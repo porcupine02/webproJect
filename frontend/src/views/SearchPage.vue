@@ -15,9 +15,9 @@
         </p>
         <!-- <p class=""> -->
         <div class="control is-expanded select" style="width: 5%">
-          <select style="width: 100%" v-model="selected_room">
+          <select style="width: 100%" v-model="selected_room" >
             <option>All</option>
-            <option v-for="room in rooms" :key="room.room_id">
+            <option v-for="room in priceRoomNew" :key="room.room_id" >
               {{ room.room_type }}
             </option>
           </select>
@@ -25,8 +25,9 @@
 
         <!-- </p> -->
         <div class="control is-expanded select" style="width: 5%">
-          <select style="width: 100%" v-model=" selected_price">
-            <option v-for="room in priceRoomNew" :key="room.room_id">
+          <select style="width: 100%; ;" v-model=" selected_price" >
+            <option></option>
+            <option v-for="room in priceRoomNew" :key="room.room_id">              
               {{ room.price }}
             </option>
           </select>
@@ -81,7 +82,7 @@ export default {
         return{
             rooms : null,
            selected_room : "All",
-           selected_price: "1500",
+           selected_price: "",
            priceRoomOld : null,
            priceRoomNew : null,
            search : this.$route.query.search
@@ -91,7 +92,7 @@ export default {
     },
 
     created(){
-        console.log(this.search)
+        
         axios.get("http://localhost:3000/search", {params : {search : this.search}})
         .then((response) => {
           this.rooms = response.data;
