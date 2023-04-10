@@ -14,9 +14,13 @@ var storage = multer.diskStorage({
 })
 const upload = multer({ storage: storage })
 
+router.get("/", async function (req, res, next) {
+    document.write("alsdkfjlasdfj")
+
+});
 
 // show
-router.get("/admin", async function (req, res, next) {
+router.get("/", async function (req, res, next) {
     try {
         console.log("hello world")
 
