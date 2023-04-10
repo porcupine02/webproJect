@@ -6,7 +6,35 @@
 
       <div class="columns">
         <div class="column is-6">
-          <img
+        <div class="slider-holder">
+        <span id="slider-image-1"></span>
+        <span id="slider-image-2"></span>
+        <span id="slider-image-3"></span>
+        <span id="slider-image-4"></span>
+
+        <div class="image-holder">
+            <img :src="'http://localhost:3000'  + room.pic1 " class="slider-image" />
+            <img :src="'http://localhost:3000'  + room.pic2 " class="slider-image" />
+            <img :src="'http://localhost:3000'  + room.pic3 " class="slider-image" />
+            <img :src="'http://localhost:3000'  + room.pic4 " class="slider-image" />
+        </div>
+
+        <div class="button-holder">
+            <a href="#slider-image-1" class="slider-change"><img :src="'http://localhost:3000'  + room.pic1 " class="slider-change-image" /></a>
+            <a href="#slider-image-2" class="slider-change"><img :src="'http://localhost:3000'  + room.pic2 " class="slider-change-image" /></a>
+            <a href="#slider-image-3" class="slider-change"><img :src="'http://localhost:3000'  + room.pic3 " class="slider-change-image" /></a>
+            <a href="#slider-image-4" class="slider-change"><img :src="'http://localhost:3000'  + room.pic4 " class="slider-change-image" /></a>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+          <!-- <img
             :src="room.pic1 ? 'http://localhost:3000' + room.pic1 : 'https://i.pinimg.com/originals/22/c0/2f/22c02f8f67b478ef00cb12bcacde588b.jpg'"
             alt="image room"
             class="has-background-info-light"
@@ -28,7 +56,7 @@
             alt="image room"
             class="has-background-info-light"
             style="margin-top: 100px"
-          />
+          /> -->
         </div>
 
         <div class="column is-5">
@@ -130,5 +158,85 @@ export default {
 </script>
 
 <style>
+       .slider-holder
+        {
+            width: 350px;
+            height: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 0px;
+            text-align: center;
+            overflow: hidden;
+        }
 
+        .image-holder
+        {
+            width: 2100px;
+            height: 400px;
+            clear: both;
+            position: relative;
+
+            -webkit-transition: left 2s;
+            -moz-transition: left 2s;
+            -o-transition: left 2s;
+            transition: left 2s;
+        }
+
+        .slider-image
+        {
+            float: left;
+            margin: 0px;
+            padding: 0px;
+            position: relative;
+          height: 350px;
+          width: 350px;
+        }
+
+        #slider-image-1:target ~ .image-holder
+        {
+            left: 0px;
+        }
+
+        #slider-image-2:target ~ .image-holder
+        {
+            left: -350px;
+        }
+
+        #slider-image-3:target ~ .image-holder
+        {
+            left: -700px;
+        }
+         #slider-image-4:target ~ .image-holder
+        {
+            left: -1050px;
+        }
+          #slider-image-5:target ~ .image-holder
+        {
+            left: -1400px;
+        }
+         #slider-image-6:target ~ .image-holder
+        {
+            left: -1750px;
+        }
+.button-holder
+        {
+            position: relative;
+            top: -50px;
+        }
+
+        .slider-change
+        {
+            display: inline-block;
+          height: 50px;
+          width: 50px;
+            border-radius: 5px;
+            background-color: brown;
+        }
+
+        .slider-change-image
+        {
+
+          height: 50px;
+          width: 50px;
+        }
 </style>

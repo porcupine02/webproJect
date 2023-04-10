@@ -15,6 +15,7 @@ var storage = multer.diskStorage({
 const upload = multer({ storage: storage })
 
 
+
 // show
 router.get("/admin", async function (req, res, next) {
     try {
@@ -22,7 +23,7 @@ router.get("/admin", async function (req, res, next) {
 
         const [booking, fields1] = await pool.query(" select * from booking")
         const [rooms, fields2] = await pool.query(" select * from roomdetail r left outer join image i on (r.room_img_id = i.room_img_id)")
-        res.render("admin", { booking: JSON.stringify(booking), rooms: JSON.stringify(rooms) })
+        res.send({ booking: JSON.stringify(booking), rooms: JSON.stringify(rooms) })
 
     } catch (err) {
         console.log(err)
@@ -37,8 +38,8 @@ router.get("/update/:roomId", async function (req, res, next) {
         const [img, fields3] = await pool.query("select * from image where room_img_id = ?",
             [room[0].room_img_id]);
 
-            console.log(room[0].room_img_id)
-            console.log(img)
+        console.log(room[0].room_img_id)
+        console.log(img)
         res.render("update", { room: room, img: img })
 
     } catch (err) {
@@ -139,4 +140,45 @@ router.post("/admin/addroom", upload.single('pic1'), async function (req, res, n
     }
 });
 
+
+// insert vacantroom
+router.post("/admin/vacantroom/:roomId", async function (req, res, next) {
+    var start = new Date(req.query.start);
+    var end = new Date(req.query.end);
+
+
+    var loop = new Date(start);
+    while (loop <= end) {
+        console.log("aksdfjlksdaf")
+        const [vacant, field] = await pool.query("insert into vacantroom(room_id, count, date) value(?,?,?)",
+            [req.params.roomId, 10, loop])
+        var newDate = loop.setDate(loop.getDate() + 1);
+        loop = new Date(newDate);
+    }
+
+
+    // const start = req.query.start
+    // const end = req.query.end
+    // console.log(req.query.count)
+    // res.send({ start: start, id: req.params.roomId })
+    // for (x = start; x <= end; x++) {
+    //     console.log(x)
+    //     const [vacant, field] = await pool.query("insert into vacantroom(room_id, count, date) value(?,?,?)",
+    //         [req.params.roomId, 10, x])
+    //     console.log(req.params.roomId)
+
+    // }
+});
+
+
+
+router.get("/admin/vacantroom/", async function (req, res, next) {
+    try {
+        const [vacantroom, field] = await pool.query("select * from vacantroom")
+        console.log(vacantroom)
+        res.send({ vacantroom: JSON.stringify(vacantroom) })
+    } catch (err) {
+        console.log(err)
+    }
+});
 exports.router = router;

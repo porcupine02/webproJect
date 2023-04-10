@@ -217,27 +217,12 @@
                 alt=""
                 style="width: 100%"
               />
-
-              <i
-                class="fas fa-star mt-3"
-                style="font-size: 40px; color: rgb(244, 247, 76)"
-              ></i>
-              <i
-                class="fas fa-star mt-3"
-                style="font-size: 40px; color: rgb(244, 247, 76)"
-              ></i>
-              <i
-                class="fas fa-star mt-3"
-                style="font-size: 40px; color: rgb(244, 247, 76)"
-              ></i>
-              <i
-                class="fas fa-star mt-3"
-                style="font-size: 40px; color: rgb(188, 188, 165)"
-              ></i>
-              <i
-                class="fas fa-star mt-3"
-                style="font-size: 40px; color: rgb(188, 188, 165)"
-              ></i>
+              <div v-for="rate in room.rate" :key="rate" style="display: inline-block;">
+                <i
+                  class="fas fa-star mt-3"
+                  style="font-size: 40px; color: rgb(244, 247, 76)"
+                ></i>
+              </div>
             </div>
           </div>
           <div class="tile is-parent is-vertical">
@@ -373,4 +358,11 @@ export default {
 </script>
 
   <style scoped>
+.bannerImage {
+  background: linear-gradient(
+      rgba(221, 246, 255, 0.141) 50%,
+      rgba(108, 120, 123, 0.278)
+    ),
+    url("../assets/banner.jpg");
+}
 </style>
