@@ -97,7 +97,7 @@
             </div>
             <div class="navbar-menu">
                 <div class="navbar-start">
-                    <a class="navbar-item" v-if="logins == true" href="search.html">
+                    <a class="navbar-item" v-if="logins == true" href="http://localhost:8080/search">
                         ค้นหาห้องพัก
                     </a>
 
@@ -207,9 +207,9 @@
                         </div>
                         <div class="tile is-child has-text-right">
                             <p class="title has-text-danger"></p>
-                            <a href="booking.html">
-                                <button v-if="logins == true" class="button has-background-success"> <router-link :to="{ name :'Detail', params : { id : room.room_id} }" >รายละเอียดเพิ่มเติม</router-link></button>
-                            </a>
+                            
+                                <router-link :to="{ name :'Detail', params : { id : room.room_id} }" >  <button v-if="logins == true" class="button has-background-success"> รายละเอียดเพิ่มเติม </button></router-link>
+                    
                         </div>
                     </div>
                 </div>
