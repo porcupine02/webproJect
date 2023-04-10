@@ -27,7 +27,7 @@
         <div class="control is-expanded select" style="width: 5%">
           <select style="width: 100%; ;" v-model=" selected_price" >
             <option></option>
-            <option v-for="room in priceRoomNew" :key="room.room_id">              
+            <option v-for="room in priceRoomNew" :key="room.room_id">
               {{ room.price }}
             </option>
           </select>
@@ -66,7 +66,7 @@
                   รายละเอียด
                 </button>
             </router-link>
-              
+
             </div>
           </div>
         </div>
@@ -92,7 +92,7 @@ export default {
     },
 
     created(){
-        
+
         axios.get("http://localhost:3000/search", {params : {search : this.search}})
         .then((response) => {
           this.rooms = response.data;
