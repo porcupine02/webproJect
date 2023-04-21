@@ -8,25 +8,30 @@
           <label class="label has-text-centered">Sign in</label>
         </div>
         <div class="field">
-          <h1 class="label">Email</h1>
+          <h1 class="label">Email {{ email }}</h1>
           <div class="control">
             <input
               class="input"
               type="email"
               placeholder="e.g. alex@example.com"
+              v-model="email"
             />
           </div>
         </div>
 
         <div class="field">
-          <label class="label">Password</label>
+          <label class="label">Password {{ password }}</label>
           <div class="control">
-            <input class="input" type="password" placeholder="********" />
+            <input class="input" type="password" placeholder="********"  v-model="password"/>
           </div>
         </div>
 
-        <a class="button is-primary" @click="login()">Sign in</a>
-        <button class="button is-danger" @click="Close()">Close</button>
+        <a class="button is-primary" value="submit" @click="login()">Sign in</a>
+        <a class="button is-danger" @click="Close()">Close</a>
+ <router-link
+                :to="{ name: 'Forgot'}"
+              >  FORGOT PASSWORD
+              </router-link>
       </form>
     </div>
     <div :class="{ modal: modal, 'is-active': isActive_Sign_up }">
@@ -64,7 +69,7 @@
           <div class="control">
             <input
               class="input"
-              type="password"
+              type="number"
               placeholder="083-3343-xxx"
               v-model="sign_phone"
             />
@@ -98,7 +103,7 @@
           <div class="control">
             <input
               class="input"
-              type="password"
+              type="text"
               placeholder="Folk"
               v-model="sign_username"
             />
@@ -116,11 +121,9 @@
             />
           </div>
         </div>
-
-        <button class="button is-primary">
-          <a href="profile.html">Sign up</a>
-        </button>
-        <button class="button is-danger" @click="Close()">Close</button>
+  
+        <a class="button is-primary" value="submit" @click="signUp()">Sign in</a>
+        <a class="button is-danger" @click="Close()">Close</a>
       </form>
     </div>
 
@@ -185,7 +188,7 @@
               <a
                 class="button is-danger"
                 v-if="logins == true"
-                @click="logins = false"
+                @click="logOut()"
                 >Log out</a
               >
             </div>
@@ -318,6 +321,8 @@ import axios from "axios";
 export default {
   data() {
     return {
+      email :'',
+      password : '',
       rooms: null,
       modal: true,
       isActive_Sign_in: false,
@@ -330,10 +335,18 @@ export default {
       sign_email: "",
       sign_username: "",
       sign_pass: "",
-      //   image: 'https://hips.hearstapps.com/hmg-prod/images/golden-retriever-royalty-free-image-506756303-1560962726.jpg?crop=1.00xw:0.756xh;0,0.0756xh&resize=1200:*'
     };
   },
   created() {
+    
+    if (localStorage.getItem("user") != null) {
+        this.logins = true;
+    
+      }
+    else{
+      this.logins = false;
+      // this.isActive_Sign_in = true;
+    }
     axios
       .get("http://localhost:3000/")
       .then((response) => {
@@ -348,11 +361,82 @@ export default {
     Close() {
       this.isActive_Sign_in = false;
       this.isActive_Sign_up = false;
+      this.email = ''
+      this.password = ''
+      this.sign_fname = ""
+      this.sign_lname = ""
+      this.sign_phone = ""
+      this.sign_dob = ""
+      this.sign_email = ""
+      this.sign_username = ""
+      this.sign_pass = ""
+      
     },
     login() {
-      this.logins = true;
+      // var data = new FormData();
+      // data.append('email', this.email);
+      // data.append('password', this.password)
+      // console.log(this.email)
+      // console.log(this.password)
+
+       var data = {
+         email : this.email,
+         password : this.password 
+       }
+      axios.post("http://localhost:3000/register", data).then((response) => {
+      
+        console.log(response.data)
+        if(response.data.length ==  1){
+         localStorage.setItem('user', JSON.stringify([{email : this.email, password: this.password}]))
+         this.isActive_Sign_in = false;
+         this.logins = true;
+          this.email = ''
+         this.password = ''
+       }
+       else{
+          alert('Password is wrong')
+       }
+      
+      }).catch(error => {
+        console.log(error.message)
+      })
+   
+
+    
+    },
+    logOut(){
+      localStorage.removeItem('user')
+      this.logins = false;
       this.isActive_Sign_in = false;
     },
+    signUp(){
+
+      var data = new FormData();
+      data.append('fname', this.sign_fname);
+      data.append('lname', this.sign_lname);
+      data.append('phone', this.sign_phone);
+      data.append('dob', this.sign_dob);
+      data.append('email', this.sign_email);
+      data.append('username', this.sign_username)
+      data.append('password', this.sign_pass)
+      console.log(this.sign_fname)
+      if(this.sign_fname != '' && this.sign_lname != '' && this.sign_phone != ''&& this.sign_dob !=''&& this.email !='' && this.sign_username !='' && this.sign_pass !='' ){
+        axios.post('http://localhost:3000/signUp', data).then(response => {
+          console.log(response)
+  
+          this.isActive_Sign_in = true;
+          this.isActive_Sign_up = false;
+
+        }).catch(error =>{
+          console.log(error.message)
+        })
+      }
+
+      else{
+        alert('กรอกข้อมูลให้ครบครับ')
+        
+      }
+    }
   },
 };
 </script>

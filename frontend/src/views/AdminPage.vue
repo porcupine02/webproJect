@@ -50,7 +50,9 @@
                                     <div class="container my-5" v-for="room in allRoom" :key="room">
                                         <div class="tile is-ancestor my-5 has-background-danger-light">
                                             <div class="tile is-4 is-vertical is-parent">
-                                                <img :src="room.pic1" alt="image_room" width="100%">
+                                                <img :src=" room.pic1
+                    ? 'http://localhost:3000' + room.pic1
+                    : 'https://i.pinimg.com/originals/22/c0/2f/22c02f8f67b478ef00cb12bcacde588b.jpg'" alt="image_room" width="100%">
                                                 <div class="tile is-child " style="margin: 20px;">
                                                     <i class="fa fa-star mt-3"
                                                         style="font-size:40px ;color:rgb(244, 247, 76); margin-left: 100px;"></i>
