@@ -121,7 +121,7 @@
             />
           </div>
         </div>
-  
+
         <a class="button is-primary" value="submit" @click="signUp()">Sign in</a>
         <a class="button is-danger" @click="Close()">Close</a>
       </form>
@@ -338,10 +338,10 @@ export default {
     };
   },
   created() {
-    
+
     if (localStorage.getItem("user") != null) {
         this.logins = true;
-    
+
       }
     else{
       this.logins = false;
@@ -370,7 +370,7 @@ export default {
       this.sign_email = ""
       this.sign_username = ""
       this.sign_pass = ""
-      
+
     },
     login() {
       // var data = new FormData();
@@ -381,10 +381,10 @@ export default {
 
        var data = {
          email : this.email,
-         password : this.password 
+         password : this.password
        }
       axios.post("http://localhost:3000/register", data).then((response) => {
-      
+
         console.log(response.data)
         if(response.data.length ==  1){
          localStorage.setItem('user', JSON.stringify([{email : this.email, password: this.password}]))
@@ -396,13 +396,13 @@ export default {
        else{
           alert('Password is wrong')
        }
-      
+
       }).catch(error => {
         console.log(error.message)
       })
-   
 
-    
+
+
     },
     logOut(){
       localStorage.removeItem('user')
@@ -420,10 +420,10 @@ export default {
       data.append('username', this.sign_username)
       data.append('password', this.sign_pass)
       console.log(this.sign_fname)
-      if(this.sign_fname != '' && this.sign_lname != '' && this.sign_phone != ''&& this.sign_dob !=''&& this.email !='' && this.sign_username !='' && this.sign_pass !='' ){
+      if(this.sign_fname != '' && this.sign_lname != '' && this.sign_phone != '' && this.sign_dob !=''&& this.sign_email !='' && this.sign_username !='' && this.sign_pass !='' ){
         axios.post('http://localhost:3000/signUp', data).then(response => {
           console.log(response)
-  
+
           this.isActive_Sign_in = true;
           this.isActive_Sign_up = false;
 
@@ -434,7 +434,6 @@ export default {
 
       else{
         alert('กรอกข้อมูลให้ครบครับ')
-        
       }
     }
   },

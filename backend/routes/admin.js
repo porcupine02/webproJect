@@ -71,18 +71,34 @@ router.put("/admin/updateroom/:id", async function (req, res, next) {
 });
 
 // create
-router.post("/admin/addroom", upload.single('pic1'), async function (req, res, next) {
+router.post("/admin/addroom", upload.array("myImage", 5), async function (req, res, next) {
     // เอารูปไปใส่ใน img table ก่อนแล้ว ดึง room_img_id มาใช้
 
     const conn = await pool.getConnection()
     await conn.beginTransaction();
 
     try {
+        const file = req.files;
+        console.log(file)
         const room_type = req.body.room_type;
+        const description = req.body.room_description;
+        const service = {
+            breakfast: req.body.breakfast,
+            pools: req.body.pool,
+            wifi: req.body.wifi,
+            air: req.body.air
+        }
         const price = req.body.price;
-        const description = req.body.description;
+        const count = req.body.count_room;
+        console.log("tyep : " + room_type)
+        console.log("des : " + description)
+        console.log(service)
+        console.log("price : " + price)
+        console.log("count : " + count)
 
-        let pic1 = req.file;
+        // not
+        // let pic1 = req.file;
+        let pic1 = 'test';
         let pic2 = req.body.pic2;
         let pic3 = req.body.pic3;
         let pic4 = req.body.pic4;
@@ -95,32 +111,37 @@ router.post("/admin/addroom", upload.single('pic1'), async function (req, res, n
         if (pic4 = undefined) {
             pic4 = null
         }
-        let breakfast = req.body.breakfast;
-        let pools = req.body.pool;
-        let wifi = req.body.wifi;
-        let air_conditioner = req.body.air;
-        if (!breakfast) {
-            breakfast = "no";
+        // not
+        if (service.breakfast) {
+            var breakfast = "yes";
+        } else {
+            var breakfast = "no";
         }
-        if (!pools) {
-            pools = "no";
+        if (service.pools) {
+            var pools = "yes";
+        } else {
+            var pools = "no";
         }
-        if (!wifi) {
-            wifi = "no";
+        if (service.wifi) {
+            var wifi = "yes";
+        } else {
+            var wifi = "no";
         }
-        if (!air_conditioner) {
-            air_conditioner = "no";
+        if (service.air) {
+            var air = "yes";
+        } else {
+            var air = "no";
         }
 
         const [services, fields4] = await conn.query(" insert into services(breakfast, pool, wifi, air_conditioner) value(?,?,?,?)",
-            [breakfast, pools, wifi, air_conditioner])
+            [breakfast, pools, wifi, air])
         const serviceId = services.insertId
         console.log(serviceId)
 
 
 
         const [img, fields1] = await conn.query(" insert into image(pic1, pic2, pic3, pic4) values(?,?,?,?)",
-            [pic1.path.substr(6), pic2, pic3, pic4])
+            [pic1, pic2, pic3, pic4])
         const imgId = img.insertId
         console.log(imgId)
         // res.send("addd image complete!")
