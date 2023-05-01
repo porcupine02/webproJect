@@ -149,7 +149,6 @@ router.post("/admin/addroom", upload.array("myImage", 5), async function (req, r
             [room_type, price, description, imgId, serviceId])
 
         conn.commit()
-        res.redirect("/admin")
 
     } catch (err) {
         console.log(err)
@@ -158,6 +157,7 @@ router.post("/admin/addroom", upload.array("myImage", 5), async function (req, r
     } finally {
         console.log('finally')
         conn.release();
+        res.redirect("/admin")
     }
 });
 

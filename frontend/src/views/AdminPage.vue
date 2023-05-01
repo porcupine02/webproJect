@@ -1,6 +1,69 @@
 <template>
+<div id="admin">
 
-            <div class="container mt-6 pt-5" id="admin">
+
+            <nav
+                class="navbar is-dark"
+                role="navigation"
+                aria-label="main navigation"
+                style="position: fixed; top: 0; width: 100%"
+            >
+                <div class="navbar-brand">
+                <a class="navbar-item" href="http://localhost:8080/">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+                </div>
+                <div class="navbar-menu">
+                <div class="navbar-start">
+                    <a
+                    class="navbar-item"
+                    v-if="logins == true"
+                    href="http://localhost:8080/search"
+                    >
+                    ค้นหาห้องพัก
+                    </a>
+
+                    <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link"> ห้องพักของเรา </a>
+
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item" href="index.html#01"> Standard Room </a>
+                        <a class="navbar-item" href="index.html#02"> Deluxe Room </a>
+                        <a class="navbar-item" href="index.html#03"> Suite Room </a>
+                        <a class="navbar-item" href="index.html#04"> Superior Room </a>
+                    </div>
+                    </div>
+                </div>
+                <div class="navbar-end">
+                    <div class="navbar-item">
+                    <div class="buttons asd">
+                        <a
+                        class="button is-info"
+                        v-if="logins == false"
+                        @click="isActive_Sign_up = true"
+                        >
+                        <strong>Sign up</strong>
+                        </a>
+                        <a class="button is-dark" v-if="logins == true" href="profile.html">
+                        <strong>My Profile</strong>
+                        </a>
+                        <a
+                        class="button is-dark"
+                        v-if="logins == false"
+                        @click="isActive_Sign_in = true"
+                        >
+                        Log in
+                        </a>
+                        <a class="button is-danger" v-if="logins == true" @click="logOut()"
+                        >Log out</a
+                        >
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </nav>
+            <div class="container mt-6 pt-5">
                 <div class="container mt-6 pt-5">
                     <p class="title has-text-centered">ข้อมูลลูกค้า</p>
 
@@ -114,7 +177,7 @@
                                     </div>
                                 </div>
                                 <!-- add room -->
-                                <div id="addRoom" class="content-tab" style="display:">
+                                <div id="addRoom" class="content-tab" style="display: none">
                                     <!-- <form method="GET" action="/admin/addroom" enctype="multipart/form-data"> -->
 
                                         ชื่อห้อง
@@ -212,6 +275,8 @@
                 </div>
             </div>
 
+</div>
+
 
 
 </template>
@@ -260,24 +325,25 @@ export default {
       formData.append("pool", this.pool);
       formData.append("wifi", this.wifi);
       formData.append("count_room", this.count_room);
-    //   this.images.forEach((image) => {
-        formData.append("myImage1", this.images);
-    //   });
-    //   const newRoom = {
-    //     room_type: this.room_type,
-    //     room_description: this.room_description,
-    //     price: this.price,
-    //     breakfast: this.breakfast,
-    //     pool: this.pool,
-    //     wifi: this.wifi,
-    //     air: this.air_conditioner,
-    //     count_room: this.count_room,
-    //     images: this.images,
-    //   };
+      //   this.images.forEach((image) => {
+      formData.append("myImage1", this.images);
+      //   });
+      //   const newRoom = {
+      //     room_type: this.room_type,
+      //     room_description: this.room_description,
+      //     price: this.price,
+      //     breakfast: this.breakfast,
+      //     pool: this.pool,
+      //     wifi: this.wifi,
+      //     air: this.air_conditioner,
+      //     count_room: this.count_room,
+      //     images: this.images,
+      //   };
       axios
         .post("http://localhost:3000/admin/addroom", formData)
         .then((res) => {
           console.log(res);
+          location.reload();
         })
         .catch((err) => {
           console.log(err);
