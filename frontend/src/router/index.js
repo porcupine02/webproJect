@@ -7,13 +7,11 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    // meta: {guess : true},
     component: () => import('../views/HomePage.vue') // set home as path '/'
   },
   {
     path: '/detail/:id',
     name: 'Detail',
-    meta: {login : true},
     component: () => import("../views/DetailPage.vue")
   },
   {
@@ -24,26 +22,21 @@ const routes = [
   {
     path: '/admin',
     name: 'Admin',
-  
     component: () => import("../views/AdminPage.vue")
   },
   {
     path: '/invoice',
     name: 'Invoice',
-
     component: () => import('../views/invoicePage.vue')
   },
   {
     path: '/booking',
     name: 'Booking',
-    meta: {login : true},
-
     component: () => import('../views/BookingPage.vue')
   },
   {
     path: '/profile',
     name: 'Profile',
-
     component: () => import('../views/ProfilePage.vue')
   },
   {
@@ -55,17 +48,9 @@ const routes = [
 ]
 
 const router = new VueRouter({
+  mode: 'history',
+  base: process.env.BASE_URL,
   routes
-}) 
-router.beforeEach((to, from, next) => {
-  const isLoggedIn = !!localStorage.getItem('user')
-
-  if(to.meta.login && !isLoggedIn){
-    alert('please login first')
-    next({path: '/'})
-  }
-
-  next()
 })
 
 export default router

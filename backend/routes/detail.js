@@ -1,7 +1,6 @@
 const express = require("express")
 const path = require("path")
 const pool = require("../config")
-const { isLoggedIn } = require("../middlewares");
 
 router = express.Router()
 
@@ -90,7 +89,7 @@ const upload = multer({ storage: storage })
 //     }
 // });
 
-router.get("/detail/:id",async function (req, res, next) {
+router.get("/detail/:id", async function (req, res, next) {
   try{
     const [row_room, columns_room] = await pool.query('SELECT * FROM  roomdetail r join image i on (r.room_img_id = i.room_img_id) join services s on (r.service_id = s.service_id) WHERE r.room_id = ?',[req.params.id])
     return res.json(row_room);
