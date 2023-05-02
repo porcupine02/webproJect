@@ -137,7 +137,9 @@
 </template>
 
 <script>
-import axios from 'axios';
+
+import axios from 'axios'
+
 export default {
     data(){
         return{
@@ -148,7 +150,6 @@ export default {
         axios.get(`http://localhost:3000/detail/${this.$route.params.id}`)
         .then((response) => {
           this.rooms = response.data;
-          console.log(this.blogs)
         })
         .catch((err) => {
           console.log(err);

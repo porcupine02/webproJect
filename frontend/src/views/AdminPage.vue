@@ -1,69 +1,5 @@
 <template>
-<div id="admin">
-
-
-            <nav
-                class="navbar is-dark"
-                role="navigation"
-                aria-label="main navigation"
-                style="position: fixed; top: 0; width: 100%"
-            >
-                <div class="navbar-brand">
-                <a class="navbar-item" href="http://localhost:8080/">
-                    <i class="fas fa-home"></i>
-                    Home
-                </a>
-                </div>
-                <div class="navbar-menu">
-                <div class="navbar-start">
-                    <a
-                    class="navbar-item"
-                    v-if="logins == true"
-                    href="http://localhost:8080/search"
-                    >
-                    ค้นหาห้องพัก
-                    </a>
-
-                    <div class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link"> ห้องพักของเรา </a>
-
-                    <div class="navbar-dropdown">
-                        <a class="navbar-item" href="index.html#01"> Standard Room </a>
-                        <a class="navbar-item" href="index.html#02"> Deluxe Room </a>
-                        <a class="navbar-item" href="index.html#03"> Suite Room </a>
-                        <a class="navbar-item" href="index.html#04"> Superior Room </a>
-                    </div>
-                    </div>
-                </div>
-                <div class="navbar-end">
-                    <div class="navbar-item">
-                    <div class="buttons asd">
-                        <a
-                        class="button is-info"
-                        v-if="logins == false"
-                        @click="isActive_Sign_up = true"
-                        >
-                        <strong>Sign up</strong>
-                        </a>
-                        <a class="button is-dark" v-if="logins == true" href="profile.html">
-                        <strong>My Profile</strong>
-                        </a>
-                        <a
-                        class="button is-dark"
-                        v-if="logins == false"
-                        @click="isActive_Sign_in = true"
-                        >
-                        Log in
-                        </a>
-                        <a class="button is-danger" v-if="logins == true" @click="logOut()"
-                        >Log out</a
-                        >
-                    </div>
-                    </div>
-                </div>
-                </div>
-            </nav>
-            <div class="container mt-6 pt-5">
+            <div class="container mt-6 pt-5" id="admin">
                 <div class="container mt-6 pt-5">
                     <p class="title has-text-centered">ข้อมูลลูกค้า</p>
 
@@ -177,65 +113,27 @@
                                     </div>
                                 </div>
                                 <!-- add room -->
-                                <div id="addRoom" class="content-tab" style="display: none">
-                                    <!-- <form method="GET" action="/admin/addroom" enctype="multipart/form-data"> -->
+                                <div id="addRoom" class="content-tab" style="display:none">
+                                    <form method="GET" action="/admin/addroom" enctype="multipart/form-data">
 
                                         ชื่อห้อง
-                                        <p class="control has-icons-left has-icons-right mb-3">
-                                            <span class="icon is-small is-left">
-                                            <i class="fas fa-hotel"></i>
-                                            </span>
-                                            <input class="input" type="text" name="room_type" placeholder="Standard room" v-model="room_type"
-                                                required>
-                                        </p>
-                                        รายละเอียด
-                                        <p class="control has-icons-left has-icons-right mb-3">
-                                            <span class="icon is-small is-left">
-                                            <i class="fas fa-book"></i>
-                                            </span>
+                                        <input class="input" type="text" name="room_type" placeholder="Standard room"
+                                            required>
+                                        <p>รายละเอียด
                                             <textarea name="description" class="input"
-                                                placeholder="Detail for this room"  v-model="room_description" required></textarea>
+                                                placeholder="Detail for this room" required></textarea>
                                         </p>
                                         <p>บริการจากทางโรงแรม
                                             <br>
-                                        <ul class="checkbox columns mb-3" name="services">
-                                            <div class="column">
-                                                <input type="checkbox" name="breakfast" value="yes" v-model="breakfast" > breakfast
-                                            </div>
-                                            <div class="column">
-                                                <input type="checkbox" name="pool" value="yes" v-model="pool" > pool
-                                            </div>
-                                            <div class="column">
-                                                <input type="checkbox" name="wifi" value="yes" v-model="wifi" > wifi
-                                            </div>
-                                            <div class="column">
-                                                <input type="checkbox" name="air_conditioner"  v-model="air_conditioner"
-                                                    value="air_conditioner"> air_conditioner</div>
+                                        <ul class="checkbox" name="services">
+                                            <li><input type="checkbox" name="breakfast" value="yes">breakfast</li>
+                                            <li><input type="checkbox" name="pool" value="yes">pool</li>
+                                            <li><input type="checkbox" name="wifi" value="yes">wifi</li>
+                                            <li><input type="checkbox" name="air_conditioner"
+                                                    value="air_conditioner">air_conditioner</li>
                                         </ul>
                                         </p>
-                                        <input
-                                            class="mb-5"
-                                            multiple
-                                            type="file"
-                                            accept="image/png, image/jpeg, image/webp"
-                                            @change="selectImages" name="images"
-                                        />
-
-                                        <div v-if="images" class="columns is-multiline">
-                                            <div v-for="(image, index) in images" :key="image.id" class="column is-one-quarter">
-                                            <div class="card">
-                                                <div class="card-image">
-                                                <figure class="image is-4by3">
-                                                    <img :src="showSelectImage(image)" alt="Placeholder image" />
-                                                </figure>
-                                                </div>
-                                                <footer class="card-footer">
-                                                <a @click="deleteSelectImage(index)" class="card-footer-item has-text-danger">Delete</a>
-                                                </footer>
-                                            </div>
-                                            </div>
-                                        </div>
-                                        <!-- ภาพห้อง
+                                        ภาพห้อง
                                         <div class="columns mt-3">
                                             <div class="cloumn">
                                                 <input type="file" name="pic1" required>
@@ -249,21 +147,20 @@
                                             <div class="cloumn">
                                                 <input type="file" name="pic4">
                                             </div>
-                                        </div> -->
+                                        </div>
                                         <div class="columns mt-3">
-                                            <div class="column is-3">
-                                                จำนวนห้องที่เปิดให้บริการ
-                                                    <input class="input" type="number" v-model="count_room" required>
+                                            <div class="cloumn">
+                                                จำนวนห้องที่เปิดให้บริการ<input class="input" type="number" required>
                                             </div>
 
-                                            <div class="column is-2">
-                                                ราคา<input type="number" class="input" name="price" v-model="price" required>
+                                            <div class="cloumn">
+                                                ราคา<input type="number" class="input" name="price" required>
                                             </div>
 
                                         </div>
-                                        <input class="button is-success" type="submit" value="Add Room" @click="submit()">
+                                        <input class="button" type="submit" value="Submit">
 
-                                    <!-- </form> -->
+                                    </form>
                                 </div>
                             </div>
 
@@ -274,8 +171,6 @@
                     </div>
                 </div>
             </div>
-
-</div>
 
 
 
@@ -289,16 +184,6 @@ export default {
     return {
       logins: true,
       allRoom: null,
-      room_type: "",
-      room_description: "",
-      breakfast: false,
-      pool: false,
-      wifi: false,
-      air_conditioner: false,
-      pic: [],
-      count_room: 0,
-      price: 0,
-      images: [], // array of image
     };
   },
   created() {
@@ -314,53 +199,6 @@ export default {
     this.getRooms();
   },
   methods: {
-    submit() {
-      console.log("submit");
-      let formData = new FormData();
-      formData.append("room_type", this.room_type);
-      formData.append("room_description", this.room_description);
-      formData.append("price", this.price);
-      formData.append("air", this.air_conditioner);
-      formData.append("breakfast", this.breakfast);
-      formData.append("pool", this.pool);
-      formData.append("wifi", this.wifi);
-      formData.append("count_room", this.count_room);
-      //   this.images.forEach((image) => {
-      formData.append("myImage1", this.images);
-      //   });
-      //   const newRoom = {
-      //     room_type: this.room_type,
-      //     room_description: this.room_description,
-      //     price: this.price,
-      //     breakfast: this.breakfast,
-      //     pool: this.pool,
-      //     wifi: this.wifi,
-      //     air: this.air_conditioner,
-      //     count_room: this.count_room,
-      //     images: this.images,
-      //   };
-      axios
-        .post("http://localhost:3000/admin/addroom", formData)
-        .then((res) => {
-          console.log(res);
-          location.reload();
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    selectImages(event) {
-      this.images = event.target.files;
-    },
-    showSelectImage(image) {
-      // for preview only
-      return URL.createObjectURL(image);
-    },
-    deleteSelectImage(index) {
-      console.log(this.images);
-      this.images = Array.from(this.images);
-      this.images.splice(index, 1);
-    },
     async getRooms() {
       try {
         const response = await axios.get("http://localhost:3000/admin");
