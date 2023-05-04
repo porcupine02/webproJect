@@ -11,8 +11,8 @@
           <h1 class="label">Username {{ username }}</h1>
           <div class="control has-icons-left">
             <span class="icon is-small is-left">
-      <i class="fas fa-envelope"></i>
-    </span>
+              <i class="fas fa-envelope"></i>
+            </span>
             <input
               class="input"
               type="username"
@@ -20,7 +20,7 @@
               v-model="username"
             />
           </div>
-      
+
         </div>
 
         <div class="field">
@@ -48,13 +48,13 @@
         <a class="button is-danger " @click="Close()">Close</a>
       </p>
      </div>
- <router-link :to="{ name: 'Forgot'}">  FORGOT PASSWORD </router-link>
-        
-       
+      <router-link :to="{ name: 'Forgot'}">  FORGOT PASSWORD </router-link>
+
+
+        </div>
       </div>
-    </div>
-    <div :class="{ modal: modal, 'is-active': isActive_Sign_up }">
-      <div class="modal-background"></div>
+      <div :class="{ modal: modal, 'is-active': isActive_Sign_up }">
+        <div class="modal-background"></div>
 
       <form  class="box modal-content">
         <div class="field">
@@ -78,9 +78,9 @@
            <p class="help is-danger" v-if="!$v.sign_fname.required">This field is required</p>
            <p class="help is-danger" v-if="!$v.sign_fname.minLength">min 5</p>
            <p class="help is-danger" v-if="!$v.sign_fname.maxLength">max 15</p>
-          
-         </template>
-        
+
+          </template>
+
         </div>
         <div class="field">
           <h1 class="label">Last Name</h1>
@@ -95,9 +95,9 @@
           </div>
             <template v-if="$v.sign_lname.$error">
 
-            <p class="help is-danger" v-if="!$v.sign_lname.required">This field is required</p>
-            <p class="help is-danger" v-if="!$v.sign_lname.minLength">min 5</p>
-            <p class="help is-danger" v-if="!$v.sign_lname.maxLength">max 15</p>
+              <p class="help is-danger" v-if="!$v.sign_lname.required">This field is required</p>
+              <p class="help is-danger" v-if="!$v.sign_lname.minLength">min 5</p>
+              <p class="help is-danger" v-if="!$v.sign_lname.maxLength">max 15</p>
 
             </template>
         </div>
@@ -132,8 +132,7 @@
           </div>
           <template v-if="$v.sign_dob.$error">
 
-          <p class="help is-danger" v-if="!$v.sign_dob.required">This field is required</p>
-          <!-- <p class="help is-danger" v-else-if="!$v.sign_dob.sign_phone">เบอร์โทรศัพท์ 9 ตัว</p> -->
+            <p class="help is-danger" v-if="!$v.sign_dob.required">This field is required</p>
 
           </template>
         </div>
@@ -190,11 +189,11 @@
           </div>
           <template v-if="$v.sign_password.$error">
 
-<p class="help is-danger" v-if="!$v.sign_password.required">This field is required</p>
-<p class="help is-danger" v-else-if="!$v.sign_password.complex"> easy password</p>
-<p class="help is-danger" v-else-if="!$v.sign_password.minLength"> 8</p>
+      <p class="help is-danger" v-if="!$v.sign_password.required">This field is required</p>
+      <p class="help is-danger" v-else-if="!$v.sign_password.complex"> easy password</p>
+      <p class="help is-danger" v-else-if="!$v.sign_password.minLength"> 8</p>
 
-</template>
+    </template>
         </div>
         <div class="field">
           <label class="label">confirm_password</label>
@@ -205,7 +204,7 @@
               type="password"
               placeholder="********"
               v-model="$v.confirm_password.$model"
-             
+
             />
           </div>
           <template v-if="$v.confirm_password.$error">
@@ -216,18 +215,18 @@
           </template>
         </div>
       <div class="field is-grouped">
-        <div class="control">  
+        <div class="control">
           <a class="button is-primary" value="submit" @click="signUp()">Sign in</a>
         </div>
         <div class="control">
            <a class="button is-danger" @click="Close()">Close</a>
         </div>
-   
-        
+
+
       </div>
-  
-      
-       
+
+
+
       </form>
     </div>
 
@@ -300,98 +299,6 @@
         </div>
       </div>
     </nav>
-    <!-- banner -->
-<!-- 
-    <section class="hero has-background-info-light is-large bannerImage">
-      <div class="hero-body has-text-centered" style="z-index: 2">
-        <p class="title is-size-1">HOTEL BOOKING</p>
-        <p class="subtitle">information for you</p>
-      </div>
-    </section> -->
-
-    <!-- content -->
-    <!-- <div class="container my-5" v-for="room in rooms" :key="room.id">
-      <div id="room.room_id">
-        <div class="tile is-ancestor my-5 has-background-danger-light">
-          <div class="tile is-4 is-vertical is-parent">
-            <div class="tile is-child">
-              <img
-                :src="
-                  room.pic1
-                    ? 'http://localhost:3000' + room.pic1
-                    : 'https://i.pinimg.com/originals/22/c0/2f/22c02f8f67b478ef00cb12bcacde588b.jpg'
-                "
-                alt=""
-                style="width: 100%"
-              />
-              <div v-for="rate in room.rate" :key="rate" style="display: inline-block;">
-                <i
-                  class="fas fa-star mt-3"
-                  style="font-size: 40px; color: rgb(244, 247, 76)"
-                ></i>
-              </div>
-            </div>
-          </div>
-          <div class="tile is-parent is-vertical">
-            <div class="tile is-child">
-              <p class="title">{{ room.room_type }}</p>
-              <p class="subtitle">{{ room.description }}</p>
-            </div> -->
-            <!-- services -->
-            <!-- <hr />
-            <p class="subtitle is-5">Facilities</p>
-            <div class="columns">
-              <div
-                class="column is-2 has-text-centered"
-                v-if="room.breakfast == 'yes'"
-              >
-                <i class="fas fa-coffee" style="font-size: 50px"></i>
-                <br />
-                breakfast
-              </div>
-
-              <div
-                class="column is-2 has-text-centered"
-                v-if="room.wifi == 'yes'"
-              >
-                <i class="fas fa-wifi" style="font-size: 50px"></i>
-                <br />
-                internet
-              </div>
-              <div
-                class="column is-2 has-text-centered"
-                v-if="room.air_conditioner == 'yes'"
-              >
-                <i class="fas fa-wifi" style="font-size: 50px"></i><br />
-                internet
-              </div>
-              <div
-                class="column is-2 has-text-centered"
-                v-if="room.pool == 'yes'"
-              >
-                <i class="fas fa-swimming-pool" style="font-size: 50px"></i>
-                <br />
-                pool
-              </div>
-            </div>
-            <div class="tile is-child has-text-right">
-              <p class="title has-text-danger"></p>
-
-              <router-link
-                :to="{ name: 'Detail', params: { id: room.room_id } }"
-              >
-                <button
-                  v-if="logins == true"
-                  class="button has-background-success"
-                >
-                  รายละเอียดเพิ่มเติม
-                </button></router-link
-              >
-            </div>
-          </div>
-        </div>
-      </div>
-    </div> -->
     <br><br><br>
     <div class="container">
         <div class="card p-6">
@@ -416,17 +323,17 @@
                     <div class="subtitle is-4">
                         people
                     </div>
-                  
-                    
+
+
                       <a class="button" @click="minus()">-</a>
                       <a class="is-size-4 mx-4" v-if="count > 0">{{ count }}</a>
                       <a class="button" @click="count++">+</a>
-             
+
                 </div>
 
             </div>
         </div>
-<br>
+        <br>
         <div class="columns is-centered">
             <!-- <div class="column is-3"> -->
             <div class="column is-3 card  m-2" v-for="room in rooms" :key="room.id">
@@ -442,7 +349,7 @@
                         <div class="media-content">
                             <p class="title is-4">{{ room.room_type }}</p>
                             <p class="subtitle is-6">
-                                
+
                                 <i class="fas fa-star mt-3" style="font-size: 40px; color: rgb(244, 247, 76)"></i>
                                 <i class="fas fa-star mt-3" style="font-size: 40px; color: rgb(244, 247, 76)"></i>
                                 <i class="fas fa-star mt-3" style="font-size: 40px; color: rgb(244, 247, 76)"></i>
@@ -465,9 +372,9 @@
                     </footer>
                 </div>
             </div>
-           
-           
-           
+
+
+
             <!-- </div> -->
 
 
@@ -518,8 +425,8 @@
                                       <a href=""><i class="fab fa-facebook" style="font-size: 40px; margin-right: 10px"></i></a>
                                       <a href=""><i class="	fab fa-instagram" style="font-size: 40px;"></i></a>
                                     </li>
-                                  
-                                  
+
+
                                 </ul>
                                 <!-- <p class="copyright-text">Designed and Developed by <a href="https://uideck.com/"
                                     rel="nofollow" target="_blank">UIdeck</a>
@@ -572,7 +479,7 @@ export default {
       confirm_password: '',
       error: "",
       count : 1,
-    
+
 
     };
   },
@@ -580,7 +487,7 @@ export default {
 
   created() {
     console.log(this.user)
-  
+
     if (localStorage.getItem("user") != null) {
         this.logins = true;
       }
@@ -592,7 +499,7 @@ export default {
       .get("http://localhost:3000/")
       .then((response) => {
         this.rooms = response.data;
-  
+
       })
       .catch((err) => {
         console.log(err);
@@ -603,12 +510,12 @@ export default {
     sign_fname:{
       required : required,
       maxLength :maxLength(15),
-      minLength : minLength(5) 
+      minLength : minLength(5)
     },
     sign_lname:{
       required : required,
       maxLength :maxLength(15),
-      minLength : minLength(5) 
+      minLength : minLength(5)
     },
     sign_phone:{
       required : required,
@@ -640,7 +547,7 @@ export default {
       if(this.count > 1){
         this.count--
       }
-      
+
     },
     Close() {
       this.isActive_Sign_in = false;
@@ -656,21 +563,21 @@ export default {
       this.sign_username = "",
       this.sign_password = "",
       this.confirm_password = '',
-      
-      
-   
+
+
+
       this.$v.$reset()
-   
+
 
     },
     login() {
 
        var data = {
          username : this.username,
-         password : this.password 
+         password : this.password
        }
       axios.post("http://localhost:3000/user/login", data).then((response) => {
-      
+
         // console.log(response.data)
         const token = response.data.token
         localStorage.setItem('user', token)
@@ -679,14 +586,14 @@ export default {
          this.logins = true;
         this.username = ''
          this.password = ''
-      
+
       }).catch(error => {
         this.error = error.response.data
         console.log(error.response.data)
       })
-   
 
-    
+
+
     },
     logOut(){
       localStorage.removeItem('user')
@@ -695,7 +602,7 @@ export default {
     },
     signUp(){
       this.$v.$touch();
-   
+
       if (!this.$v.$invalid) {
       var data = new FormData();
       data.append('fname', this.sign_fname);
@@ -709,7 +616,7 @@ export default {
       // if(this.sign_fname != '' && this.sign_lname != '' && this.sign_phone != ''&& this.sign_dob !=''&& this.sign_email !='' && this.sign_username !='' && this.sign_pass !='' ){
         axios.post('http://localhost:3000/signUp', data).then(response => {
           console.log(response)
-  
+
           this.isActive_Sign_in = true;
           this.isActive_Sign_up = false;
 
@@ -721,7 +628,7 @@ export default {
 
       // else{
       //   alert('กรอกข้อมูลให้ครบครับ')
-        
+
       // }
     }
    }

@@ -24,7 +24,7 @@ const routes = [
   {
     path: '/admin',
     name: 'Admin',
-  
+
     component: () => import("../views/AdminPage.vue")
   },
   {
@@ -56,7 +56,7 @@ const routes = [
 
 const router = new VueRouter({
   routes
-}) 
+})
 router.beforeEach((to, from, next) => {
   const isLoggedIn = !!localStorage.getItem('user')
 

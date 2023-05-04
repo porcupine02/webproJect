@@ -19,7 +19,7 @@ export default {
    methods: {
      onAuthChange () {
        const token = localStorage.getItem('user')
-    
+
        if (token) {
          this.getUser()
        }
@@ -31,7 +31,7 @@ export default {
       //  const token = localStorage.getItem('user')
        axios.get('http://localhost:3000/user/me').then(res => {
          this.user = res.data
-        
+
        })
      },
    }
@@ -39,11 +39,16 @@ export default {
 </script>
 
 <style>
+
+@font-face {
+  font-family: "prompt";
+  src: local("prompt"),
+   url(./fonts/prompt/Prompt-Light.ttf) format("truetype");
+}
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: "prompt", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* text-align: center; */
   color: #2c3e50;
   margin-top: 60px;
 }
