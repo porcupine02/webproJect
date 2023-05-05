@@ -330,8 +330,8 @@
       <br />
     </div>
     <div class="container">
-      <div class="columns is-centered is-multiline">
-        <div class="column is-3 card" v-for="room in rooms" :key="room.id">
+      <div class="columns is-multiline">
+        <div class="column is-3 card m-2" v-for="room in rooms" :key="room.id">
           <div class="card-image">
             <figure class="image is-4by3">
               <img
