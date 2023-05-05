@@ -328,9 +328,10 @@
         </div>
       </div>
       <br />
-      <div class="columns is-centered">
-        <!-- <div class="column is-3"> -->
-        <div class="column is-3 card m-2" v-for="room in rooms" :key="room.id">
+    </div>
+    <div class="container">
+      <div class="columns is-centered is-multiline">
+        <div class="column is-3 card" v-for="room in rooms" :key="room.id">
           <div class="card-image">
             <figure class="image is-4by3">
               <img
@@ -343,50 +344,52 @@
               />
             </figure>
           </div>
-          <div class="card-content">
-            <div class="media">
-              <div class="media-content">
-                <p class="title is-4">{{ room.room_type }}</p>
-                <p class="subtitle is-6">
-                  <i
-                    class="fas fa-star mt-3"
-                    style="font-size: 40px; color: rgb(244, 247, 76)"
-                  ></i>
-                  <i
-                    class="fas fa-star mt-3"
-                    style="font-size: 40px; color: rgb(244, 247, 76)"
-                  ></i>
-                  <i
-                    class="fas fa-star mt-3"
-                    style="font-size: 40px; color: rgb(244, 247, 76)"
-                  ></i>
-                  <i
-                    class="fas fa-star mt-3"
-                    style="font-size: 40px; color: rgb(244, 247, 76)"
-                  ></i>
-                  <i
-                    class="fas fa-star mt-3"
-                    style="font-size: 40px; color: rgb(244, 247, 76)"
-                  ></i>
+            <div class="card-content">
+              <div class="media">
+                <div class="media-content">
+                  <p class="title is-4">{{ room.room_type }}</p>
+                  <p class="subtitle is-6">
+                    <i
+                      class="fas fa-star mt-3"
+                      style="font-size: 40px; color: rgb(244, 247, 76)"
+                    ></i>
+                    <i
+                      class="fas fa-star mt-3"
+                      style="font-size: 40px; color: rgb(244, 247, 76)"
+                    ></i>
+                    <i
+                      class="fas fa-star mt-3"
+                      style="font-size: 40px; color: rgb(244, 247, 76)"
+                    ></i>
+                    <i
+                      class="fas fa-star mt-3"
+                      style="font-size: 40px; color: rgb(244, 247, 76)"
+                    ></i>
+                    <i
+                      class="fas fa-star mt-3"
+                      style="font-size: 40px; color: rgb(244, 247, 76)"
+                    ></i>
+                  </p>
+                </div>
+              </div>
+              <div class="content">
+                รายละเอียดห้อง
+                <br />
+                {{ room.description }}
+                <p class="title has-text-danger mt-2">
+                  THB {{ room.price }} -.
                 </p>
               </div>
             </div>
-            <div class="content">
-              รายละเอียดห้อง
-              <br />
-              {{ room.description }}
-              <p class="title has-text-danger mt-2">THB {{ room.price }} -.</p>
-            </div>
+            <footer class="card-footer">
+              <a :href="'#/detail/' + room.room_id" class="card-footer-item"
+                >เพิ่มเติม</a
+              >
+              <a href="#/booking" class="card-footer-item">จองเลย</a>
+            </footer>
           </div>
-          <footer class="card-footer">
-            <a :href="'#/detail/' + room.room_id" class="card-footer-item"
-              >เพิ่มเติม</a
-            >
-            <a href="#/booking" class="card-footer-item">จองเลย</a>
-          </footer>
         </div>
       </div>
-    </div>
     <br />
     <br />
     <br />
