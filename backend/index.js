@@ -18,12 +18,14 @@ const detailRouter = require('./routes/detail')
 const commentRouter = require('./routes/comment')
 const adminRouter = require('./routes/admin')
 const userRouter = require('./routes/user')
+const bookingRouter = require('./routes/booking')
 
 app.use(indexRouter.router)
 app.use(detailRouter.router)
 app.use(commentRouter.router)
 app.use(adminRouter.router)
 app.use(userRouter.router)
+app.use(bookingRouter.router)
 
 app.listen(3000, () => {
   console.log(`Example app listening at http://localhost:3000`)
