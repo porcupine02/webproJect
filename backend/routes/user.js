@@ -21,8 +21,8 @@ router.post('/user/login', async (req, res, next) =>{
         return res.status(400).send('Incorrect username or password')
     }
     const {username, password} = req.body
-    
-    
+
+
         console.log(username+ ' ' + password)
         const conn = await pool.getConnection()
         await conn.beginTransaction()
@@ -36,9 +36,9 @@ router.post('/user/login', async (req, res, next) =>{
                 throw new Error('Incorrect username or password')
             }
 
-          
+
             const hash = await bcrypt.hash(user.password, 5)
-          
+
             if (!(await bcrypt.compare(password, hash))) {
                 throw new Error('Incorrect username or password')
             }
@@ -47,7 +47,7 @@ router.post('/user/login', async (req, res, next) =>{
 
             let token = tokens[0]?.token
             if(!token){
-               
+
                 token = generateToken()
                 await conn.query(
                     'INSERT INTO tokens(login_id,token) VALUES(?, ?)', [user.login_id, token]
@@ -68,6 +68,12 @@ router.post('/user/login', async (req, res, next) =>{
          // req.user ถูก save ข้อมูล user จาก database ใน middleware function "isLoggedIn"
          console.log(req.user)
          res.json(req.user)
+     })
+ router.put('/changepassword',async (req, res, next) => {
+        //  console.log(req.user)
+         console.log("alsdjflaksdjflasjdfljasdlkfj")
+
+        //  res.json(req.user)
      })
 
 
