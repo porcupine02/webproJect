@@ -255,17 +255,6 @@
           <a class="navbar-item" v-if="logins == true" href="/search">
             ค้นหาห้องพัก
           </a>
-
-          <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link"> ห้องพักของเรา </a>
-
-            <div class="navbar-dropdown">
-              <a class="navbar-item" href="index.html#01"> Standard Room </a>
-              <a class="navbar-item" href="index.html#02"> Deluxe Room </a>
-              <a class="navbar-item" href="index.html#03"> Suite Room </a>
-              <a class="navbar-item" href="index.html#04"> Superior Room </a>
-            </div>
-          </div>
         </div>
         <div class="navbar-end">
           <div class="navbar-item">
@@ -280,7 +269,7 @@
               <a
                 class="button is-dark"
                 v-if="logins == true"
-                href="profile.html"
+                href="#/profile"
               >
                 <strong>My Profile {{ user.user_name }}</strong>
               </a>

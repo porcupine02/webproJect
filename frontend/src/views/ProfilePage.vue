@@ -372,15 +372,10 @@ export default {
   },
 
   created() {
+    // ยังไม่ได้ทำ ลืมไปแล้วว่าเขียนไง
+    axios.get("/user/", cus)
     this.history = JSON.parse(localStorage.getItem("book"));
-    // const arr = Array.from(localStorage.getItem('book'))
-    // this.history.push(this.books)
-    // console.log(this.history.length)
-    // const history_string = JSON.stringify(this.history);
-    // localStorage.setItem("history_string", history_string)
-    // this.history.push(this.booking)
-    // console.log(this.booking)
-    // console.log(typeof(history_string))
+
     console.log(typeof this.history);
   },
 };
