@@ -12,15 +12,15 @@
           </figure>
         </div>
         <div class="content is-size-4">
-          <strong>username</strong>
+          <strong>{{ user[0].user_name}}</strong>
           <p class="is-size-5">
-            fist_name last_name
+            {{ user[0].first_name + " " + user[0].last_name}}
             <br />
-            tel : 000000
+            tel : {{ user[0].phone }}
             <br />
-            E-mail : asdfl@gmail.com
+            E-mail : {{ user[0].email }}
             <br />
-            Birth-date : 01-01-2000
+            Birth-date : {{ user[0].DOB }}
           </p>
           <div class="button" @click="uploadFile()">Edit Profile</div>
           <div class="button" @click="changePwd()">change password</div>
@@ -67,30 +67,37 @@
       <!-- history booking operate -->
       <div class="column">
         <strong class="content is-size-5"> ประวัติการจอง </strong>
-
-        <article class="media mt-3 card p-3">
+        <article
+          class="media mt-3 card p-3"
+          v-for="booked in booking"
+          :key="booked"
+        >
           <div class="media-content">
             <div class="content has-icons-left">
               <span class="icon is-left">
                 <i class="fas fa-calendar"></i>
               </span>
-              check in : 01-01-2001
+              check in : {{ booked.check_in }}
               <span class="icon is-left">
                 <i class="fas fa-calendar"></i>
               </span>
-              check out : 01-01-2001
+              check out : {{ booked.check_out }}
               <p>
                 <!-- <br /> -->
-                <strong>John Smith</strong> <small>booking date</small>
+                <strong>{{
+                  booked.booking_fname + " " + booked.booking_lname + "    "
+                }}</strong>
+                <small>booking date {{ booked.timestamp_booking }}</small>
                 <br />
 
-                <span class="icon is-left"> <i class="fas fa-user"></i> </span>2
-                peopl
+                <span class="icon is-left"> <i class="fas fa-user"></i> </span>
+                {{ booked.people }}
+                people
 
                 <span class="icon is-left">
                   <i class="fas fa-bed"></i>
                 </span>
-                1 room
+                {{ booked.countRoom }} room
                 <br />
 
                 <span class="icon is-left">
@@ -98,220 +105,6 @@
                 </span>
                 สถานะการจ่ายเงิน :
                 <strong class="has-text-success">complate</strong>
-
-                <span class="is-size-5" style="float: right">
-                  total price
-                </span>
-              </p>
-              <div class="button">check in</div>
-              <div class="button">check out</div>
-            </div>
-          </div>
-          <div class="media-right">
-            <div class="button has-background-danger">cancel</div>
-          </div>
-        </article>
-        <article class="media mt-3 card p-3">
-          <div class="media-content">
-            <div class="content has-icons-left">
-              <span class="icon is-left">
-                <i class="fas fa-calendar"></i>
-              </span>
-              check in : 01-01-2001
-              <span class="icon is-left">
-                <i class="fas fa-calendar"></i>
-              </span>
-              check out : 01-01-2001
-              <p>
-                <!-- <br /> -->
-                <strong>John Smith</strong> <small>booking date</small>
-                <br />
-
-                <span class="icon is-left"> <i class="fas fa-user"></i> </span>2
-                peopl
-
-                <span class="icon is-left">
-                  <i class="fas fa-bed"></i>
-                </span>
-                1 room
-                <br />
-
-                <span class="icon is-left">
-                  <i class="fas fa-credit-card"></i>
-                </span>
-                สถานะการจ่ายเงิน :
-                <strong class="has-text-danger">incomplate</strong>
-
-                <span class="is-size-5" style="float: right">
-                  total price
-                </span>
-              </p>
-              <div class="button">check in</div>
-              <div class="button">check out</div>
-            </div>
-          </div>
-          <div class="media-right">
-            <div class="button has-background-danger">cancel</div>
-          </div>
-        </article>
-        <article class="media mt-3 card p-3">
-          <div class="media-content">
-            <div class="content has-icons-left">
-              <span class="icon is-left">
-                <i class="fas fa-calendar"></i>
-              </span>
-              check in : 01-01-2001
-              <span class="icon is-left">
-                <i class="fas fa-calendar"></i>
-              </span>
-              check out : 01-01-2001
-              <p>
-                <!-- <br /> -->
-                <strong>John Smith</strong> <small>booking date</small>
-                <br />
-
-                <span class="icon is-left"> <i class="fas fa-user"></i> </span>2
-                peopl
-
-                <span class="icon is-left">
-                  <i class="fas fa-bed"></i>
-                </span>
-                1 room
-                <br />
-
-                <span class="icon is-left">
-                  <i class="fas fa-credit-card"></i>
-                </span>
-                สถานะการจ่ายเงิน :
-                <strong class="has-text-success">complate</strong>
-
-                <span class="is-size-5" style="float: right">
-                  total price
-                </span>
-              </p>
-              <div class="button">check in</div>
-              <div class="button">check out</div>
-            </div>
-          </div>
-          <div class="media-right">
-            <div class="button has-background-danger">cancel</div>
-          </div>
-        </article>
-        <article class="media mt-3 card p-3">
-          <div class="media-content">
-            <div class="content has-icons-left">
-              <span class="icon is-left">
-                <i class="fas fa-calendar"></i>
-              </span>
-              check in : 01-01-2001
-              <span class="icon is-left">
-                <i class="fas fa-calendar"></i>
-              </span>
-              check out : 01-01-2001
-              <p>
-                <!-- <br /> -->
-                <strong>John Smith</strong> <small>booking date</small>
-                <br />
-
-                <span class="icon is-left"> <i class="fas fa-user"></i> </span>2
-                peopl
-
-                <span class="icon is-left">
-                  <i class="fas fa-bed"></i>
-                </span>
-                1 room
-                <br />
-
-                <span class="icon is-left">
-                  <i class="fas fa-credit-card"></i>
-                </span>
-                สถานะการจ่ายเงิน :
-                <strong class="has-text-success">complate</strong>
-
-                <span class="is-size-5" style="float: right">
-                  total price
-                </span>
-              </p>
-              <div class="button">check in</div>
-              <div class="button">check out</div>
-            </div>
-          </div>
-          <div class="media-right">
-            <div class="button has-background-danger">cancel</div>
-          </div>
-        </article>
-        <article class="media mt-3 card p-3">
-          <div class="media-content">
-            <div class="content has-icons-left">
-              <span class="icon is-left">
-                <i class="fas fa-calendar"></i>
-              </span>
-              check in : 01-01-2001
-              <span class="icon is-left">
-                <i class="fas fa-calendar"></i>
-              </span>
-              check out : 01-01-2001
-              <p>
-                <!-- <br /> -->
-                <strong>John Smith</strong> <small>booking date</small>
-                <br />
-
-                <span class="icon is-left"> <i class="fas fa-user"></i> </span>2
-                peopl
-
-                <span class="icon is-left">
-                  <i class="fas fa-bed"></i>
-                </span>
-                1 room
-                <br />
-
-                <span class="icon is-left">
-                  <i class="fas fa-credit-card"></i>
-                </span>
-                สถานะการจ่ายเงิน :
-                <strong class="has-text-success">complate</strong>
-
-                <span class="is-size-5" style="float: right">
-                  total price
-                </span>
-              </p>
-              <div class="button">check in</div>
-              <div class="button">check out</div>
-            </div>
-          </div>
-          <div class="media-right">
-            <div class="button has-background-danger">cancel</div>
-          </div>
-        </article>
-        <article class="media mt-3 card p-3">
-          <div class="media-content">
-            <div class="content has-icons-left">
-              <span class="icon is-left">
-                <i class="fas fa-calendar"></i>
-              </span>
-              check in : 01-01-2001
-              <span class="icon is-left">
-                <i class="fas fa-calendar"></i>
-              </span>
-              check out : 01-01-2001
-              <p>
-                <!-- <br /> -->
-                <strong>John Smith</strong> <small>booking date</small>
-                <br />
-
-                <span class="icon is-left"> <i class="fas fa-user"></i> </span>2
-                peopl
-
-                <span class="icon is-left">
-                  <i class="fas fa-bed"></i>
-                </span>
-                1 room
-                <br />
-
-                <span class="icon is-left">
-                  <i class="fas fa-credit-card"></i>
-                </span>
-                สถานะการจ่ายเงิน :
                 <strong class="has-text-danger">incomplate</strong>
 
                 <span class="is-size-5" style="float: right">
@@ -332,7 +125,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from "@/plugins/axios";
 export default {
   data() {
     return {
@@ -341,6 +134,7 @@ export default {
       booking: [],
       upload: false,
       pwd: false,
+      user: "",
     };
   },
   methods: {
@@ -359,7 +153,7 @@ export default {
       }
     },
     changePassword() {
-      console.log("change")
+      console.log("change");
       axios
         .put("http://localhost:3000/changepassword")
         .then((res) => {
@@ -372,11 +166,18 @@ export default {
   },
 
   created() {
-    // ยังไม่ได้ทำ ลืมไปแล้วว่าเขียนไง
-    axios.get("/user/", cus)
-    this.history = JSON.parse(localStorage.getItem("book"));
-
-    console.log(typeof this.history);
+    // user = localStorage.getItem("user");
+    this.user = localStorage.getItem("user");
+    console.log(this.user);
+    axios
+      .get(`http://localhost:3000/user/`)
+      .then((res) => {
+        this.booking = res.data.booking
+        this.user = res.data.user
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   },
 };
 </script>
