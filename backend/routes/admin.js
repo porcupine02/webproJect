@@ -226,7 +226,6 @@ router.post("/admin/create", isLoggedIn, upload.array("myImage", 5), async funct
     const service3 = req.body.service3
     const service4 = req.body.service4
     const people = req.body.people
-    const image = req.body.myImage
 
 
 
@@ -236,24 +235,20 @@ router.post("/admin/create", isLoggedIn, upload.array("myImage", 5), async funct
 
     try {
         console.log("asdfsdf")
-        // insert image and service ก่อนค่อยเอาเข้าตารางเพราะต้องใช้ id
+        // insert service ก่อนค่อยเอาเข้าตารางเพราะต้องใช้ id แล้วค่อยไป insert image
         const [ins_service] = await conn.query('insert into services(breakfast, pool, wifi, air_conditioner) value(?, ?, ?, ?)', [service1, service2, service3, service4])
-        const [room] = await conn.query('insert into roomdetail(room_type, price, description, service_id, room_img_id, people) value(?, ?, ?, ?, ?, ?)', [room_type, price, description, ins_service.insertId, image, people])
+        const [room] = await conn.query('insert into roomdetail(room_type, price, description, service_id, people) value(?, ?, ?, ?, ?)', [room_type, price, description, ins_service.insertId, people])
 
 
         req.files.forEach((file, index) => {
-            let path = [blogId, file.path.substring(6), index == 0 ? 1 : 0];
+            let path = [room.insertId, file.path.substring(6)];
             pathArray.push(path);
         });
 
-        await pool.query(
-            "INSERT INTO images(room_id, file_path) VALUES (?, ?);",
-            [room.insertId, pathArray]
+        const [img] = await pool.query(
+            "INSERT INTO images(room_id, file_path) VALUES ?",
+            [pathArray]
         );
-        console.log(image)
-
-
-
         conn.commit()
     } catch (err) {
         console.log(err)

@@ -84,7 +84,10 @@
                   class="column is-4 has-text-centered"
                   v-if="room.air_conditioner == 'yes'"
                 >
-                  <i class="fa fa-snowflake-o" style="font-size: 40px; color: #888"></i
+                  <i
+                    class="fa fa-snowflake-o"
+                    style="font-size: 40px; color: #888"
+                  ></i
                   ><br />
                   air conditioner
                 </div>

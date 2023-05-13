@@ -6,6 +6,9 @@
       </div>
     </section>
     <section class="px-6">
+      <!-- <%= error.code + ': ' + error.sqlMessage %> -->
+      <!---->
+      {{ error }}
       <input
         class="mb-5"
         multiple
@@ -13,7 +16,7 @@
         accept="image/png, image/jpeg, image/webp"
         @change="selectImages"
       />
-      <!-- image section -->
+
       <div v-if="images" class="columns is-multiline">
         <div
           v-for="(image, index) in images"
@@ -128,6 +131,7 @@ export default {
     return {
       newRoom: "",
       roomtype: [],
+      error: null,
       images: [], // array of image
       selected: "standard room",
       price: "",
@@ -142,13 +146,8 @@ export default {
   methods: {
     selectImages(event) {
       this.images = event.target.files;
-      this.images.forEach((image, index) => {
-        if (image.size > 1000000) {
-          alert("file too large");
-          this.images = Array.form(this.images);
-          this.images.splice(index, 1);
-        }
-      });
+      console.log(typeof this.images);
+      console.log(event.target.files);
     },
     showSelectImage(image) {
       // for preview only
@@ -177,6 +176,7 @@ export default {
       formData.append("service3", this.service3 ? "yes" : "no");
       formData.append("service4", this.service4 ? "yes" : "no");
       formData.append("people", this.people);
+      this.images = Array.from(this.images)
       this.images.forEach((image) => {
         if (image.size > 1000000) {
           console.log("too large image");
@@ -211,6 +211,7 @@ export default {
     },
   },
   created() {
+    this.images = Array.from(this.images);
     axios
       .get("http://localhost:3000/admin/create")
       .then((res) => {

@@ -1,4 +1,14 @@
 
+CREATE TABLE `images` (
+    `img_id` int(5) unsigned NOT NULL AUTO_INCREMENT,
+    `room_id` int(5) unsigned,
+    `file_path` varchar(50) NOT NUll,
+    `cus_id` int(5),
+    `upload_date` datetime DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`img_id`),
+) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
+
+
 CREATE TABLE `roomDetail` (
     `room_id` int(5) unsigned NOT NULL AUTO_INCREMENT,
     `room_type` varchar(25) NOT NULL,
@@ -6,10 +16,11 @@ CREATE TABLE `roomDetail` (
     `rate` int(1) unsigned DEFAULT 5,
     `description` varchar(500),
     `service_id` int(5) unsigned,
-    `room_img_id` int(2) unsigned NOT NULL,
+    `room_img_id` int(2) unsigned,
     `people`int(2) unsigned NOT NUll,
     `count` int(5) unsigned DEFAULT 0,
-    PRIMARY KEY (`room_id`)
+    PRIMARY KEY (`room_id`),
+    FOREIGN KEY (`room_img_id`) REFERENCES `images`(`img_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
 
 
@@ -38,7 +49,7 @@ CREATE TABLE `booking` (
     `countRoom` int(2) NOT NULL,
     `status` enum('booked', 'complete', 'doing') NOT NUll DEFAULT 'booked',
     PRIMARY KEY (`booking_id`),
-    FOREIGN KEY (`room_id`) REFERENCES `roomDetail`(`room_id`) ON DELETE CASCADE
+    FOREIGN KEY (`room_id`) REFERENCES `roomDetail`(`room_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
 
 CREATE INDEX booking_ibfk_2 ON booking (cus_id);
@@ -87,16 +98,6 @@ CREATE TABLE `login` (
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
 
 CREATE INDEX roomDetail_ibfk_1 ON roomDetail (room_img_id);
-CREATE TABLE `images` (
-    `img_id` int(5) unsigned NOT NULL AUTO_INCREMENT,
-    `room_id` int(5) unsigned,
-    `file_path` varchar(50) NOT NUll,
-    `cus_id` int(5),
-    `upload_date` datetime DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`img_id`),
-    FOREIGN KEY (`img_id`) REFERENCES `roomDetail`(`room_img_id`) ON DELETE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
-
 CREATE INDEX images_ibfk_1 ON images (room_id);
 
 
@@ -109,7 +110,7 @@ CREATE TABLE `payments` (
     `booking_id` int(5) unsigned NOT NULL,
     `payment_amount` int(5) NOT NUll,
     PRIMARY KEY (`payment_id`),
-    FOREIGN KEY (`booking_id`) REFERENCES `booking`(`booking_id`) ON DELETE CASCADE
+    FOREIGN KEY (`booking_id`) REFERENCES `booking`(`booking_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
 
 
@@ -129,5 +130,5 @@ CREATE TABLE `tokens` (
   `token` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `tokens_UN` (`token`),
-  FOREIGN KEY (`login_id`) REFERENCES `login` (`login_id`) ON DELETE CASCADE
+  FOREIGN KEY (`login_id`) REFERENCES `login` (`login_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;

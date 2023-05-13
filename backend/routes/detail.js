@@ -90,31 +90,38 @@ const upload = multer({ storage: storage })
 //     }
 // });
 
-router.get("/detail/:id",async function (req, res, next) {
-  try{
-    const [row_room, columns_room] = await pool.query('SELECT * FROM  roomdetail r join image i on (r.room_img_id = i.room_img_id) join services s on (r.service_id = s.service_id) WHERE r.room_id = ?',[req.params.id])
-    return res.json(row_room);
-  } catch(err){
-    res.json(err)
+router.get("/detail/:id", async function (req, res, next) {
+  try {
+    const [row_room, columns_room] = await pool.query(`
+    SELECT *
+    FROM  roomdetail r
+    join image i
+    on (r.room_img_id = i.img_id)
+    join services s
+    on (r.service_id = s.service_id)
+    WHERE r.room_id = ?`, [req.params.id])
+    return res.send(row_room);
+  } catch (err) {
+    res.send(err)
   }
 
- 
+
 
 });
 
-router.get("/search", async function(req, res, next){
-  try{
+router.get("/search", async function (req, res, next) {
+  try {
     console.log(req.query.search)
     let query = 'SELECT * FROM roomdetail r join image i using(room_img_id)'
     let params = []
-    if(req.query.search){
+    if (req.query.search) {
       query = query + 'WHERE r.room_type LIKE ?'
       params = [`%${req.query.search}%`]
     }
-   
-    const[row_room, columns_room] = await pool.query(query, params)
+
+    const [row_room, columns_room] = await pool.query(query, params)
     return res.json(row_room)
-  } catch(err){
+  } catch (err) {
     res.json(err)
   }
 })
