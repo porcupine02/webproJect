@@ -1,43 +1,53 @@
 <template>
-  <div class="container" id="Booking">
-    <div class="tile is-ancestor">
+  <div class="container" id="Booking"  >
+    <div class="tile is-ancestor" v-for="room in detalRoom" :key="room.room_id">
       <div class="tile is-parent is-8">
         <div class="tile is-child box">
           <div class="columns">
             <div class="column is-6">
               <img
-                src="https://pix10.agoda.net/hotelImages/124/1246280/1246280_16061017110043391702.jpg?ca=6&ce=1&s=1024x768"
+                :src=" room.pic1
+                    ? 'http://localhost:3000' + room.pic1
+                    : 'https://i.pinimg.com/originals/22/c0/2f/22c02f8f67b478ef00cb12bcacde588b.jpg'"
                 alt=""
               />
             </div>
             <div class="column is-6">
-              <h1>ชื่อห้องพัก</h1>
-              <h1>ประเภทห้อง</h1>
+              <h1>ชื่อห้องพัก : {{ room.room_type }}</h1> 
+              <h1>รายละเอียดห้อง</h1>
+              {{ room.description }}
+            
             </div>
           </div>
         </div>
       </div>
 
-      <div class="tile is-4 is-vertical is-parent">
+      <div class="tile is-4 is-vertical">
         <div class="tile is-child box">
           <p class="title">รายละเอียดราคา</p>
           <div class="columns">
             <div class="column is-6">
-              <p>1 ห้อง x 2 คืน</p>
+              <p>1 ห้อง x {{ countDays }} คืน</p>
             </div>
             <div class="column is-6">
-              <p>8000 Baht</p>
+              <p>{{ room.price * countDays}} บาท</p>
             </div>
           </div>
           <div class="columns ">
-             <div class="column is-6">จำนวนห้อง {{ countRoom }} ห้อง</div>
-             <div class="column is-6">16000 Baht </div>
+             <div class="column is-6">จำนวนห้อง {{ countRooms  }} ห้อง</div>
+             <div class="column is-6">{{room.price * countDays * countRooms}} บาท </div>
+          </div>
+          <!-- {{ dayNow.split('T')[0] }} -->
+          <div class="columns has-text-danger" v-if="dob == dayNow.split('T')[0]">
+             <div class="column is-6">โปรโมชั่น {{ dob }}</div>
+             <div class="column is-6">ลด 10% </div>
           </div>
           <hr>
 
           <div class="columns ">
              <div class="column is-6">ที่ต้องชำระ</div>
-             <div class="column is-6">16000 Bath</div>
+             <div class="column is-6"  v-if="dob == dayNow.split('T')[0]" >{{room.price * countDays * countRooms - (0.10 * room.price * countDays * countRooms)}} บาท</div>
+             <div class="column is-6" v-else  >{{room.price * countDays * countRooms}} บาท</div>
           </div>
           <div class="columns mt-4">
              <div class="column is-12">
@@ -70,7 +80,7 @@
               <label for="">จำนวนห้อง </label>
                <br>
               <div class="select is-rounded mt-4" >
-                <select   v-model="countRoom" >
+                <select   v-model="countRooms" >
                   <option selected value="1">1 ห้อง</option>
                   <option value="2">2 ห้อง</option>
                   <option value="3">3 ห้อง</option>
@@ -125,7 +135,7 @@
                <label for="">วันเดือนปีเกิด</label>
             </div>
             <div class="column is-4">
-               <input type="date" class="input">
+               <input type="date" class="input" v-model="dob">
             </div>
           </div>
         </div>
@@ -135,13 +145,35 @@
 </template>
 
 <script>
+import axios from "@/plugins/axios";
 export default {
   data() {
     return {
-      countRoom : 1,
-      startDate : '',
-      endDate : '',
+      countRooms : 1,
+      startDate : this.$route.query.room.split(' ')[1],
+      endDate : this.$route.query.room.split(' ')[2],
+      booking : this.$route.query.room,
+      detalRoom : null,
+      countDays : null,
+      dob : '-',
+      dayNow : null
     };
+  },
+  created(){
+    console.log(this.booking.split(' '))
+    axios
+      .get(`http://localhost:3000/booking`, {params : {room : this.booking}})
+      .then((response) => {
+        // this.rooms = response.data;
+        console.log(response.data.countDays)
+        this.detalRoom = JSON.parse(response.data.room)
+        this.countDays = JSON.parse(response.data.countDays)
+        this.dayNow = JSON.parse(response.data.dateNow)
+
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
   },
   methods: {},
 };

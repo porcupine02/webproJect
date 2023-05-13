@@ -5,7 +5,7 @@
       <div class="modal-background"></div>
       <div class="box modal-content">
         <div class="field">
-          <label class="label has-text-centered">Sign in</label>
+          <label class="label has-text-centered">ล็อคอิน</label>
         </div>
         <div class="field">
           <h1 class="label">Username {{ username }}</h1>
@@ -44,13 +44,13 @@
         </p>
         <div class="field is-grouped is-grouped">
           <p class="control">
-            <a class="button is-primary" @click="login()">Sign in</a>
+            <a class="button is-primary" @click="login()">เข้าสู่ระบบ</a>
           </p>
           <p class="control">
-            <a class="button is-danger" @click="Close()">Close</a>
+            <a class="button is-danger" @click="Close()">ปิด</a>
           </p>
         </div>
-        <router-link :to="{ name: 'Forgot' }"> FORGOT PASSWORD </router-link>
+        <router-link :to="{ name: 'Forgot' }"> ลืมรหัสผ่าน </router-link>
       </div>
     </div>
     <div :class="{ modal: modal, 'is-active': isActive_Sign_up }">
@@ -58,7 +58,7 @@
 
       <form class="box modal-content">
         <div class="field">
-          <label class="label has-text-centered">Sign up</label>
+          <label class="label has-text-centered">สมัครสมาชิก</label>
         </div>
 
         <div class="field">
@@ -116,7 +116,10 @@
               This field is required
             </p>
             <p class="help is-danger" v-else-if="!$v.sign_phone.sign_phone">
-              เบอร์โทรศัพท์ 9 ตัว
+              เบอร์โทรศัพท์ 10 ตัว
+            </p>
+            <p class="help is-danger" v-else-if="!$v.sign_phone.maxLength">
+              เบอร์โทรศัพท์ 10 ตัว
             </p>
           </template>
         </div>
@@ -196,13 +199,13 @@
           </div>
           <template v-if="$v.sign_password.$error">
             <p class="help is-danger" v-if="!$v.sign_password.required">
-              This field is required
+              กรุณากรอกข้อมูล
             </p>
             <p class="help is-danger" v-else-if="!$v.sign_password.complex">
-              easy password
+              รหัสมีความปลอดภัยน้อย
             </p>
             <p class="help is-danger" v-else-if="!$v.sign_password.minLength">
-              8
+              จำนวนตัวอักษรมากกว่า 8 ตัว
             </p>
           </template>
         </div>
@@ -220,18 +223,18 @@
           <template v-if="$v.confirm_password.$error">
             <!-- <p class="help is-danger" v-if="!$v.confirm_password.required">This field is required</p> -->
             <p class="help is-danger" v-if="!$v.confirm_password.sameAs">
-              not same
+              รหัสไม่เหมือนกัน
             </p>
           </template>
         </div>
         <div class="field is-grouped">
           <div class="control">
             <a class="button is-primary" value="submit" @click="signUp()"
-              >Sign in</a
+              >ลงทะเบียน</a
             >
           </div>
           <div class="control">
-            <a class="button is-danger" @click="Close()">Close</a>
+            <a class="button is-danger" @click="Close()">ปิด</a>
           </div>
         </div>
       </form>
@@ -264,7 +267,7 @@
                 v-if="logins == false"
                 @click="isActive_Sign_up = true"
               >
-                <strong>Sign up</strong>
+                <strong>สมัครสมาชิก</strong>
               </a>
               <a
                 class="button is-dark"
@@ -278,13 +281,13 @@
                 v-if="logins == false"
                 @click="isActive_Sign_in = true"
               >
-                Log in
+                ล็อคอิน
               </a>
               <a
                 class="button is-danger"
                 v-if="logins == true"
                 @click="logOut()"
-                >Log out</a
+                >ล็อคเอ้า</a
               >
             </div>
           </div>
@@ -296,31 +299,39 @@
       <div class="card p-6">
         <div class="columns is-centered">
           <div class="column is-4">
-            <div class="subtitle is-4">begin :</div>
+            <div class="subtitle is-4">เช็คอิน :</div>
             <div class="">
-              <input type="date" class="input" />
+              <p>{{ begin }}</p>
+              <input type="date" class="input" v-model="begin"/>
             </div>
           </div>
           <div class="column is-4">
-            <div class="subtitle is-4">end :</div>
+            <div class="subtitle is-4">เช็คเอ้าท์ :</div>
             <div class="">
-              <input type="date" class="input" />
+              <p>{{ end }}</p>
+              <input type="date" class="input"  v-model="end"/>
             </div>
           </div>
-          <div class="column is-4">
-            <div class="subtitle is-4">people</div>
+          <div class="column is-3">
+            <div class="subtitle is-4">จำนวนคน</div>
 
             <a class="button" @click="minus()">-</a>
             <a class="is-size-4 mx-4" v-if="count > 0">{{ count }}</a>
             <a class="button" @click="count++">+</a>
+
+            <a href="" class="button is-link mx-5">ค้นหา</a>
+
           </div>
+       
         </div>
       </div>
       <br />
-    </div>
-    <div class="container">
-      <div class="columns is-multiline">
-        <div class="column is-3 card m-2" v-for="room in rooms" :key="room.id">
+
+    <!-- </div> -->
+    <!-- <div class="container"> -->
+      <div class="columns  is-multiline">
+        <div class="column is-2.5 card m-2" v-for="room in rooms" :key="room.id">
+
           <div class="card-image">
             <figure class="image is-4by3">
               <img
@@ -374,10 +385,11 @@
               <a :href="'#/detail/' + room.room_id" class="card-footer-item"
                 >เพิ่มเติม</a
               >
-              <a href="#/booking" class="card-footer-item">จองเลย</a>
-            </footer>
+              <a :href="'#/booking?room=' + room.room_id + ' ' + begin + ' ' + end" class="card-footer-item">จองเลย</a>
+            </footer> 
           </div>
         </div>
+        
       </div>
     <br />
     <br />
@@ -463,7 +475,7 @@ function complexPassword(value) {
 }
 
 function phone(value) {
-  return !!value.match(/0[0-9]{9}/);
+  return  !!value.match(/0[0-9]{9}/);
 }
 
 export default {
@@ -487,6 +499,8 @@ export default {
       confirm_password: "",
       error: "",
       count: 1,
+      begin: '',
+      end : ''
     };
   },
 
@@ -523,6 +537,7 @@ export default {
     sign_phone: {
       required: required,
       sign_phone: phone,
+      maxLength: maxLength(10)
     },
     sign_dob: {
       required: required,
@@ -557,14 +572,14 @@ export default {
       this.username = "";
       this.password = "";
       this.error = "";
-      (this.sign_fname = ""),
-        (this.sign_lname = ""),
-        (this.sign_phone = ""),
-        (this.sign_dob = ""),
-        (this.sign_email = ""),
-        (this.sign_username = ""),
-        (this.sign_password = ""),
-        (this.confirm_password = ""),
+     this.sign_fname = "",
+       this.sign_lname = "",
+       this.sign_phone = "",
+       this.sign_dob = "",
+       this.sign_email = "",
+       this.sign_username = "",
+       this.sign_password = "",
+       this.confirm_password = "",
         this.$v.$reset();
     },
     login() {
@@ -598,16 +613,18 @@ export default {
       this.$v.$touch();
 
       if (!this.$v.$invalid) {
-        var data = new FormData();
-        data.append("fname", this.sign_fname);
-        data.append("lname", this.sign_lname);
-        data.append("phone", this.sign_phone);
-        data.append("dob", this.sign_dob);
-        data.append("email", this.sign_email);
-        data.append("username", this.sign_username);
-        data.append("password", this.sign_password);
-        console.log(this.sign_fname);
-        // if(this.sign_fname != '' && this.sign_lname != '' && this.sign_phone != ''&& this.sign_dob !=''&& this.sign_email !='' && this.sign_username !='' && this.sign_pass !='' ){
+
+        var data = {
+          fname : this.sign_fname,
+          lname : this.sign_lname,
+          phone : this.sign_phone,
+          dob : this.sign_dob,
+          email : this.sign_email,
+          username : this.sign_username,
+          confirm_password: this.confirm_password,
+          password : this.sign_password 
+        }
+
         axios
           .post("http://localhost:3000/signUp", data)
           .then((response) => {
@@ -620,12 +637,7 @@ export default {
             this.error = error.response.error;
             console.log(error.response.error);
           });
-        // }
-
-        // else{
-        //   alert('กรอกข้อมูลให้ครบครับ')
-
-        // }
+   
       }
     },
   },

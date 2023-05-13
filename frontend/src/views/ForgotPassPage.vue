@@ -42,7 +42,7 @@
 
     <div class="box modal-content" style="margin-top : 300px" v-if="isActive_username == true">
         <div class="field">
-          <label class="label has-text-centered">Sign in</label>
+          <label class="label has-text-centered">เมลที่ใช้ลงทะเบียน</label>
         </div>
         <div class="field">
           <h1 class="label">Email {{ email }}</h1>
@@ -51,7 +51,7 @@
               class="input"
               type="email"
               placeholder="e.g. alex@example.com"
-              v-model="email"
+              v-model="sign_username"
             />
           </div>
         </div>
@@ -123,7 +123,7 @@ export default {
       forgot(){
 
         var data ={
-            email : this.email
+            username : this.sign_username
         }
          axios.post('http://localhost:3000/forgot', data).then(response => {
             console.log(response.data)
@@ -147,7 +147,7 @@ export default {
       },
       editPass(){
         var data = {
-            email : this.email,
+            username : this.sign_username,
             password : this.password 
         }
         axios.put('http://localhost:3000/forgot',data).then(response => {
