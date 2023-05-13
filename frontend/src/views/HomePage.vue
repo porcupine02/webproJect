@@ -322,7 +322,7 @@
             <a href="" class="button is-link mx-5">ค้นหา</a>
 
           </div>
-       
+
         </div>
       </div>
       <br />
@@ -386,10 +386,10 @@
                 >เพิ่มเติม</a
               >
               <a :href="'#/booking?room=' + room.room_id + ' ' + begin + ' ' + end" class="card-footer-item">จองเลย</a>
-            </footer> 
+            </footer>
           </div>
         </div>
-        
+
       </div>
     <br />
     <br />
@@ -622,7 +622,7 @@ export default {
           email : this.sign_email,
           username : this.sign_username,
           confirm_password: this.confirm_password,
-          password : this.sign_password 
+          password : this.sign_password
         }
 
         axios
@@ -637,7 +637,7 @@ export default {
             this.error = error.response.error;
             console.log(error.response.error);
           });
-   
+
       }
     },
   },

@@ -13,7 +13,7 @@
         accept="image/png, image/jpeg, image/webp"
         @change="selectImages"
       />
-      <!-- image section -->
+
       <!-- <div v-if="images" class="columns is-multiline">
         <div
           v-for="(image, index) in images"
@@ -191,7 +191,7 @@ export default {
   },
   created() {
     axios
-      .get("http://localhost:3000/admin/create")
+      .get("http://localhost:3000/admin/update")
       .then((res) => {
         this.roomtype = res.data;
         console.log(res.data);

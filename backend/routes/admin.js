@@ -182,6 +182,23 @@ router.get("/admin/vacantroom/", async function (req, res, next) {
         console.log(err)
     }
 });
+
+// update roomdetail
+router.put("/admin/update/:roomId", async function (req, res, next) {
+    const roomId = req.params.roomId
+    const [[serviceId]] = await pool.query('select service_id from roomdetail where room_id = ?', [roomId])
+    const [[imgId]] = await pool.query('select room_img_id from roomdetail where room_id = ?', [roomId])
+    try {
+        console.log(req)
+        res.send({ service: serviceId, img: imgId })
+
+
+    } catch (err) {
+        console.log(err)
+    }
+})
+
+
 router.get("/admin/create", async function (req, res, next) {
     try {
         const [roomtype, field] = await pool.query("select distinct room_type from roomdetail")
