@@ -41,7 +41,7 @@ CREATE TABLE `customers` (
     FOREIGN KEY (`cus_id`) REFERENCES `reports`(`cus_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
 
-CREATE TABLE `log_in` (
+CREATE TABLE `login` (
     `login_id` int(5) unsigned NOT NULL AUTO_INCREMENT,
     `cus_id` int(5) unsigned NOT NULL,
     `username` varchar(25) NOT NULL,
@@ -60,7 +60,7 @@ CREATE TABLE `images` (
     PRIMARY KEY (`img_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
 
-CREATE INDEX customers_ibfk_2 ON images (room_id);
+CREATE INDEX images_ibfk_1 ON images (room_id);
 
 CREATE TABLE `roomDetail` (
     `room_id` int(5) unsigned NOT NULL AUTO_INCREMENT,
@@ -118,7 +118,7 @@ CREATE TABLE `unvalible_room` (
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
 
 
-CREATE INDEX tokens_ibfk_1 ON log_in (login_id);
+CREATE INDEX tokens_ibfk_1 ON login (login_id);
 
 CREATE TABLE `tokens` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
@@ -126,5 +126,5 @@ CREATE TABLE `tokens` (
   `token` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `tokens_UN` (`token`),
-  FOREIGN KEY (`login_id`) REFERENCES `log_in` (`login_id`) ON DELETE CASCADE
+  FOREIGN KEY (`login_id`) REFERENCES `login` (`login_id`) ON DELETE CASCADE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;

@@ -30,7 +30,7 @@ router.post('/user/login', async (req, res, next) => {
     await conn.beginTransaction()
 
     try {
-        const [users] = await conn.query('SELECT * FROM login WHERE user_name = ?', [username])
+        const [users] = await conn.query('SELECT * FROM login WHERE username = ?', [username])
         //  console.log(users[0].password)
         const user = users[0]
         console.log(user)
@@ -81,7 +81,7 @@ const passwordValidator = (value, helpers) => {
 }
 
 const usernameValidator = async (value, helpers) => {
-    const [rows, _] = await pool.query("SELECT user_name FROM login WHERE user_name = ?", [value])
+    const [rows, _] = await pool.query("SELECT username FROM login WHERE username = ?", [value])
     console.log(rows)
     if (rows.length > 0) {
         const message = 'มีชื่อ ซ้ำ'
@@ -103,19 +103,19 @@ const signUpSchema = Joi.object({
 })
 
 router.post('/signUp', async function(req, res, next){
-     
+
     try {
         await signUpSchema.validateAsync(req.body, { abortEarly: false })
     } catch (err) {
         return res.status(400).send(err)
     }
 
-      
-    console.log(req.body)
-   
-  
 
-  
+    console.log(req.body)
+
+
+
+
       const conn = await pool.getConnection()
       // Begin transaction
       await conn.beginTransaction();
@@ -127,36 +127,36 @@ router.post('/signUp', async function(req, res, next){
       const email = req.body.email
       const username = req.body.username
       const password = req.body.password
-  
+
       try {
           let results =  await conn.query(
           'INSERT INTO customers ( first_name, last_name, phone, email, DOB) VALUES (?, ?, ?, ?, ?)', [fname, lname, phone, email, dob]
         )
-       
+
         const cusId = results[0].insertId;
         console.log(cusId)
-  
+
         await conn.query(
-          'INSERT INTO login (cus_id, user_name, password, login_role) VALUES (?, ?, ?, 2)', [cusId, username, password]
+          'INSERT INTO login (cus_id, username, password, login_role) VALUES (?, ?, ?, 2)', [cusId, username, password]
         )
-      
+
         conn.commit()
         res.status(201).send()
         // res.send('true')
       } catch (err) {
          conn.rollback();
          res.status(400).json(err.toString());
-      
+
       } finally {
-       
+
         conn.release();
       }
-        
-      
+
+
   })
 
   const usernameForgotValidator = async (value, helpers) => {
-    const [rows, _] = await pool.query("SELECT user_name FROM login WHERE user_name = ?", [value])
+    const [rows, _] = await pool.query("SELECT username FROM login WHERE username = ?", [value])
     console.log(rows)
     if (rows.length == 0) {
         const message = 'ไม่มีชื่อนี้'
@@ -185,13 +185,13 @@ router.post('/signUp', async function(req, res, next){
     } catch(err){
         return res.status(400).send('ใส่ชื่อผิด')
     }
-  
+
       try {
         // console.log(req.body)
         const [rows, fields] = await pool.query(
-           'SELECT password FROM login WHERE user_name = ?', [req.body.username]
+           'SELECT password FROM login WHERE username = ?', [req.body.username]
         );
-  
+
         if(!rows){
           res.json('Wrong')
         }
@@ -200,7 +200,7 @@ router.post('/signUp', async function(req, res, next){
         return next(err)
       }
   })
-  
+
   router.put('/forgot', async function(req, res, next){
 
     try{
@@ -212,7 +212,7 @@ router.post('/signUp', async function(req, res, next){
 
      try{
         console.log(req.body)
-        const [rows, fields] = await pool.query('UPDATE login set password = ? WHERE user_name = ?', [req.body.password, req.body.username])
+        const [rows, fields] = await pool.query('UPDATE login set password = ? WHERE username = ?', [req.body.password, req.body.username])
         res.json(rows)
      } catch(err){
         console.log(err)
