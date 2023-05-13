@@ -1,4 +1,37 @@
 
+CREATE TABLE `roomDetail` (
+    `room_id` int(5) unsigned NOT NULL AUTO_INCREMENT,
+    `room_type` varchar(25) NOT NULL,
+    `price` int(10) NOT NULL,
+    `rate` int(1) unsigned DEFAULT 5,
+    `description` varchar(500),
+    `service_id` int(5) unsigned,
+    `room_img_id` int(2) unsigned NOT NULL,
+    `people`int(2) unsigned NOT NUll,
+    `count` int(5) unsigned DEFAULT 0,
+    PRIMARY KEY (`room_id`)
+) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
+
+
+
+CREATE TABLE `booking` (
+    `booking_id` int(5) unsigned NOT NULL AUTO_INCREMENT,
+    `cus_id` int(5) unsigned NOT NULL,
+    `room_id` int(5) unsigned NOT NULL,
+    `price` int(10) unsigned NOT NUll,
+    `check_in` date NOT NULL,
+    `check_out` date NOT NULL,
+    `booking_fname` varchar(50) NOT NULL,
+    `booking_lname` varchar(50) NOT NULL,
+    `timestamp_booking` datetime NOT NULL,
+    `people` int(1) NOT NULL,
+    `countRoom` int(2) NOT NULL,
+    `status` enum('booked', 'complete', 'doing') NOT NUll DEFAULT 'booked',
+    PRIMARY KEY (`booking_id`),
+    FOREIGN KEY (`room_id`) REFERENCES `roomDetail`(`room_id`) ON DELETE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
+
+CREATE INDEX booking_ibfk_1 ON booking (cus_id);
 CREATE TABLE `customers` (
     `cus_id` int(5) unsigned NOT NULL AUTO_INCREMENT,
     `first_name` varchar(50) NOT NULL,
@@ -7,6 +40,7 @@ CREATE TABLE `customers` (
     `email` varchar(100) NOT NULL,
     `DOB` date NOT NUll,
     PRIMARY KEY (`cus_id`),
+    FOREIGN KEY (`cus_id`) REFERENCES `booking`(`cus_id`) ON DELETE CASCADE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
 
 
@@ -53,50 +87,19 @@ CREATE TABLE `login` (
     FOREIGN KEY (`cus_id`) REFERENCES `customers`(`cus_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
 
+CREATE INDEX roomDetail_ibfk_1 ON roomDetail (room_img_id);
 CREATE TABLE `images` (
     `img_id` int(5) unsigned NOT NULL AUTO_INCREMENT,
     `room_id` int(5) unsigned,
     `file_path` varchar(50) NOT NUll,
     `cus_id` int(5),
     `upload_date` datetime DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`img_id`)
+    PRIMARY KEY (`img_id`),
+    FOREIGN KEY (`img_id`) REFERENCES `roomDetail`(`room_img_id`) ON DELETE CASCADE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
 
 CREATE INDEX images_ibfk_1 ON images (room_id);
 
-CREATE TABLE `roomDetail` (
-    `room_id` int(5) unsigned NOT NULL AUTO_INCREMENT,
-    `room_type` varchar(25) NOT NULL,
-    `price` int(10) NOT NULL,
-    `rate` int(1) unsigned DEFAULT 5,
-    `description` varchar(500),
-    `service_id` int(5) unsigned,
-    `room_img_id` int(2) unsigned NOT NULL,
-    `people`int(2) unsigned NOT NUll,
-    `count` int(5) unsigned DEFAULT 0,
-    PRIMARY KEY (`room_id`),
-    FOREIGN KEY (`room_img_id`) REFERENCES `images`(`img_id`) ON DELETE CASCADE,
-    FOREIGN KEY (`service_id`) REFERENCES `services`(`service_id`) ON DELETE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
-
-
-CREATE TABLE `booking` (
-    `booking_id` int(5) unsigned NOT NULL AUTO_INCREMENT,
-    `cus_id` int(5) unsigned NOT NULL,
-    `room_id` int(5) unsigned NOT NULL,
-    `price` int(10) unsigned NOT NUll,
-    `check_in` date NOT NULL,
-    `check_out` date NOT NULL,
-    `booking_fname` varchar(50) NOT NULL,
-    `booking_lname` varchar(50) NOT NULL,
-    `timestamp_booking` datetime NOT NULL,
-    `people` int(1) NOT NULL,
-    `countRoom` int(2) NOT NULL,
-    `status` enum('booked', 'complete', 'doing') NOT NUll DEFAULT 'booked',
-    PRIMARY KEY (`booking_id`),
-    FOREIGN KEY (`cus_id`) REFERENCES `customers`(`cus_id`) ON DELETE CASCADE,
-    FOREIGN KEY (`room_id`) REFERENCES `roomDetail`(`room_id`) ON DELETE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
 
 
 CREATE TABLE `payments` (
@@ -112,11 +115,10 @@ CREATE TABLE `payments` (
 
 
 CREATE TABLE `unvalible_room` (
-    `room_id` int(5) unsigned NOT NULL AUTO_INCREMENT,
+    `room_id` int(5) unsigned NOT NULL,
     `count` int(2) NOT NULL,
     `date` date NOT NUll,
-    PRIMARY KEY (`date`, `room_id`),
-    FOREIGN KEY (`room_id`) REFERENCES `roomDetail`(`room_id`) ON DELETE CASCADE
+    PRIMARY KEY (`date`, `room_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
 
 

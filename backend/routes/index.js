@@ -9,8 +9,11 @@ router = express.Router();
 
 router.get("/",async function (req, res, next) {
   try {
+    // const [rows, fields] = await pool.query(
+    //    'SELECT * FROM  roomdetail r join images i on (r.room_img_id = i.img_id) join services s on (r.service_id = s.service_id) '
+    // );
     const [rows, fields] = await pool.query(
-       'SELECT * FROM  roomdetail r join images i on (r.room_img_id = i.img_id) join services s on (r.service_id = s.service_id) '
+       'SELECT * FROM  roomdetail'
     );
     return res.json(rows);
   } catch (err) {

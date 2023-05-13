@@ -236,6 +236,7 @@ router.post("/admin/create", async function (req, res, next) {
     const service2 = req.body.service2
     const service3 = req.body.service3
     const service4 = req.body.service4
+    const people = req.body.people
 
     const conn = await pool.getConnection()
     await conn.beginTransaction();
@@ -244,7 +245,7 @@ router.post("/admin/create", async function (req, res, next) {
         console.log("asdfsdf")
         // insert image and service ก่อนค่อยเอาเข้าตารางเพราะต้องใช้ id
         const [ins_service] = await conn.query('insert into services(breakfast, pool, wifi, air_conditioner) value(?, ?, ?, ?)', [service1, service2, service3, service4])
-        await conn.query('insert into roomdetail(room_type, price, description, service_id, room_img_id) value(?, ?, ?, ?, 1)', [room_type, price, description, ins_service.insertId])
+        await conn.query('insert into roomdetail(room_type, price, description, service_id, room_img_id, people) value(?, ?, ?, ?, 1, ?)', [room_type, price, description, ins_service.insertId, people])
         conn.commit()
     } catch (err) {
         console.log(err)

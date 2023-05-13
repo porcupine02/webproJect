@@ -506,7 +506,6 @@ export default {
 
   created() {
     console.log(this.user);
-
     if (localStorage.getItem("user") != null) {
       this.logins = true;
     } else {

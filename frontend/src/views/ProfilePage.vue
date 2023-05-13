@@ -140,6 +140,7 @@ export default {
   methods: {
     uploadFile() {
       if (!this.upload) {
+        this.pwd = false;
         this.upload = true;
       } else {
         this.upload = false;
@@ -147,6 +148,7 @@ export default {
     },
     changePwd() {
       if (!this.pwd) {
+        this.upload = false;
         this.pwd = true;
       } else {
         this.pwd = false;

@@ -98,6 +98,14 @@
         </div>
       </div>
 
+
+      <div class="field">
+        <label class="label">จำนวนคนที่เหมาะกับห้องนี้</label>
+        <div class="control">
+          <input class="input column is-2" type="number" v-model="people" />
+        </div>
+      </div>
+
       <hr />
 
       <div class="field is-grouped">
@@ -128,6 +136,7 @@ export default {
       service2: false,
       service3: false,
       service4: false,
+      people: ""
     };
   },
   methods: {
@@ -175,6 +184,7 @@ export default {
         service2: this.service2 ? "yes" : "no",
         service3: this.service3 ? "yes" : "no",
         service4: this.service4 ? "yes" : "no",
+        people: this.people
       };
 
       console.log(formData);
