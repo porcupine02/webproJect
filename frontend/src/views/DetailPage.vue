@@ -3,32 +3,13 @@
     <!-- content -->
     <div class="container" v-for="room in rooms" :key="room">
       <!-- left -->
-
       <div class="columns mx-6">
         <div class="column is-6">
-          <img :src="'http://localhost:3000/' + room.pic1" alt="" />
+          <img :src="'http://localhost:3000/' + images[0].file_path" alt="" />
           <div class="columns">
-            <div class="column">
+            <div class="column" v-for="image in images" :key="image">
               <img
-                :src="'http://localhost:3000/' + room.pic1"
-                alt="picture room"
-              />
-            </div>
-            <div class="column">
-              <img
-                :src="'http://localhost:3000/' + room.pic2"
-                alt="picture room"
-              />
-            </div>
-            <div class="column">
-              <img
-                :src="'http://localhost:3000/' + room.pic3"
-                alt="picture room"
-              />
-            </div>
-            <div class="column">
-              <img
-                :src="'http://localhost:3000/' + room.pic4"
+                :src="'http://localhost:3000/' + image.file_path"
                 alt="picture room"
               />
             </div>
@@ -241,14 +222,16 @@ export default {
   data() {
     return {
       rooms: null,
+      images: null,
     };
   },
   created() {
     axios
       .get(`http://localhost:3000/detail/${this.$route.params.id}`)
       .then((response) => {
-        this.rooms = response.data;
-        console.log(this.rooms);
+        this.rooms = response.data.room;
+        this.images = response.data.images;
+        console.log(this.images);
       })
       .catch((err) => {
         console.log(err);

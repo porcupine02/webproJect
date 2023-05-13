@@ -92,15 +92,13 @@ const upload = multer({ storage: storage })
 
 router.get("/detail/:id", async function (req, res, next) {
   try {
-    const [row_room, columns_room] = await pool.query(`
-    SELECT *
-    FROM  roomdetail r
-    join image i
-    on (r.room_img_id = i.img_id)
-    join services s
-    on (r.service_id = s.service_id)
-    WHERE r.room_id = ?`, [req.params.id])
-    return res.send(row_room);
+    const [row_room, columns_room] = await pool.query(`SELECT * FROM  roomdetail r join services s using (service_id) where r.room_id = ?`, [req.params.id])
+    const [images, fields] = await pool.query(`select file_path from images where room_id = ?`, [req.params.id])
+
+    return res.send({
+      room: row_room,
+      images: images
+    });
   } catch (err) {
     res.send(err)
   }
