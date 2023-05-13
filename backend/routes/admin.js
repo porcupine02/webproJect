@@ -6,15 +6,36 @@ const multer = require('multer');
 const Joi = require("joi");
 const { isLoggedIn } = require("../middlewares");
 
+
+// SET STORAGE
 var storage = multer.diskStorage({
     destination: function (req, file, callback) {
-        callback(null, './public/imagehotel')
+        callback(null, "./static/imagehotel");
     },
     filename: function (req, file, callback) {
-        callback(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
-    }
-})
-const upload = multer({ storage: storage })
+        callback(
+            null,
+            file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+        );
+    },
+});
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 1 * 1024 * 1024 }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -72,132 +93,90 @@ router.put("/admin/updateroom/:id", async function (req, res, next) {
     }
 });
 
-// create
-router.post("/admin/addroom", upload.single('pic1'), async function (req, res, next) {
-    // เอารูปไปใส่ใน img table ก่อนแล้ว ดึง room_img_id มาใช้
+// // create
+// router.post("/admin/addroom", upload.single('pic1'), async function (req, res, next) {
+//     // เอารูปไปใส่ใน img table ก่อนแล้ว ดึง room_img_id มาใช้
 
-    const conn = await pool.getConnection()
-    await conn.beginTransaction();
+//     const conn = await pool.getConnection()
+//     await conn.beginTransaction();
 
-    try {
-        const room_type = req.body.room_type;
-        const price = req.body.price;
-        const description = req.body.description;
+//     try {
+//         const room_type = req.body.room_type;
+//         const price = req.body.price;
+//         const description = req.body.description;
 
-        let pic1 = req.file;
-        let pic2 = req.body.pic2;
-        let pic3 = req.body.pic3;
-        let pic4 = req.body.pic4;
-        if (pic2 = undefined) {
-            pic2 = null
-        }
-        if (pic3 = undefined) {
-            pic3 = null
-        }
-        if (pic4 = undefined) {
-            pic4 = null
-        }
-        let breakfast = req.body.breakfast;
-        let pools = req.body.pool;
-        let wifi = req.body.wifi;
-        let air_conditioner = req.body.air;
-        if (!breakfast) {
-            breakfast = "no";
-        }
-        if (!pools) {
-            pools = "no";
-        }
-        if (!wifi) {
-            wifi = "no";
-        }
-        if (!air_conditioner) {
-            air_conditioner = "no";
-        }
+//         let pic1 = req.file;
+//         let pic2 = req.body.pic2;
+//         let pic3 = req.body.pic3;
+//         let pic4 = req.body.pic4;
+//         if (pic2 = undefined) {
+//             pic2 = null
+//         }
+//         if (pic3 = undefined) {
+//             pic3 = null
+//         }
+//         if (pic4 = undefined) {
+//             pic4 = null
+//         }
+//         let breakfast = req.body.breakfast;
+//         let pools = req.body.pool;
+//         let wifi = req.body.wifi;
+//         let air_conditioner = req.body.air;
+//         if (!breakfast) {
+//             breakfast = "no";
+//         }
+//         if (!pools) {
+//             pools = "no";
+//         }
+//         if (!wifi) {
+//             wifi = "no";
+//         }
+//         if (!air_conditioner) {
+//             air_conditioner = "no";
+//         }
 
-        const [services, fields4] = await conn.query(" insert into services(breakfast, pool, wifi, air_conditioner) value(?,?,?,?)",
-            [breakfast, pools, wifi, air_conditioner])
-        const serviceId = services.insertId
-        console.log(serviceId)
-
-
-
-        const [img, fields1] = await conn.query(" insert into image(pic1, pic2, pic3, pic4) values(?,?,?,?)",
-            [pic1.path.substr(6), pic2, pic3, pic4])
-        const imgId = img.insertId
-        console.log(imgId)
-        // res.send("addd image complete!")
-        const [room, fields3] = await conn.query(" insert into roomdetail(room_type, price, description, room_img_id, service_id) value(?,?,?,?,?)",
-            [room_type, price, description, imgId, serviceId])
-
-        conn.commit()
-        res.redirect("/admin")
-
-    } catch (err) {
-        console.log(err)
-        await conn.rollback();
-        return next(error)
-    } finally {
-        console.log('finally')
-        conn.release();
-    }
-});
-
-
-// insert vacantroom
-router.post("/admin/vacantroom/:roomId", async function (req, res, next) {
-    var start = new Date(req.query.start);
-    var end = new Date(req.query.end);
-
-
-    var loop = new Date(start);
-    while (loop <= end) {
-        console.log("aksdfjlksdaf")
-        const [vacant, field] = await pool.query("insert into vacantroom(room_id, count, date) value(?,?,?)",
-            [req.params.roomId, 10, loop])
-        var newDate = loop.setDate(loop.getDate() + 1);
-        loop = new Date(newDate);
-    }
-
-
-    // const start = req.query.start
-    // const end = req.query.end
-    // console.log(req.query.count)
-    // res.send({ start: start, id: req.params.roomId })
-    // for (x = start; x <= end; x++) {
-    //     console.log(x)
-    //     const [vacant, field] = await pool.query("insert into vacantroom(room_id, count, date) value(?,?,?)",
-    //         [req.params.roomId, 10, x])
-    //     console.log(req.params.roomId)
-
-    // }
-});
+//         const [services, fields4] = await conn.query(" insert into services(breakfast, pool, wifi, air_conditioner) value(?,?,?,?)",
+//             [breakfast, pools, wifi, air_conditioner])
+//         const serviceId = services.insertId
+//         console.log(serviceId)
 
 
 
-router.get("/admin/vacantroom/", async function (req, res, next) {
-    try {
-        const [vacantroom, field] = await pool.query("select * from vacantroom")
-        console.log(vacantroom)
-        res.send({ vacantroom: JSON.stringify(vacantroom) })
-    } catch (err) {
-        console.log(err)
-    }
-});
+//         const [img, fields1] = await conn.query(" insert into image(pic1, pic2, pic3, pic4) values(?,?,?,?)",
+//             [pic1.path.substr(6), pic2, pic3, pic4])
+//         const imgId = img.insertId
+//         console.log(imgId)
+//         // res.send("addd image complete!")
+//         const [room, fields3] = await conn.query(" insert into roomdetail(room_type, price, description, room_img_id, service_id) value(?,?,?,?,?)",
+//             [room_type, price, description, imgId, serviceId])
+
+//         conn.commit()
+//         res.redirect("/admin")
+
+//     } catch (err) {
+//         console.log(err)
+//         await conn.rollback();
+//         return next(error)
+//     } finally {
+//         console.log('finally')
+//         conn.release();
+//     }
+// });
 
 // update roomdetail
-router.put("/admin/update/:roomId", async function (req, res, next) {
-    const roomId = req.params.roomId
-    const [[serviceId]] = await pool.query('select service_id from roomdetail where room_id = ?', [roomId])
-    const [[imgId]] = await pool.query('select room_img_id from roomdetail where room_id = ?', [roomId])
-    try {
-        console.log(req)
-        res.send({ service: serviceId, img: imgId })
+// router.put("/admin/update/:roomId", async function (req, res, next) {
+//     const roomId = req.params.roomId
+//     const [[serviceId]] = await pool.query('select service_id from roomdetail where room_id = ?', [roomId])
+//     const [[imgId]] = await pool.query('select room_img_id from roomdetail where room_id = ?', [roomId])
+//     try {
+//         console.log(req)
+//         res.send({ service: serviceId, img: imgId })
 
 
-    } catch (err) {
-        console.log(err)
-    }
-})
+//     } catch (err) {
+//         console.log(err)
+//     }
+// })
 
 
 router.get("/admin/create", isLoggedIn, async function (req, res, next) {
@@ -223,7 +202,7 @@ const checkCreate = Joi.object({
     service4: Joi.valid('yes', 'no').required(),
     people: Joi.number().required(),
 })
-router.post("/admin/create", isLoggedIn, async function (req, res, next) {
+router.post("/admin/create", isLoggedIn, upload.array("myImage", 5), async function (req, res, next) {
     // add people
     try {
         await checkCreate.validateAsync(req.body, { abortEarly: false })
@@ -231,6 +210,14 @@ router.post("/admin/create", isLoggedIn, async function (req, res, next) {
         console.log(err)
         return res.status(400).send(err)
     }
+
+    const file = req.files;
+    let pathArray = [];
+
+    if (!file) {
+        return res.status(400).json({ message: "Please upload a file" });
+    }
+
     const room_type = req.body.room_type
     const price = req.body.price
     const description = req.body.description
@@ -239,6 +226,10 @@ router.post("/admin/create", isLoggedIn, async function (req, res, next) {
     const service3 = req.body.service3
     const service4 = req.body.service4
     const people = req.body.people
+    const image = req.body.myImage
+
+
+
 
     const conn = await pool.getConnection()
     await conn.beginTransaction();
@@ -247,7 +238,22 @@ router.post("/admin/create", isLoggedIn, async function (req, res, next) {
         console.log("asdfsdf")
         // insert image and service ก่อนค่อยเอาเข้าตารางเพราะต้องใช้ id
         const [ins_service] = await conn.query('insert into services(breakfast, pool, wifi, air_conditioner) value(?, ?, ?, ?)', [service1, service2, service3, service4])
-        await conn.query('insert into roomdetail(room_type, price, description, service_id, room_img_id, people) value(?, ?, ?, ?, 1, ?)', [room_type, price, description, ins_service.insertId, people])
+        const [room] = await conn.query('insert into roomdetail(room_type, price, description, service_id, room_img_id, people) value(?, ?, ?, ?, ?, ?)', [room_type, price, description, ins_service.insertId, image, people])
+
+
+        req.files.forEach((file, index) => {
+            let path = [blogId, file.path.substring(6), index == 0 ? 1 : 0];
+            pathArray.push(path);
+        });
+
+        await pool.query(
+            "INSERT INTO images(room_id, file_path) VALUES (?, ?);",
+            [room.insertId, pathArray]
+        );
+        console.log(image)
+
+
+
         conn.commit()
     } catch (err) {
         console.log(err)

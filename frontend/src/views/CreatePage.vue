@@ -14,7 +14,7 @@
         @change="selectImages"
       />
       <!-- image section -->
-      <!-- <div v-if="images" class="columns is-multiline">
+      <div v-if="images" class="columns is-multiline">
         <div
           v-for="(image, index) in images"
           :key="image.id"
@@ -35,7 +35,7 @@
             </footer>
           </div>
         </div>
-      </div> -->
+      </div>
 
       <div class="field mt-5">
         <label class="label">ประเภทห้องพัก</label>
@@ -128,6 +128,7 @@ export default {
     return {
       newRoom: "",
       roomtype: [],
+      images: [], // array of image
       selected: "standard room",
       price: "",
       description: "",
@@ -141,6 +142,13 @@ export default {
   methods: {
     selectImages(event) {
       this.images = event.target.files;
+      this.images.forEach((image, index) => {
+        if (image.size > 1000000) {
+          alert("file too large");
+          this.images = Array.form(this.images);
+          this.images.splice(index, 1);
+        }
+      });
     },
     showSelectImage(image) {
       // for preview only
@@ -157,25 +165,45 @@ export default {
       if (this.selected == 0) {
         this.selected = this.newRoom;
       }
+      // this.images.forEach((image) => {
+      //   formData.append("myImage", image);
+      // });
+      let formData = new FormData();
+      formData.append("room_type", this.selected);
+      formData.append("description", this.description);
+      formData.append("price", this.price);
+      formData.append("service1", this.service1 ? "yes" : "no");
+      formData.append("service2", this.service2 ? "yes" : "no");
+      formData.append("service3", this.service3 ? "yes" : "no");
+      formData.append("service4", this.service4 ? "yes" : "no");
+      formData.append("people", this.people);
+      this.images.forEach((image) => {
+        if (image.size > 1000000) {
+          console.log("too large image");
+        }
+        formData.append("myImage", image);
+      });
 
-      let formData = {
-        room_type: this.selected,
-        description: this.description,
-        price: this.price,
-        service1: this.service1 ? "yes" : "no",
-        service2: this.service2 ? "yes" : "no",
-        service3: this.service3 ? "yes" : "no",
-        service4: this.service4 ? "yes" : "no",
-        people: this.people,
-      };
+      // let formData = {
+      //   room_type: this.selected,
+      //   description: this.description,
+      //   price: this.price,
+      //   service1: this.service1 ? "yes" : "no",
+      //   service2: this.service2 ? "yes" : "no",
+      //   service3: this.service3 ? "yes" : "no",
+      //   service4: this.service4 ? "yes" : "no",
+      //   people: this.people,
+      //   myImage: this.images,
+      // };
+      console.log(formData);
 
       axios
         .post("http://localhost:3000/admin/create", formData)
         .then((res) => {
           console.log(res);
-          this.$router.push({
-            name: "Home",
-          });
+          // this.$router.push({
+          //   name: "Home",
+          // });
         })
         .catch((error) => {
           console.log(error);
