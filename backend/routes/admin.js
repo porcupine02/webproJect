@@ -248,16 +248,14 @@ router.post("/admin/create", isLoggedIn, async function (req, res, next) {
         // insert image and service ก่อนค่อยเอาเข้าตารางเพราะต้องใช้ id
         const [ins_service] = await conn.query('insert into services(breakfast, pool, wifi, air_conditioner) value(?, ?, ?, ?)', [service1, service2, service3, service4])
         await conn.query('insert into roomdetail(room_type, price, description, service_id, room_img_id, people) value(?, ?, ?, ?, 1, ?)', [room_type, price, description, ins_service.insertId, people])
-
         conn.commit()
-        res.status(201)
     } catch (err) {
         console.log(err)
         conn.rollback()
     } finally {
         conn.release()
         console.log("finally")
-        res.status(201)
+        res.status(201).send('complate')
     }
 });
 

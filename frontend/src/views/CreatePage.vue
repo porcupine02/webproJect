@@ -98,7 +98,6 @@
         </div>
       </div>
 
-
       <div class="field">
         <label class="label">จำนวนคนที่เหมาะกับห้องนี้</label>
         <div class="control">
@@ -136,7 +135,7 @@ export default {
       service2: false,
       service3: false,
       service4: false,
-      people: ""
+      people: "",
     };
   },
   methods: {
@@ -155,23 +154,6 @@ export default {
     submitNewRoom() {
       console.log("submit");
 
-      //   let formData = new FormData();
-      //   console.log(this.selected)
-      //   formData.append("room_type", this.selected);
-      //   console.log(formData.room_type)
-      //   formData.append("description", this.description);
-      //   formData.append("price", this.price);
-      //   formData.append("service1", this.service1 ? "yes" : "no");
-      //   formData.append("service2", this.service2 ? "yes" : "no");
-      //   formData.append("service3", this.service3 ? "yes" : "no");
-      //   formData.append("service4", this.service4 ? "yes" : "no");
-      //   this.images.forEach((image) => {
-      //     if (image.size > 1000000) {
-      //       console.log("asdf;");
-      //     }
-      //     formData.append("myImage", image);
-      //   });
-
       if (this.selected == 0) {
         this.selected = this.newRoom;
       }
@@ -184,16 +166,16 @@ export default {
         service2: this.service2 ? "yes" : "no",
         service3: this.service3 ? "yes" : "no",
         service4: this.service4 ? "yes" : "no",
-        people: this.people
+        people: this.people,
       };
-
-      console.log(formData);
 
       axios
         .post("http://localhost:3000/admin/create", formData)
         .then((res) => {
           console.log(res);
-          // this.$router.push({path: '/#/'})
+          this.$router.push({
+            name: "Home",
+          });
         })
         .catch((error) => {
           console.log(error);
