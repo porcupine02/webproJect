@@ -13,7 +13,7 @@ const routes = [
   {
     path: '/detail/:id',
     name: 'Detail',
-    meta: {login : true},
+    meta: { login: true },
     component: () => import("../views/DetailPage.vue")
   },
   {
@@ -36,7 +36,7 @@ const routes = [
   {
     path: '/booking',
     name: 'Booking',
-    meta: {login : true},
+    meta: { login: true },
 
     component: () => import('../views/BookingPage.vue')
   },
@@ -50,6 +50,11 @@ const routes = [
     path: '/forgot',
     name: 'Forgot',
     component: () => import('../views/ForgotPassPage.vue')
+  },
+  {
+    path: '/createRoom',
+    name: 'CreateRoom',
+    component: () => import('../views/CreatePage.vue')
   }
 
 ]
@@ -60,9 +65,9 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   const isLoggedIn = !!localStorage.getItem('user')
 
-  if(to.meta.login && !isLoggedIn){
+  if (to.meta.login && !isLoggedIn) {
     alert('please login first')
-    next({path: '/'})
+    next({ path: '/' })
   }
 
   next()

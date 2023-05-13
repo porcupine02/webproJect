@@ -2,7 +2,8 @@ const express = require("express");
 const pool = require("../config");
 const path = require("path")
 router = express.Router();
-const multer = require('multer')
+const multer = require('multer');
+const Joi = require("joi");
 
 var storage = multer.diskStorage({
     destination: function (req, file, callback) {
@@ -181,4 +182,63 @@ router.get("/admin/vacantroom/", async function (req, res, next) {
         console.log(err)
     }
 });
+router.get("/admin/create", async function (req, res, next) {
+    try {
+        const [roomtype, field] = await pool.query("select distinct room_type from roomdetail")
+        console.log(roomtype)
+        res.status(200).send(JSON.stringify(roomtype))
+    } catch (err) {
+        console.log(err)
+    }
+});
+
+
+
+const checkCreate = Joi.object({
+    room_type: Joi.string().required(),
+    price: Joi.number().integer().required(),
+    description: Joi.string().required(),
+    service1: Joi.valid('yes', 'no').required(),
+    service2: Joi.valid('yes', 'no').required(),
+    service3: Joi.valid('yes', 'no').required(),
+    service4: Joi.valid('yes', 'no').required()
+})
+router.post("/admin/create", async function (req, res, next) {
+    try {
+        await checkCreate.validateAsync(req.body, { abortEarly: false })
+    } catch (err) {
+        console.log(err)
+        return res.status(400).send(err)
+    }
+    const room_type = req.body.room_type
+    const price = req.body.price
+    const description = req.body.description
+    const service1 = req.body.service1
+    const service2 = req.body.service2
+    const service3 = req.body.service3
+    const service4 = req.body.service4
+
+    const conn = await pool.getConnection()
+    await conn.beginTransaction();
+
+    try {
+        // insert image and service ก่อนค่อยเอาเข้าตารางเพราะต้องใช้ id
+        const [ins_service] = await conn.query('insert into services(breakfast, pool, wifi, air_conditioner) value(?, ?, ?, ?)', [service1, service2, service3, service4])
+        await conn.query('insert into roomdetail(room_type, price, description, service_id, room_img_id) value(?, ?, ?, ?, 1)', [room_type, price, description, ins_service.insertId])
+        conn.commit()
+    } catch (err) {
+        console.log(err)
+        conn.rollback()
+    } finally {
+        conn.release()
+        console.log("finally")
+        // มันไม่ยอม redirect ให้กูอะ
+        res.status(201).redirect("/admin/create")
+    }
+});
+
+
+
+
+
 exports.router = router;

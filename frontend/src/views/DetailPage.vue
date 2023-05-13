@@ -81,12 +81,12 @@
                 </div>
 
                 <div
-                  class="column is-2 has-text-centered"
+                  class="column is-4 has-text-centered"
                   v-if="room.air_conditioner == 'yes'"
                 >
-                  <i class="fa fa-wifi" style="font-size: 40px; color: #888"></i
+                  <i class="fa fa-snowflake-o" style="font-size: 40px; color: #888"></i
                   ><br />
-                  internet
+                  air conditioner
                 </div>
                 <div
                   class="column is-2 has-text-centered"
@@ -97,7 +97,7 @@
                   internet
                 </div>
                 <div
-                  class="column is-2 has-text-centered"
+                  class="column is-3 has-text-centered"
                   v-if="room.pool == 'yes'"
                 >
                   <i
