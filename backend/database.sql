@@ -1,3 +1,15 @@
+
+CREATE TABLE `customers` (
+    `cus_id` int(5) unsigned NOT NULL AUTO_INCREMENT,
+    `first_name` varchar(50) NOT NULL,
+    `last_name` varchar(50) NOT NULL,
+    `phone` int(10) NOT NULL,
+    `email` varchar(100) NOT NULL,
+    `DOB` date NOT NUll,
+    PRIMARY KEY (`cus_id`),
+) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
+
+
 CREATE TABLE `services` (
     `service_id` int(5) unsigned NOT NULL AUTO_INCREMENT,
     `breakfast` enum('yes', 'no') NOT NULL,
@@ -14,7 +26,8 @@ CREATE TABLE `comments` (
     `cus_id` int(5) unsigned NOT NUll,
     `like` int(5) DEFAULT 0,
     `room_id` int(5) NOT NUll,
-    PRIMARY KEY (`comment_id`)
+    PRIMARY KEY (`comment_id`),
+    FOREIGN KEY (`cus_id`) REFERENCES `customers`(`cus_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
 
 
@@ -23,23 +36,12 @@ CREATE TABLE `reports` (
     `content` varchar(500) NOT NUll,
     `cus_id` int(5) unsigned NOT NUll,
     `status` enum('submit', 'accept') DEFAULT 'submit',
-    PRIMARY KEY (`report_id`)
+    PRIMARY KEY (`report_id`),
+    FOREIGN KEY (`cus_id`) REFERENCES `customers`(`cus_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
 
-CREATE INDEX customers_ibfk_1 ON comments (cus_id);
+CREATE INDEX plase_ibfk_1 ON comments (cus_id);
 CREATE INDEX customers_ibfk_2 ON reports (cus_id);
-
-CREATE TABLE `customers` (
-    `cus_id` int(5) unsigned NOT NULL AUTO_INCREMENT,
-    `first_name` varchar(50) NOT NULL,
-    `last_name` varchar(50) NOT NULL,
-    `phone` int(10) NOT NULL,
-    `email` varchar(100) NOT NULL,
-    `DOB` date NOT NUll,
-    PRIMARY KEY (`cus_id`),
-    FOREIGN KEY (`cus_id`) REFERENCES `comments`(`cus_id`),
-    FOREIGN KEY (`cus_id`) REFERENCES `reports`(`cus_id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE `login` (
     `login_id` int(5) unsigned NOT NULL AUTO_INCREMENT,

@@ -218,9 +218,11 @@ const checkCreate = Joi.object({
     service1: Joi.valid('yes', 'no').required(),
     service2: Joi.valid('yes', 'no').required(),
     service3: Joi.valid('yes', 'no').required(),
-    service4: Joi.valid('yes', 'no').required()
+    service4: Joi.valid('yes', 'no').required(),
+    people: Joi.number().required(),
 })
 router.post("/admin/create", async function (req, res, next) {
+    // add people
     try {
         await checkCreate.validateAsync(req.body, { abortEarly: false })
     } catch (err) {
@@ -239,6 +241,7 @@ router.post("/admin/create", async function (req, res, next) {
     await conn.beginTransaction();
 
     try {
+        console.log("asdfsdf")
         // insert image and service ก่อนค่อยเอาเข้าตารางเพราะต้องใช้ id
         const [ins_service] = await conn.query('insert into services(breakfast, pool, wifi, air_conditioner) value(?, ?, ?, ?)', [service1, service2, service3, service4])
         await conn.query('insert into roomdetail(room_type, price, description, service_id, room_img_id) value(?, ?, ?, ?, 1)', [room_type, price, description, ins_service.insertId])
