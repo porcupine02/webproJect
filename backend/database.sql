@@ -13,6 +13,16 @@ CREATE TABLE `roomDetail` (
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
 
 
+CREATE TABLE `customers` (
+    `cus_id` int(5) unsigned NOT NULL AUTO_INCREMENT,
+    `first_name` varchar(50) NOT NULL,
+    `last_name` varchar(50) NOT NULL,
+    `phone` int(10) NOT NULL,
+    `email` varchar(100) NOT NULL,
+    `DOB` date NOT NUll,
+    PRIMARY KEY (`cus_id`)
+) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
+
 
 CREATE TABLE `booking` (
     `booking_id` int(5) unsigned NOT NULL AUTO_INCREMENT,
@@ -31,18 +41,7 @@ CREATE TABLE `booking` (
     FOREIGN KEY (`room_id`) REFERENCES `roomDetail`(`room_id`) ON DELETE CASCADE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
 
-CREATE INDEX booking_ibfk_1 ON booking (cus_id);
-CREATE TABLE `customers` (
-    `cus_id` int(5) unsigned NOT NULL AUTO_INCREMENT,
-    `first_name` varchar(50) NOT NULL,
-    `last_name` varchar(50) NOT NULL,
-    `phone` int(10) NOT NULL,
-    `email` varchar(100) NOT NULL,
-    `DOB` date NOT NUll,
-    PRIMARY KEY (`cus_id`),
-    FOREIGN KEY (`cus_id`) REFERENCES `booking`(`cus_id`) ON DELETE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
-
+CREATE INDEX booking_ibfk_2 ON booking (cus_id);
 
 CREATE TABLE `services` (
     `service_id` int(5) unsigned NOT NULL AUTO_INCREMENT,

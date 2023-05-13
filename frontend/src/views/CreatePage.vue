@@ -193,6 +193,7 @@ export default {
         .post("http://localhost:3000/admin/create", formData)
         .then((res) => {
           console.log(res);
+          // this.$router.push({path: '/#/'})
         })
         .catch((error) => {
           console.log(error);

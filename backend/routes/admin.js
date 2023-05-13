@@ -4,6 +4,7 @@ const path = require("path")
 router = express.Router();
 const multer = require('multer');
 const Joi = require("joi");
+const { isLoggedIn } = require("../middlewares");
 
 var storage = multer.diskStorage({
     destination: function (req, file, callback) {
@@ -199,7 +200,8 @@ router.put("/admin/update/:roomId", async function (req, res, next) {
 })
 
 
-router.get("/admin/create", async function (req, res, next) {
+router.get("/admin/create", isLoggedIn, async function (req, res, next) {
+    console.log(req.user)
     try {
         const [roomtype, field] = await pool.query("select distinct room_type from roomdetail")
         console.log(roomtype)
@@ -221,7 +223,7 @@ const checkCreate = Joi.object({
     service4: Joi.valid('yes', 'no').required(),
     people: Joi.number().required(),
 })
-router.post("/admin/create", async function (req, res, next) {
+router.post("/admin/create", isLoggedIn, async function (req, res, next) {
     // add people
     try {
         await checkCreate.validateAsync(req.body, { abortEarly: false })
@@ -246,15 +248,16 @@ router.post("/admin/create", async function (req, res, next) {
         // insert image and service ก่อนค่อยเอาเข้าตารางเพราะต้องใช้ id
         const [ins_service] = await conn.query('insert into services(breakfast, pool, wifi, air_conditioner) value(?, ?, ?, ?)', [service1, service2, service3, service4])
         await conn.query('insert into roomdetail(room_type, price, description, service_id, room_img_id, people) value(?, ?, ?, ?, 1, ?)', [room_type, price, description, ins_service.insertId, people])
+
         conn.commit()
+        res.status(201)
     } catch (err) {
         console.log(err)
         conn.rollback()
     } finally {
         conn.release()
         console.log("finally")
-        // มันไม่ยอม redirect ให้กูอะ
-        res.status(201).redirect("/admin/create")
+        res.status(201)
     }
 });
 

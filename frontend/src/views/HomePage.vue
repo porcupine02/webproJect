@@ -269,11 +269,7 @@
               >
                 <strong>สมัครสมาชิก</strong>
               </a>
-              <a
-                class="button is-dark"
-                v-if="logins == true"
-                href="#/profile"
-              >
+              <a class="button is-dark" v-if="logins == true" href="#/profile">
                 <strong>My Profile {{ user.user_name }}</strong>
               </a>
               <a
@@ -288,7 +284,12 @@
                 v-if="logins == true"
                 @click="logOut()"
                 >ล็อคเอ้า</a
+              ><a
+                class="navbar-item"
+                href="http://localhost:8080/#/createRoom/"
               >
+                create
+              </a>
             </div>
           </div>
         </div>
@@ -302,14 +303,14 @@
             <div class="subtitle is-4">เช็คอิน :</div>
             <div class="">
               <p>{{ begin }}</p>
-              <input type="date" class="input" v-model="begin"/>
+              <input type="date" class="input" v-model="begin" />
             </div>
           </div>
           <div class="column is-4">
             <div class="subtitle is-4">เช็คเอ้าท์ :</div>
             <div class="">
               <p>{{ end }}</p>
-              <input type="date" class="input"  v-model="end"/>
+              <input type="date" class="input" v-model="end" />
             </div>
           </div>
           <div class="column is-3">
@@ -320,18 +321,19 @@
             <a class="button" @click="count++">+</a>
 
             <a href="" class="button is-link mx-5">ค้นหา</a>
-
           </div>
-
         </div>
       </div>
       <br />
 
-    <!-- </div> -->
-    <!-- <div class="container"> -->
-      <div class="columns  is-multiline">
-        <div class="column is-2.5 card m-2" v-for="room in rooms" :key="room.id">
-
+      <!-- </div> -->
+      <!-- <div class="container"> -->
+      <div class="columns is-multiline">
+        <div
+          class="column is-2.5 card m-2"
+          v-for="room in rooms"
+          :key="room.id"
+        >
           <div class="card-image">
             <figure class="image is-4by3">
               <img
@@ -344,53 +346,54 @@
               />
             </figure>
           </div>
-            <div class="card-content">
-              <div class="media">
-                <div class="media-content">
-                  <p class="title is-4">{{ room.room_type }}</p>
-                  <p class="subtitle is-6">
-                    <i
-                      class="fas fa-star mt-3"
-                      style="font-size: 40px; color: rgb(244, 247, 76)"
-                    ></i>
-                    <i
-                      class="fas fa-star mt-3"
-                      style="font-size: 40px; color: rgb(244, 247, 76)"
-                    ></i>
-                    <i
-                      class="fas fa-star mt-3"
-                      style="font-size: 40px; color: rgb(244, 247, 76)"
-                    ></i>
-                    <i
-                      class="fas fa-star mt-3"
-                      style="font-size: 40px; color: rgb(244, 247, 76)"
-                    ></i>
-                    <i
-                      class="fas fa-star mt-3"
-                      style="font-size: 40px; color: rgb(244, 247, 76)"
-                    ></i>
-                  </p>
-                </div>
-              </div>
-              <div class="content">
-                รายละเอียดห้อง
-                <br />
-                {{ room.description }}
-                <p class="title has-text-danger mt-2">
-                  THB {{ room.price }} -.
+          <div class="card-content">
+            <div class="media">
+              <div class="media-content">
+                <p class="title is-4">{{ room.room_type }}</p>
+                <p class="subtitle is-6">
+                  <i
+                    class="fas fa-star mt-3"
+                    style="font-size: 40px; color: rgb(244, 247, 76)"
+                  ></i>
+                  <i
+                    class="fas fa-star mt-3"
+                    style="font-size: 40px; color: rgb(244, 247, 76)"
+                  ></i>
+                  <i
+                    class="fas fa-star mt-3"
+                    style="font-size: 40px; color: rgb(244, 247, 76)"
+                  ></i>
+                  <i
+                    class="fas fa-star mt-3"
+                    style="font-size: 40px; color: rgb(244, 247, 76)"
+                  ></i>
+                  <i
+                    class="fas fa-star mt-3"
+                    style="font-size: 40px; color: rgb(244, 247, 76)"
+                  ></i>
                 </p>
               </div>
             </div>
-            <footer class="card-footer">
-              <a :href="'#/detail/' + room.room_id" class="card-footer-item"
-                >เพิ่มเติม</a
-              >
-              <a :href="'#/booking?room=' + room.room_id + ' ' + begin + ' ' + end" class="card-footer-item">จองเลย</a>
-            </footer>
+            <div class="content">
+              รายละเอียดห้อง
+              <br />
+              {{ room.description }}
+              <p class="title has-text-danger mt-2">THB {{ room.price }} -.</p>
+            </div>
           </div>
+          <footer class="card-footer">
+            <a :href="'#/detail/' + room.room_id" class="card-footer-item"
+              >เพิ่มเติม</a
+            >
+            <a
+              :href="'#/booking?room=' + room.room_id + ' ' + begin + ' ' + end"
+              class="card-footer-item"
+              >จองเลย</a
+            >
+          </footer>
         </div>
-
       </div>
+    </div>
     <br />
     <br />
     <br />
@@ -475,7 +478,7 @@ function complexPassword(value) {
 }
 
 function phone(value) {
-  return  !!value.match(/0[0-9]{9}/);
+  return !!value.match(/0[0-9]{9}/);
 }
 
 export default {
@@ -499,8 +502,8 @@ export default {
       confirm_password: "",
       error: "",
       count: 1,
-      begin: '',
-      end : ''
+      begin: "",
+      end: "",
     };
   },
 
@@ -536,7 +539,7 @@ export default {
     sign_phone: {
       required: required,
       sign_phone: phone,
-      maxLength: maxLength(10)
+      maxLength: maxLength(10),
     },
     sign_dob: {
       required: required,
@@ -571,14 +574,14 @@ export default {
       this.username = "";
       this.password = "";
       this.error = "";
-     this.sign_fname = "",
-       this.sign_lname = "",
-       this.sign_phone = "",
-       this.sign_dob = "",
-       this.sign_email = "",
-       this.sign_username = "",
-       this.sign_password = "",
-       this.confirm_password = "",
+      (this.sign_fname = ""),
+        (this.sign_lname = ""),
+        (this.sign_phone = ""),
+        (this.sign_dob = ""),
+        (this.sign_email = ""),
+        (this.sign_username = ""),
+        (this.sign_password = ""),
+        (this.confirm_password = ""),
         this.$v.$reset();
     },
     login() {
@@ -612,17 +615,16 @@ export default {
       this.$v.$touch();
 
       if (!this.$v.$invalid) {
-
         var data = {
-          fname : this.sign_fname,
-          lname : this.sign_lname,
-          phone : this.sign_phone,
-          dob : this.sign_dob,
-          email : this.sign_email,
-          username : this.sign_username,
+          fname: this.sign_fname,
+          lname: this.sign_lname,
+          phone: this.sign_phone,
+          dob: this.sign_dob,
+          email: this.sign_email,
+          username: this.sign_username,
           confirm_password: this.confirm_password,
-          password : this.sign_password
-        }
+          password: this.sign_password,
+        };
 
         axios
           .post("http://localhost:3000/signUp", data)
@@ -636,7 +638,6 @@ export default {
             this.error = error.response.error;
             console.log(error.response.error);
           });
-
       }
     },
   },
