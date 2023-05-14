@@ -4,10 +4,10 @@
     <div class="container" v-for="room in rooms" :key="room">
       <!-- left -->
       <div class="columns mx-6">
-        <div class="column is-6">
+        <div class="column is-6 ">
           <img :src="'http://localhost:3000/' + images[0].file_path" alt="" />
           <div class="columns">
-            <div class="column" v-for="image in images" :key="image">
+            <div class="column is-2" v-for="image in images" :key="image">
               <img
                 :src="'http://localhost:3000/' + image.file_path"
                 alt="picture room"
@@ -20,7 +20,7 @@
           <p class="title is-3 mt-6">
             {{ room.room_type }}
           </p>
-          <div>
+          <!-- <div>
             <i
               v-for="item in room.rate"
               :key="item"
@@ -33,7 +33,7 @@
               class="fa fa-star"
               style="font-size: 30px; color: rgb(188, 188, 165)"
             ></i>
-          </div>
+          </div> -->
           <div class="tile">
             <h1 class="title has-text-danger mt-3">
               {{ room.price
@@ -170,6 +170,8 @@ export default {
         this.rooms = response.data.room;
         this.images = response.data.images;
         this.comments = response.data.comments;
+        console.log(this.rooms);
+        console.log(this.images);
         console.log(this.comments);
       })
       .catch((err) => {
