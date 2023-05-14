@@ -12,9 +12,9 @@
           </figure>
         </div>
         <div class="content is-size-4">
-          <strong>{{ user[0].user_name}}</strong>
+          <strong>{{ user[0].user_name }}</strong>
           <p class="is-size-5">
-            {{ user[0].first_name + " " + user[0].last_name}}
+            {{ user[0].first_name + " " + user[0].last_name }}
             <br />
             tel : {{ user[0].phone }}
             <br />
@@ -72,7 +72,6 @@
           v-for="booked in booking"
           :key="booked"
         >
-
           <div class="media-content">
             <div class="content has-icons-left">
               <span class="icon is-left">
@@ -105,8 +104,8 @@
                   <i class="fas fa-credit-card"></i>
                 </span>
                 สถานะการจ่ายเงิน :
-                <strong class="has-text-success">complate</strong>
-                <strong class="has-text-danger">incomplate</strong>
+                <strong class="has-text-success" v-if="booked.payment_amount >= booked.payment_total_money">complate</strong>
+                <strong class="has-text-danger" v-else>incomplate</strong>
 
                 <span class="is-size-5" style="float: right">
                   total price
@@ -175,8 +174,8 @@ export default {
     axios
       .get(`http://localhost:3000/user/`)
       .then((res) => {
-        this.booking = res.data.booking
-        this.user = res.data.user
+        this.booking = res.data.booking;
+        this.user = res.data.user;
       })
       .catch((err) => {
         console.log(err);
