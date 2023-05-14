@@ -133,7 +133,7 @@ export default {
       roomtype: [],
       error: null,
       images: [], // array of image
-      selected: "standard room",
+      selected: "asdf",
       price: "",
       description: "",
       service1: false,
@@ -201,9 +201,9 @@ export default {
         .post("http://localhost:3000/admin/create", formData)
         .then((res) => {
           console.log(res);
-          // this.$router.push({
-          //   name: "Home",
-          // });
+          this.$router.push({
+            name: "Home",
+          });
         })
         .catch((error) => {
           console.log(error);

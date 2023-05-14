@@ -94,10 +94,13 @@ router.get("/detail/:id", async function (req, res, next) {
   try {
     const [row_room, columns_room] = await pool.query(`SELECT * FROM  roomdetail r join services s using (service_id) where r.room_id = ?`, [req.params.id])
     const [images, fields] = await pool.query(`select file_path from images where room_id = ?`, [req.params.id])
-
+    const [comments, fields1] = await pool.query(`select c.*, concat(u.first_name, ' ', u.last_name) as name, DATE_FORMAT(post_time, '%Y-%m-%d %H%i') AS post_time  from comments c join customers u using (cus_id) where room_id = ?`, [req.params.id])
+    console.log(comments)
+    console.log(req.params.id)
     return res.send({
       room: row_room,
-      images: images
+      images: images,
+      comments: comments
     });
   } catch (err) {
     res.send(err)

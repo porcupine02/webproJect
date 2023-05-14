@@ -70,6 +70,7 @@ CREATE TABLE `comments` (
     `cus_id` int(5) unsigned NOT NUll,
     `like` int(5) DEFAULT 0,
     `room_id` int(5) NOT NUll,
+    `post_time` datetime DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`comment_id`),
     FOREIGN KEY (`cus_id`) REFERENCES `customers`(`cus_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;

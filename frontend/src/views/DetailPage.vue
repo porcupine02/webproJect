@@ -114,102 +114,39 @@
       <!-- comments -->
       <div class="content is-medium px-3 mx-6">
         <h5>ความคิดเห็นจากผู้ใช้บริการ</h5>
-        <article class="media">
-          <figure class="media-left">
-            <p class="image is-64x64">
-              <img src="https://bulma.io/images/placeholders/128x128.png" />
-            </p>
-          </figure>
-          <div class="media-content">
-            <div class="content">
-              <p>
-                <strong>John Smith</strong> <small>date</small>
-                <br />
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
-                ornare magna eros, eu pellentesque tortor vestibulum ut.
-                Maecenas non massa sem. Etiam finibus odio quis feugiat
-                facilisis.
+        <div class="has-text-centered m-5" v-show='!comments.length'>ตอนนี้ยังไม่มีความคิดเห็นจากผู้ใช้</div>
+        <div v-for="comment in comments" :key="comment.id">
+          <article class="media">
+            <figure class="media-left">
+              <p class="image is-64x64">
+                <img src="https://bulma.io/images/placeholders/128x128.png" />
               </p>
-            </div>
-            <nav class="level is-mobile">
-              <div class="level-left">
-                <a class="level-item">
-                  <span class="icon is-small"
-                    ><i class="fas fa-heart"></i
-                  ></span>
-                </a>
-                Like 1
+            </figure>
+            <div class="media-content">
+              <div class="content">
+                <p>
+                  <strong>{{ comment.name }}</strong>
+                  <small>{{ comment.post_timed }}</small>
+                  <br />
+                  {{ comment.content }}
+                </p>
               </div>
-            </nav>
-          </div>
-          <div class="media-right">
-            <button class="delete"></button>
-          </div>
-        </article>
-        <article class="media">
-          <figure class="media-left">
-            <p class="image is-64x64">
-              <img src="https://bulma.io/images/placeholders/128x128.png" />
-            </p>
-          </figure>
-          <div class="media-content">
-            <div class="content">
-              <p>
-                <strong>John Smith</strong> <small>date</small>
-                <br />
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
-                ornare magna eros, eu pellentesque tortor vestibulum ut.
-                Maecenas non massa sem. Etiam finibus odio quis feugiat
-                facilisis.
-              </p>
+              <nav class="level is-mobile">
+                <div class="level-left">
+                  <a class="level-item">
+                    <span class="icon is-small"
+                      ><i class="fas fa-heart"></i
+                    ></span>
+                  </a>
+                  Like {{ comment.like }}
+                </div>
+              </nav>
             </div>
-            <nav class="level is-mobile">
-              <div class="level-left">
-                <a class="level-item">
-                  <span class="icon is-small"
-                    ><i class="fas fa-heart"></i
-                  ></span>
-                </a>
-                Like 1
-              </div>
-            </nav>
-          </div>
-          <div class="media-right">
-            <button class="delete"></button>
-          </div>
-        </article>
-        <article class="media">
-          <figure class="media-left">
-            <p class="image is-64x64">
-              <img src="https://bulma.io/images/placeholders/128x128.png" />
-            </p>
-          </figure>
-          <div class="media-content">
-            <div class="content">
-              <p>
-                <strong>John Smith</strong> <small>date</small>
-                <br />
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
-                ornare magna eros, eu pellentesque tortor vestibulum ut.
-                Maecenas non massa sem. Etiam finibus odio quis feugiat
-                facilisis.
-              </p>
+            <div class="media-right">
+              <button class="delete"></button>
             </div>
-            <nav class="level is-mobile">
-              <div class="level-left">
-                <a class="level-item">
-                  <span class="icon is-small"
-                    ><i class="fas fa-heart"></i
-                  ></span>
-                </a>
-                Like 1
-              </div>
-            </nav>
-          </div>
-          <div class="media-right">
-            <button class="delete"></button>
-          </div>
-        </article>
+          </article>
+        </div>
       </div>
     </div>
   </div>
@@ -223,6 +160,7 @@ export default {
     return {
       rooms: null,
       images: null,
+      comments: null,
     };
   },
   created() {
@@ -231,7 +169,8 @@ export default {
       .then((response) => {
         this.rooms = response.data.room;
         this.images = response.data.images;
-        console.log(this.images);
+        this.comments = response.data.comments;
+        console.log(this.comments);
       })
       .catch((err) => {
         console.log(err);
