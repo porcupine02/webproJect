@@ -108,7 +108,7 @@
                 <strong class="has-text-danger" v-else>incomplate</strong>
 
                 <span class="is-size-5" style="float: right">
-                  total price
+                  {{ booked.payment_total_money }}
                 </span>
               </p>
               <div class="button">check in</div>

@@ -224,7 +224,7 @@ router.get('/user/', isLoggedIn, async (req, res, next) => {
     const id = req.user.login_id;
     console.log(id)
     try {
-        const [booking, fields1] = await pool.query("select *, DATE_FORMAT(check_in, '%Y-%m-%d') as check_in, date_format(check_out, '%Y-%m-%d') as check_out from booking join payments using (booking_id) where cus_id = ?", [id])
+        const [booking, fields1] = await pool.query("select *, DATE_FORMAT(check_in, '%Y-%m-%d') as check_in, date_format(check_out, '%Y-%m-%d') as check_out, DATE_FORMAT(timestamp_booking, '%Y-%m-%d %H:%i') as timestamp_booking from booking join payments using (booking_id) where cus_id = ?", [id])
         const [user, fields2] = await pool.query("select *, DATE_FORMAT(DOB, '%Y-%m-%d') as DOB from customers join login using (cus_id)  where cus_id = ?", [id])
         console.log(user)
         res.status(200).send({ "booking": booking, "user": user })

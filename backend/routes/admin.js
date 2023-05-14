@@ -201,6 +201,7 @@ const checkCreate = Joi.object({
     service3: Joi.valid('yes', 'no').required(),
     service4: Joi.valid('yes', 'no').required(),
     people: Joi.number().required(),
+    count: Joi.number().required()
 })
 router.post("/admin/create", isLoggedIn, upload.array("myImage", 5), async function (req, res, next) {
     // add people
@@ -226,7 +227,7 @@ router.post("/admin/create", isLoggedIn, upload.array("myImage", 5), async funct
     const service3 = req.body.service3
     const service4 = req.body.service4
     const people = req.body.people
-
+    const count = req.body.count
 
 
 
@@ -237,7 +238,7 @@ router.post("/admin/create", isLoggedIn, upload.array("myImage", 5), async funct
         console.log("asdfsdf")
         // insert service ก่อนค่อยเอาเข้าตารางเพราะต้องใช้ id แล้วค่อยไป insert image
         const [ins_service] = await conn.query('insert into services(breakfast, pool, wifi, air_conditioner) value(?, ?, ?, ?)', [service1, service2, service3, service4])
-        const [room] = await conn.query('insert into roomdetail(room_type, price, description, service_id, people) value(?, ?, ?, ?, ?)', [room_type, price, description, ins_service.insertId, people])
+        const [room] = await conn.query('insert into roomdetail(room_type, price, description, service_id, people, count) value(?, ?, ?, ?, ?, ?)', [room_type, price, description, ins_service.insertId, people, count])
 
 
         req.files.forEach((file, index) => {
@@ -249,6 +250,7 @@ router.post("/admin/create", isLoggedIn, upload.array("myImage", 5), async funct
             "INSERT INTO images(room_id, file_path) VALUES ?",
             [pathArray]
         );
+        await conn.query('update roomdetail set room_img_id = ? where room_id = ?', [img.insertId, room.insertId])
         conn.commit()
     } catch (err) {
         console.log(err)
