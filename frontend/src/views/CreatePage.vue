@@ -107,6 +107,12 @@
           <input class="input column is-2" type="number" v-model="people" />
         </div>
       </div>
+      <div class="field">
+        <label class="label">จำนวนห้องที่เปิดให้บริการ</label>
+        <div class="control">
+          <input class="input column is-2" type="number" v-model="count" />
+        </div>
+      </div>
 
       <hr />
 
@@ -141,6 +147,7 @@ export default {
       service3: false,
       service4: false,
       people: "",
+      count: '',
     };
   },
   methods: {
@@ -176,6 +183,7 @@ export default {
       formData.append("service3", this.service3 ? "yes" : "no");
       formData.append("service4", this.service4 ? "yes" : "no");
       formData.append("people", this.people);
+      formData.append("count", this.count);
       this.images = Array.from(this.images)
       this.images.forEach((image) => {
         if (image.size > 1000000) {

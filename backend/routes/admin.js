@@ -98,7 +98,7 @@ router.put("/admin/updateroom/:id", async function (req, res, next) {
 //     // เอารูปไปใส่ใน img table ก่อนแล้ว ดึง room_img_id มาใช้
 
 //     const conn = await pool.getConnection()
-//     await conn.beginTransaction();
+//     await conn.beginTransaction( );
 
 //     try {
 //         const room_type = req.body.room_type;
