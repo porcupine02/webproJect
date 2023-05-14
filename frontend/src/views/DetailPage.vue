@@ -4,7 +4,7 @@
     <div class="container" v-for="room in rooms" :key="room">
       <!-- left -->
       <div class="columns mx-6">
-        <div class="column is-6 ">
+        <div class="column is-6">
           <img :src="'http://localhost:3000/' + images[0].file_path" alt="" />
           <div class="columns">
             <div class="column is-2" v-for="image in images" :key="image">
@@ -114,7 +114,9 @@
       <!-- comments -->
       <div class="content is-medium px-3 mx-6">
         <h5>ความคิดเห็นจากผู้ใช้บริการ</h5>
-        <div class="has-text-centered m-5" v-show='!comments.length'>ตอนนี้ยังไม่มีความคิดเห็นจากผู้ใช้</div>
+        <div class="has-text-centered m-5" v-show="!comments.length">
+          ตอนนี้ยังไม่มีความคิดเห็นจากผู้ใช้
+        </div>
         <div v-for="comment in comments" :key="comment.id">
           <article class="media">
             <figure class="media-left">
@@ -133,7 +135,7 @@
               </div>
               <nav class="level is-mobile">
                 <div class="level-left">
-                  <a class="level-item">
+                  <a class="level-item" @click="addLike(comment.comment_id)">
                     <span class="icon is-small"
                       ><i class="fas fa-heart"></i
                     ></span>
@@ -162,6 +164,20 @@ export default {
       images: null,
       comments: null,
     };
+  },
+  methods: {
+    addLike(id) {
+      axios
+        .put(`http://localhost:3000/comments/addLike/${id}`)
+        .then((response) => {
+          console.log('add like')
+          console.log(response)
+          location.reload()
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
   created() {
     axios

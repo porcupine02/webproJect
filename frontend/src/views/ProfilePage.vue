@@ -72,6 +72,7 @@
           v-for="booked in booking"
           :key="booked"
         >
+
           <div class="media-content">
             <div class="content has-icons-left">
               <span class="icon is-left">
