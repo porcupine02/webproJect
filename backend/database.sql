@@ -13,7 +13,6 @@ CREATE TABLE `roomDetail` (
     `room_id` int(5) unsigned NOT NULL AUTO_INCREMENT,
     `room_type` varchar(25) NOT NULL,
     `price` int(10) NOT NULL,
-    `rate` int(1) unsigned DEFAULT 5,
     `description` varchar(500),
     `service_id` int(5) unsigned,
     `room_img_id` int(2) unsigned,
@@ -71,6 +70,7 @@ CREATE TABLE `comments` (
     `like` int(5) DEFAULT 0,
     `room_id` int(5) NOT NUll,
     `post_time` datetime DEFAULT CURRENT_TIMESTAMP,
+    `rate` int(1) unsigned DEFAULT 5,
     PRIMARY KEY (`comment_id`),
     FOREIGN KEY (`cus_id`) REFERENCES `customers`(`cus_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
