@@ -5,11 +5,18 @@
       <!-- left -->
       <div class="columns mx-6">
         <div class="column is-6">
-          <img :src="'http://localhost:3000/' + images[0].file_path" alt="" />
+          <img
+            :src="'http://localhost:3000/' + images[display].file_path"
+            alt=""
+          />
           <div class="columns">
-            <div class="column is-2" v-for="image in images" :key="image">
-              <img
-                :src="'http://localhost:3000/' + image.file_path"
+            <div
+              class="column is-2"
+              v-for="(index, image) in images"
+              :key="image"
+            >
+              <img @click="changeImage(image)"
+                :src="'http://localhost:3000/' + index.file_path"
                 alt="picture room"
               />
             </div>
@@ -163,6 +170,7 @@ export default {
       rooms: null,
       images: null,
       comments: null,
+      display: 0,
     };
   },
   methods: {
@@ -170,14 +178,17 @@ export default {
       axios
         .put(`http://localhost:3000/comments/addLike/${id}`)
         .then((response) => {
-          console.log('add like')
-          console.log(response)
-          location.reload()
+          console.log("add like");
+          console.log(response);
+          location.reload();
         })
         .catch((err) => {
           console.log(err);
         });
     },
+    changeImage(index){
+      this.display = index
+    }
   },
   created() {
     axios
