@@ -4,6 +4,8 @@ const Joi = require('joi')
 const bcrypt = require('bcrypt');
 const { generateToken } = require('../utils/token');
 const { isLoggedIn } = require("../middlewares");
+const multer = require('multer');
+const path = require('path');
 
 router = express.Router();
 const loginSchema = Joi.object({
@@ -11,14 +13,25 @@ const loginSchema = Joi.object({
     password: Joi.string().required()
 })
 
+// SET STORAGE
+var storage = multer.diskStorage({
+    destination: function (req, file, callback) {
+        callback(null, './static/imagehotel')
+    },
+    filename: function (req, file, callback) {
+        callback(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
+    }
+})
+const upload = multer({ storage: storage })
+
 
 router.post('/user/login', async (req, res, next) => {
 
     console.log('success')
 
-    try{
-        await loginSchema.validateAsync(req.body, {abortEarly : false})
-    } catch(err){
+    try {
+        await loginSchema.validateAsync(req.body, { abortEarly: false })
+    } catch (err) {
         return res.status(400).send('กรุณากรอก usernam password')
 
     }
@@ -102,7 +115,7 @@ const signUpSchema = Joi.object({
 
 })
 
-router.post('/signUp', async function(req, res, next){
+router.post('/signUp', async function (req, res, next) {
 
     try {
         await signUpSchema.validateAsync(req.body, { abortEarly: false })
@@ -116,46 +129,46 @@ router.post('/signUp', async function(req, res, next){
 
 
 
-      const conn = await pool.getConnection()
-      // Begin transaction
-      await conn.beginTransaction();
+    const conn = await pool.getConnection()
+    // Begin transaction
+    await conn.beginTransaction();
 
-      const fname = req.body.fname
-      const lname = req.body.lname
-      const phone = req.body.phone
-      const dob = req.body.dob
-      const email = req.body.email
-      const username = req.body.username
-      const password = req.body.password
+    const fname = req.body.fname
+    const lname = req.body.lname
+    const phone = req.body.phone
+    const dob = req.body.dob
+    const email = req.body.email
+    const username = req.body.username
+    const password = req.body.password
 
-      try {
-          let results =  await conn.query(
-          'INSERT INTO customers ( first_name, last_name, phone, email, DOB) VALUES (?, ?, ?, ?, ?)', [fname, lname, phone, email, dob]
+    try {
+        let results = await conn.query(
+            'INSERT INTO customers ( first_name, last_name, phone, email, DOB) VALUES (?, ?, ?, ?, ?)', [fname, lname, phone, email, dob]
         )
 
         const cusId = results[0].insertId;
         console.log(cusId)
 
         await conn.query(
-          'INSERT INTO login (cus_id, username, password, login_role) VALUES (?, ?, ?, 2)', [cusId, username, password]
+            'INSERT INTO login (cus_id, username, password, login_role) VALUES (?, ?, ?, 2)', [cusId, username, password]
         )
 
         conn.commit()
         res.status(201).send()
         // res.send('true')
-      } catch (err) {
-         conn.rollback();
-         res.status(400).json(err.toString());
+    } catch (err) {
+        conn.rollback();
+        res.status(400).json(err.toString());
 
-      } finally {
+    } finally {
 
         conn.release();
-      }
+    }
 
 
-  })
+})
 
-  const usernameForgotValidator = async (value, helpers) => {
+const usernameForgotValidator = async (value, helpers) => {
     const [rows, _] = await pool.query("SELECT username FROM login WHERE username = ?", [value])
     console.log(rows)
     if (rows.length == 0) {
@@ -166,58 +179,58 @@ router.post('/signUp', async function(req, res, next){
 }
 
 
-  const userNameForgotSchema = Joi.object({
+const userNameForgotSchema = Joi.object({
     username: Joi.string().required().external(usernameForgotValidator)
-  })
+})
 
-  const passForgotSchema = Joi.object({
+const passForgotSchema = Joi.object({
     password: Joi.string().required().custom(passwordValidator),
     username: Joi.string().required()
-  })
+})
 
 
-  router.post('/forgot', async function(req, res, next ){
+router.post('/forgot', async function (req, res, next) {
 
     console.log(req.body.username)
 
-    try{
-        await userNameForgotSchema.validateAsync(req.body, {abortEarly : false})
-    } catch(err){
+    try {
+        await userNameForgotSchema.validateAsync(req.body, { abortEarly: false })
+    } catch (err) {
         return res.status(400).send('ใส่ชื่อผิด')
     }
 
-      try {
+    try {
         // console.log(req.body)
         const [rows, fields] = await pool.query(
-           'SELECT password FROM login WHERE username = ?', [req.body.username]
+            'SELECT password FROM login WHERE username = ?', [req.body.username]
         );
 
-        if(!rows){
-          res.json('Wrong')
+        if (!rows) {
+            res.json('Wrong')
         }
         return res.json(rows);
-      } catch (err) {
+    } catch (err) {
         return next(err)
-      }
-  })
+    }
+})
 
-  router.put('/forgot', async function(req, res, next){
+router.put('/forgot', async function (req, res, next) {
 
-    try{
-        await passForgotSchema.validateAsync(req.body, {abortEarly : false})
-    } catch(err){
+    try {
+        await passForgotSchema.validateAsync(req.body, { abortEarly: false })
+    } catch (err) {
         return res.status(400).send('ใส่รหัสไม่ถูกต้อง')
     }
 
 
-     try{
+    try {
         console.log(req.body)
         const [rows, fields] = await pool.query('UPDATE login set password = ? WHERE username = ?', [req.body.password, req.body.username])
         res.json(rows)
-     } catch(err){
+    } catch (err) {
         console.log(err)
-     }
-  })
+    }
+})
 
 router.get('/user/', isLoggedIn, async (req, res, next) => {
     // req.user ถูก save ข้อมูล user จาก database ใน middleware function "isLoggedIn"
@@ -244,12 +257,87 @@ router.get('/user/me', isLoggedIn, async (req, res, next) => {
 })
 
 
-router.put('/changepassword', async (req, res, next) => {
-    //  console.log(req.user)
-    console.log("alsdjflaksdjflasjdfljasdlkfj")
+const check_changePassword = Joi.object({
+    newPassword: Joi.string().required(),
+    oldPassword: Joi.string().required().custom(passwordValidator)
+})
+router.put('/changepassword', isLoggedIn, async (req, res, next) => {
 
 
-    //  res.json(req.user)
+    try {
+        await check_changePassword.validateAsync(req.body, { abortEarly: false })
+    } catch (err) {
+        return res.status(400).send('รหัสไม่ถูกต้อง')
+    }
+    console.log(req.user)
+    const login_id = req.user.login_id
+    console.log(login_id)
+    // const req.user
+    const newPassword = req.body.newPassword
+    const oldPassword = req.body.oldPassword
+    console.log(oldPassword)
+
+    const [old] = await pool.query("select * from login where login_id = ?", [login_id])
+    const older = old[0].password
+    console.log(older)
+    const conn = await pool.getConnection()
+    await conn.beginTransaction()
+
+    try {
+        if (oldPassword == older) {
+            await conn.query("update login set password = ? where login_id = ?", [newPassword, login_id])
+            conn.commit()
+            res.status(201).send("เปลี่ยนรหัสผ่านเรียบร้อย")
+        } else {
+            return res.status(404).send({
+                message: "รหัสผ่านเก่าไม่ถูกต้อง"
+            })
+        }
+    } catch (err) {
+        conn.rollback()
+        res.status(400).json(err.toString())
+    } finally {
+        conn.release()
+    }
+
+})
+
+router.put('/changeProfile', isLoggedIn, upload.single('profileImage'), async (req, res, next) => {
+    console.log(req.user)
+    const login_id = req.user.login_id
+    console.log(req.user.login_id)
+
+    const file = req.files
+    console.log(file)
+    console.log(req.files)
+    let pathArray = [];
+    // if (!file.length) {
+    //     return res.status(400).send({ message: "กรุณาอัพโหลดไฟล์ภาพ" });
+    // }
+
+    const [cus_id] = await pool.query("select * from login where login_id = ?", [login_id])
+    const [check_image] = await pool.query("select * from images where cus_id = ?", [cus_id])
+    console.log(check_image)
+
+
+
+    const conn = await pool.getConnection()
+    await conn.beginTransaction()
+
+    try {
+        if (check_image.length > 0) {
+            await conn.query("update images set file_path = ? where cus_id = ?", [])
+
+        }
+        conn.commit()
+        res.status(201).json("complele")
+    } catch (err) {
+        conn.rollback()
+        res.status(400).json(err.toString())
+    } finally {
+        conn.release()
+    }
+
 })
 
 
