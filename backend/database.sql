@@ -5,6 +5,7 @@ CREATE TABLE `images` (
     `file_path` varchar(50) NOT NUll,
     `cus_id` int(5),
     `upload_date` datetime DEFAULT CURRENT_TIMESTAMP,
+    `main` int(1),
     PRIMARY KEY (`img_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
 

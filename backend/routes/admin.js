@@ -33,12 +33,6 @@ const upload = multer({
 
 
 
-
-
-
-
-
-
 // show
 router.get("/admin", async function (req, res, next) {
     try {
@@ -108,9 +102,9 @@ router.get("/admin/create", isLoggedIn, async function (req, res, next) {
 
 
 const checkCreate = Joi.object({
-    room_type: Joi.string().required(),
+    room_type: Joi.string().min(10).required(),
     price: Joi.number().integer().required(),
-    description: Joi.string().required(),
+    description: Joi.string().min(50).required(),
     service1: Joi.valid('yes', 'no').required(),
     service2: Joi.valid('yes', 'no').required(),
     service3: Joi.valid('yes', 'no').required(),
@@ -144,7 +138,6 @@ router.post("/admin/create", isLoggedIn, upload.array("myImage", 5), async funct
     const count = req.body.count
 
 
-
     const conn = await pool.getConnection()
     await conn.beginTransaction();
 
@@ -155,9 +148,13 @@ router.post("/admin/create", isLoggedIn, upload.array("myImage", 5), async funct
 
 
         req.files.forEach((file, index) => {
-            let path = [room.insertId, file.path.substring(6)];
-            pathArray.push(path);
+            if (index > 0) {
+                let path = [room.insertId, file.path.substring(6)];
+                pathArray.push(path);
+            }
         });
+
+        await conn.query("insert into images(room_id, file_path, main) values (?, ?, ?)", [room.insertId, req.files[0].path.substring(6), 1])
 
         const [img] = await pool.query(
             "INSERT INTO images(room_id, file_path) VALUES ?",
