@@ -17,34 +17,58 @@
         <tr>
           <th colspan="4" class="has-text-centered">รายละเอียดการจอง</th>
         </tr>
-        <!-- <tr>
-          <td colspan="4">
-            ชื่อ :
-            {{ information[num - 1].fname + " " + information[num - 1].lname }}
+        <tr>
+          <td colspan="4">ชื่อ : {{ fname + " " + lname }}</td>
+        </tr>
+        <tr>
+          <td colspan="2">Check in : {{ checkIn }}</td>
+          <td colspan="2">Check out : {{ checkOut }}</td>
+        </tr>
+        <tr>
+          <td colspan="2">จำนวนวันที่เข้า : {{ countDays }}</td>
+          <td colspan="2">จำนวนห้อง : {{ countRooms }}</td>
+        </tr>
+        <tr>
+          <td colspan="2">ราคาต่อคืน : {{ priceForDay }}</td>
+          <td colspan="2">
+            ราคา : {{ priceForDay + " x " + countRooms + " x " + countDays }}
           </td>
         </tr>
         <tr>
-          <td colspan="2">Check in : {{ information[num - 1].checkIn }}</td>
-          <td colspan="2">Check out : {{ information[num - 1].checkOut }}</td>
+          <td colspan="3">รวม : {{ allPrice }}</td>
         </tr>
-        <tr>
-          <td colspan="2">จำนวนคน : {{ information[num - 1].people }}</td>
-          <td colspan="2">จำนวนห้อง : {{ information[num - 1].countRoom }}</td>
-        </tr>
-        <tr>
-          <td colspan="2">ประเภทห้อง : {{ information[num - 1].type }}</td>
-          <td colspan="2">ราคา : {{ information[num - 1].price }}</td>
-        </tr>
-        <tr>
-          <td colspan="3">รวม : {{ total }}</td>
-        </tr> -->
         <tr>
           <th colspan="4" class="has-text-centered">หลักฐานการจ่ายตัง</th>
         </tr>
         <tr>
           <td colspan="4">
-            สลิป :
-            <input type="file" />
+            <div class="file">
+              <label class="file-label">
+                <input
+                  class="file-input"
+                  type="file"
+                  id="file"
+                  ref="file"
+                  @change="handleFileUpload()"
+                />
+                <span class="file-cta">
+                  <span class="file-icon">
+                    <i class="fas fa-upload"></i>
+                  </span>
+                  <span class="file-label"> สลิป : </span>
+                </span>
+              </label>
+ 
+            </div>
+            <div>
+              <label for="">กรอกเงินที่จ่าย {{ paidAmount }}</label>
+              <input type="number" v-model="paidAmount" />
+            </div>
+            <template v-if="$v.fileSize.$error">
+            <p class="help is-danger" v-if="!$v.fileSize.checkuploadfile">
+              กรุณากรอกทั้งสองฝั่ง
+            </p>
+          </template>
           </td>
         </tr>
       </table>
@@ -55,7 +79,7 @@
           <a class="button is-primary" @click="confirm()">ยืนยัน</a>
         </div>
         <div class="column">
-          <a href="booking.html" class="button is-danger">ยกเลิก</a>
+          <a href="/" class="button is-danger">ยกเลิก</a>
         </div>
 
         <div class="column"></div>
@@ -67,37 +91,138 @@
 </template>
 
 <script>
+import axios from "@/plugins/axios";
+// import { required } from "vuelidate/lib/validators";
+
+function checkuploadfile(value) {
+  console.log(value)
+   if(value == 0){
+    // console.log(this.paidAmount)
+     if(this.paidAmount != ''){
+      return false
+     }
+     else{
+      return true
+     }
+   }
+   else{
+    console.log(this.paidAmount)
+    if(this.paidAmount != ''){
+      return true
+    }
+    else{
+      return false
+    }
+   }
+}
 export default {
+  props: ["user"],
   data() {
     return {
       information: "",
       total: 0,
-      file: "",
-      // history: '',
-      num: JSON.parse(localStorage.getItem("book")).length,
+      // file: "",
+      booking: this.$route.query.booking,
+      fname: "",
+      lname: "",
+      checkIn: "",
+      checkOut: "",
+      countDays: "",
+      countRooms: "",
+      priceForDay: "",
+      price: 0,
+      allPrice: "",
+      roomId: "",
+      file: null,
+      paidAmount: "",
+      fileSize : 0,
+      allCountRooms : 0
+      // user : this.user.username
     };
   },
+  validations: {
+    fileSize: {
+      checkuploadfile: checkuploadfile,
+    },
+  },
   methods: {
+    handleFileUpload() {
+      this.file = this.$refs.file.files[0];
+      console.log(this.file)
+
+      this.fileSize += this.$refs.file.files[0].size
+      console.log(this.fileSize)
+      // console.log(this.file);
+    },
     confirm() {
-      // const receipt = JSON.stringify(this.history)
-      // this.history.push(receipt)
-      // localStorage.setItem("history", this.history);
-      window.location.href = "profile.html";
+      this.$v.$touch();
+      if (!this.$v.$invalid) {
+      // console.log(this.file)
+      var formData = new FormData();
+      formData.append("file_image", this.file);
+      formData.append("fname", this.fname);
+      formData.append("lname", this.lname);
+      formData.append("checkIn", this.checkIn);
+      formData.append("checkOut", this.checkOut);
+      formData.append("countDays", this.countDays);
+      formData.append("countRooms", this.countRooms);
+      formData.append("priceForDay", this.priceForDay);
+      formData.append("price", this.price);
+      formData.append("allPrice", this.allPrice);
+      formData.append("roomId", this.roomId);
+      formData.append("paidAmount", this.paidAmount);
+      formData.append("people", this.people);
+      formData.append("allCountRooms", this.allCountRooms);
+      // console.log(formData);
+
+      axios
+        .post("http://localhost:3000/invoice", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          console.log(response.data);
+          this.$router.push({ path: "/" }); // Success! -> redirect to home page
+        })
+        .catch((error) => {
+          console.log(error.message);
+        });
+      }
     },
   },
   created() {
-    if (localStorage.getItem("book") != null) {
-      // this.history = JSON.parse(localStorage.getItem('book'))
-      this.information = JSON.parse(localStorage.getItem("book"));
-      console.log(this.information);
-      this.total =
-        this.information[this.num - 1].price *
-        this.information[this.num - 1].countRoom;
-    }
+    this.roomId = this.booking.split(" ")[0];
+    this.fname = this.booking.split(" ")[5];
+    this.lname = this.booking.split(" ")[6];
+    this.people = this.booking.split(" ")[3]
+    this.checkIn = this.booking.split(" ")[1];
+    this.checkOut = this.booking.split(" ")[2];
+    this.countDays = this.booking.split(" ")[10];
+    this.countRooms = this.booking.split(" ")[4];
+    this.priceForDay = this.booking.split(" ")[7];
+    this.price =
+      this.booking.split(" ")[7] *
+      this.booking.split(" ")[4] *
+      this.booking.split(" ")[10];
+    this.allPrice = this.booking.split(" ")[8];
+    this.allCountRooms = this.booking.split(" ")[11]
+    
+    console.log(this.allPrice);
+    console.log(this.user);
+
+    // axios
+    //   .get(`http://localhost:3000/invoice`, {params : {booking : this.booking}})
+    //   .then((response) => {
+    //     // this.rooms = response.data;
+    //     console.log(response.data)
+
+    //   })
+    //   .catch((err) => {
+    //     console.log(err.message);
+    //   });
   },
-}
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

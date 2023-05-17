@@ -107,20 +107,22 @@ CREATE INDEX images_ibfk_1 ON images (room_id);
 CREATE TABLE `payments` (
     `payment_id` int(5) unsigned NOT NULL AUTO_INCREMENT,
     `payment_date` date NOT NULL,
-    `payment_slip` varchar(40) NOT NULL,
+    `payment_slip` varchar(200) ,
     `payment_total_money` int(10) NOT NULL,
     `booking_id` int(5) unsigned NOT NULL,
-    `payment_amount` int(5) NOT NUll,
+    `payment_amount` int(5),
+     `status` enum('incomplete', 'complete') NOT NUll DEFAULT 'incomplete',
     PRIMARY KEY (`payment_id`),
     FOREIGN KEY (`booking_id`) REFERENCES `booking`(`booking_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
 
 
 CREATE TABLE `unvalible_room` (
+    `un_id` int(5) AUTO_INCREMENT,
     `room_id` int(5) unsigned NOT NULL,
     `count` int(2) NOT NULL,
     `date` date NOT NUll,
-    PRIMARY KEY (`date`, `room_id`)
+    PRIMARY KEY (`un_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
 
 

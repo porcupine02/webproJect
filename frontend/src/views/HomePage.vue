@@ -270,7 +270,7 @@
                 <strong>สมัครสมาชิก</strong>
               </a>
               <a class="button is-dark" v-if="logins == true" href="#/profile">
-                <strong>My Profile {{ user.user_name }}</strong>
+                <strong>My Profile {{ user.username }}</strong>
               </a>
               <a
                 class="button is-dark"
@@ -303,15 +303,28 @@
             <div class="subtitle is-4">เช็คอิน :</div>
             <div class="">
               <p>{{ begin }}</p>
-              <input type="date" class="input" v-model="begin" />
+              <input type="date" class="input" :class="{ 'is-danger': $v.begin.$error }" v-model="$v.begin.$model" />
             </div>
+            <template v-if="$v.begin.$error">
+            <p class="help is-danger" v-if="!$v.begin.required">
+              This field is required
+            </p>
+          </template>
           </div>
           <div class="column is-4">
             <div class="subtitle is-4">เช็คเอ้าท์ :</div>
             <div class="">
               <p>{{ end }}</p>
-              <input type="date" class="input" v-model="end" />
+              <input type="date" class="input" :class="{ 'is-danger': $v.end.$error }" v-model="$v.end.$model" />
             </div>
+            <template v-if="$v.end.$error">
+            <p class="help is-danger" v-if="!$v.end.required">
+              This field is required
+            </p>
+            <p class="help is-danger" v-else-if="!$v.end.ErrDate">
+              ใส่เวลาให้น้อยกว่าเริ่มต้น
+            </p>
+          </template>
           </div>
           <div class="column is-3">
             <div class="subtitle is-4">จำนวนคน</div>
@@ -320,26 +333,33 @@
             <a class="is-size-4 mx-4" v-if="count > 0">{{ count }}</a>
             <a class="button" @click="count++">+</a>
 
-            <a href="" class="button is-link mx-5">ค้นหา</a>
+            <a  class="button is-link mx-5" @click="serach()">ค้นหา</a>
           </div>
         </div>
       </div>
-      <br />
+      <br /> 
+     
 
       <!-- </div> -->
       <!-- <div class="container"> -->
+      <div class="columns is-centered" v-if="rooms.length == 0">
+           <h1>ไม่พบสิ่งที่ต้องการค้นหา</h1>
+      </div> 
       <div class="columns is-multiline">
         <div
-          class="column is-2.5 card m-2"
+          class="column is-3 card " style="margin-left : 6%; margin-bottom: 4%"
           v-for="room in rooms"
           :key="room.id"
+          
         >
+        <div v-if="room == ''">
+        </div>
           <div class="card-image">
             <figure class="image is-4by3">
               <img
                 :src="
-                  room.pic1
-                    ? 'http://localhost:3000' + room.pic1
+                  room.file_path
+                    ? 'http://localhost:3000' + room.file_path
                     : 'https://i.pinimg.com/originals/22/c0/2f/22c02f8f67b478ef00cb12bcacde588b.jpg'
                 "
                 alt="Placeholder image"
@@ -385,8 +405,9 @@
             <a :href="'#/detail/' + room.room_id" class="card-footer-item"
               >เพิ่มเติม</a
             >
+            <!-- :href="'#/booking?room=' + room.room_id + ' ' + begin + ' ' + end" -->
             <a
-              :href="'#/booking?room=' + room.room_id + ' ' + begin + ' ' + end"
+              @click="booking(room.room_id)"
               class="card-footer-item"
               >จองเลย</a
             >
@@ -394,10 +415,11 @@
         </div>
       </div>
     </div>
-    <br />
-    <br />
-    <br />
-    <br />
+    <br>
+    <br>
+    <br>
+ 
+
 
     <!-- Contact -->
     <div class="container">
@@ -481,6 +503,13 @@ function phone(value) {
   return !!value.match(/0[0-9]{9}/);
 }
 
+function ErrDate(value){
+  if(value < this.begin){
+    return false
+  }
+  return true
+}
+
 export default {
   props: ["user"],
   data() {
@@ -516,13 +545,18 @@ export default {
       // this.isActive_Sign_in = true;
     }
     axios
-      .get("http://localhost:3000/")
+      .get("http://localhost:3000/showRoom")
       .then((response) => {
         this.rooms = response.data;
+        console.log(this.rooms)
       })
       .catch((err) => {
         console.log(err);
       });
+   
+  },
+  mounted(){
+    // this.serach()
   },
 
   validations: {
@@ -561,6 +595,13 @@ export default {
     confirm_password: {
       sameAs: sameAs("sign_password"),
     },
+    begin:{
+      required: required,
+    },
+    end :{
+      required: required,
+      ErrDate : ErrDate
+    }
   },
   methods: {
     minus() {
@@ -614,7 +655,7 @@ export default {
     signUp() {
       this.$v.$touch();
 
-      if (!this.$v.$invalid) {
+      // if (!this.$v.$invalid) {
         var data = {
           fname: this.sign_fname,
           lname: this.sign_lname,
@@ -624,7 +665,10 @@ export default {
           username: this.sign_username,
           confirm_password: this.confirm_password,
           password: this.sign_password,
+
         };
+
+        console.log(data)
 
         axios
           .post("http://localhost:3000/signUp", data)
@@ -638,8 +682,41 @@ export default {
             this.error = error.response.error;
             console.log(error.response.error);
           });
+      // }
+    },
+    serach(){
+      if(this.begin == '' && this.end == ''){
+        this.$v.$touch();
+
+      }
+      if(this.begin != '' && this.end != ''){
+        
+      axios
+        .get("http://localhost:3000", {
+          params: {
+            begin: this.begin,
+            end : this.end,
+            people : this.count
+          },
+        })
+        .then((response) => {
+          this.rooms = response.data;
+          console.log(this.rooms)
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+   
       }
     },
+    booking(roomId){
+      this.$v.$touch();
+      // if(!this.$v.$invalid){
+      if(this.begin != '' && this.end != ''){
+        this.$router.push({ path: '/booking' , query: { room:  roomId + ' ' + this.begin + ' ' + this.end + ' ' + this.count}  })
+      }
+      // }
+    }
   },
 };
 </script>
