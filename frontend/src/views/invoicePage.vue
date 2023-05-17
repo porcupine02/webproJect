@@ -1,4 +1,6 @@
 <template>
+
+  
   <div class="columns" style="margin-top: 100px" id="invoice">
     <div class="column"></div>
     <div class="column is-three box">
@@ -91,7 +93,9 @@
 </template>
 
 <script>
+
 import axios from "@/plugins/axios";
+
 // import { required } from "vuelidate/lib/validators";
 
 function checkuploadfile(value) {
@@ -205,7 +209,8 @@ export default {
       this.booking.split(" ")[7] *
       this.booking.split(" ")[4] *
       this.booking.split(" ")[10];
-    this.allPrice = this.booking.split(" ")[8];
+    this.allPrice = this.booking.split(" ")[9];
+    console.log("folK" + this.allPrice)
     this.allCountRooms = this.booking.split(" ")[11]
     
     console.log(this.allPrice);

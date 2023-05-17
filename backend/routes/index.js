@@ -12,9 +12,9 @@ router.get("/",async function (req, res, next) {
   // console.log(req.query.begin)
   // console.log(req.query.end)
   // console.log(req.query.people)
-  const begin = req.query.begin || ''
-  const end = req.query.end || ''
-  const people = req.query.people || ''
+  const begin = req.query.begin 
+  const end = req.query.end
+  const people = req.query.people 
   var roomblank = []
   try {
 
@@ -22,36 +22,29 @@ router.get("/",async function (req, res, next) {
     //    'SELECT * FROM  roomdetail r join images i on (r.room_img_id = i.img_id) join services s on (r.service_id = s.service_id) '
    
     // );
-    const [rows, fields] = await pool.query(
+    const [room_un, fields] = await pool.query(
        'SELECT DISTINCT  room_id, min(unvalible_room.count) as ucount FROM  roomdetail  join unvalible_room using(room_id) WHERE people >= ?  and date between ? and ? group by room_id', [people, begin, end ]
     );
-    const [row1, field1] = await pool.query('SELECT room_id, count as ucount FROM roomdetail WHERE people >= ?', people)
+    const [room_all, field1] = await pool.query('SELECT room_id, count as ucount FROM roomdetail WHERE people >= ?', people)
 
-    // console.log(row1)
-    // console.log(rows.length)
-
-    // const [row1, field1] = await pool.query('SELECT * FROM roomdetail')
-
-    // var differences = row1.filter(row1[0].room_id => rows.indexOf(row1[0].room_id ) === -1)
-    // console.log(differences)
 
    var arr = []
-   console.log(row1)
-   console.log(rows)
+   console.log(room_all)
+   console.log(room_un)
    
-   for(let j = 0; j < row1.length; j++){
-    if(rows[j] == undefined){
-      arr[j] = row1[j]
+   for(let j = 0; j < room_all.length; j++){
+    if(room_un[j] == undefined){
+      arr[j] = room_all[j]
     }
     else{
-      arr[j] = rows[j]
+      arr[j] = room_un[j]
     }
     
    }
 
  
    
-    if(rows == ''){
+    if(room_un == ''){
       console.log('folk')
       const[room, feild1] = await pool.query('SELECT * FROM roomdetail join services using(service_id) join images using (room_id) WHERE people >= ? and main = 1', people)
          return res.json(room);

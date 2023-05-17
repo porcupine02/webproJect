@@ -1,5 +1,8 @@
 <template>
   <div id="detail">
+    <div>
+      <NavBar />
+    </div>
     <!-- content -->
     <div class="container" v-for="room in rooms" :key="room">
       <!-- left -->
@@ -163,7 +166,7 @@
 
 <script>
 import axios from "axios";
-
+import NavBar from "@/components/NavBar.vue"
 export default {
   data() {
     return {
@@ -190,6 +193,7 @@ export default {
       this.display = index
     }
   },
+  components: { NavBar },
   created() {
     axios
       .get(`http://localhost:3000/detail/${this.$route.params.id}`)

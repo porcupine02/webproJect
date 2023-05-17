@@ -1,4 +1,9 @@
 <template>
+  <div>
+    
+ <div>
+      <NavBar />
+    </div>
   <div class="container" id="Booking"  >
     <div class="tile is-ancestor" v-for="room in detalRoom" :key="room.room_id">
       <div class="tile is-parent is-8">
@@ -162,10 +167,12 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
 import axios from "@/plugins/axios";
+import NavBar from "@/components/NavBar.vue"
 import {
   required,
 
@@ -192,6 +199,9 @@ export default {
       ucount : null
     };
   },
+
+  components: { NavBar },
+
   created(){
    
     // console.log(this.booking.split(' '))

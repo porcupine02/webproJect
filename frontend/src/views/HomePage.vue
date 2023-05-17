@@ -1,7 +1,7 @@
 <template>
   <div id="home">
     <!-- login signout -->
-    <div :class="{ modal: modal, 'is-active': isActive_Sign_in }">
+    <!-- <div :class="{ modal: modal, 'is-active': isActive_Sign_in }">
       <div class="modal-background"></div>
       <div class="box modal-content">
         <div class="field">
@@ -158,11 +158,10 @@
             <p class="help is-danger" v-else-if="!$v.sign_email.email">
               not email
             </p>
-            <!-- <p class="help is-danger" v-else-if="!$v.sign_email.minLength"> 10</p> -->
           </template>
-        </div>
+        </div> -->
 
-        <div class="field">
+        <!-- <div class="field">
           <label class="label">User Name</label>
           <div class="control">
             <input
@@ -221,7 +220,7 @@
             />
           </div>
           <template v-if="$v.confirm_password.$error">
-            <!-- <p class="help is-danger" v-if="!$v.confirm_password.required">This field is required</p> -->
+      
             <p class="help is-danger" v-if="!$v.confirm_password.sameAs">
               รหัสไม่เหมือนกัน
             </p>
@@ -238,10 +237,10 @@
           </div>
         </div>
       </form>
-    </div>
+    </div> -->
 
     <!-- nav bar -->
-    <nav
+    <!-- <nav
       class="navbar is-dark"
       role="navigation"
       aria-label="main navigation"
@@ -249,16 +248,11 @@
     >
       <div class="navbar-brand">
         <a class="navbar-item" href="http://localhost:8080/">
-          <i class="fas fa-home"></i>
-          Home
+          <strong> <i class="fas fa-home"> </i> Home</strong>
         </a>
       </div>
       <div class="navbar-menu">
-        <div class="navbar-start">
-          <a class="navbar-item" v-if="logins == true" href="/search">
-            ค้นหาห้องพัก
-          </a>
-        </div>
+      
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons asd">
@@ -270,7 +264,7 @@
                 <strong>สมัครสมาชิก</strong>
               </a>
               <a class="button is-dark" v-if="logins == true" href="#/profile">
-                <strong>My Profile {{ user.username }}</strong>
+                <strong> <i class="fas fa-user"> </i> {{ user.username }}</strong>
               </a>
               <a
                 class="button is-dark"
@@ -294,7 +288,11 @@
           </div>
         </div>
       </div>
-    </nav>
+    </nav> -->
+    <div>
+      <NavBar />
+    </div>
+
     <br /><br /><br />
     <div class="container">
       <div class="card p-6">
@@ -485,6 +483,7 @@
 
 <script>
 import axios from "@/plugins/axios";
+import NavBar from "@/components/NavBar.vue"
 import {
   required,
   maxLength,
@@ -492,6 +491,7 @@ import {
   sameAs,
   email,
 } from "vuelidate/lib/validators";
+// import navbar from '../../component/navbar.vue';
 function complexPassword(value) {
   if (!(value.match(/[a-z]/) && value.match(/[A-Z]/) && value.match(/[0-9]/))) {
     return false;
@@ -511,6 +511,7 @@ function ErrDate(value){
 }
 
 export default {
+
   props: ["user"],
   data() {
     return {
@@ -535,15 +536,17 @@ export default {
       end: "",
     };
   },
+  // name : 'app',
+  components: { NavBar },
 
   created() {
-    console.log(this.user);
-    if (localStorage.getItem("user") != null) {
-      this.logins = true;
-    } else {
-      this.logins = false;
-      // this.isActive_Sign_in = true;
-    }
+    // console.log(this.user);
+    // if (localStorage.getItem("user") != null) {
+    //   this.logins = true;
+    // } else {
+    //   this.logins = false;
+     
+    // }
     axios
       .get("http://localhost:3000/showRoom")
       .then((response) => {
@@ -609,81 +612,81 @@ export default {
         this.count--;
       }
     },
-    Close() {
-      this.isActive_Sign_in = false;
-      this.isActive_Sign_up = false;
-      this.username = "";
-      this.password = "";
-      this.error = "";
-      (this.sign_fname = ""),
-        (this.sign_lname = ""),
-        (this.sign_phone = ""),
-        (this.sign_dob = ""),
-        (this.sign_email = ""),
-        (this.sign_username = ""),
-        (this.sign_password = ""),
-        (this.confirm_password = ""),
-        this.$v.$reset();
-    },
-    login() {
-      var data = {
-        username: this.username,
-        password: this.password,
-      };
-      axios
-        .post("http://localhost:3000/user/login", data)
-        .then((response) => {
-          // console.log(response.data)
-          const token = response.data.token;
-          localStorage.setItem("user", token);
-          this.$emit("auth-change");
-          this.isActive_Sign_in = false;
-          this.logins = true;
-          this.username = "";
-          this.password = "";
-        })
-        .catch((error) => {
-          this.error = error.response.data;
-          console.log(error.response.data);
-        });
-    },
-    logOut() {
-      localStorage.removeItem("user");
-      this.logins = false;
-      this.isActive_Sign_in = false;
-    },
-    signUp() {
-      this.$v.$touch();
+    // Close() {
+    //   this.isActive_Sign_in = false;
+    //   this.isActive_Sign_up = false;
+    //   this.username = "";
+    //   this.password = "";
+    //   this.error = "";
+    //   (this.sign_fname = ""),
+    //     (this.sign_lname = ""),
+    //     (this.sign_phone = ""),
+    //     (this.sign_dob = ""),
+    //     (this.sign_email = ""),
+    //     (this.sign_username = ""),
+    //     (this.sign_password = ""),
+    //     (this.confirm_password = ""),
+    //     this.$v.$reset();
+    // },
+    // login() {
+    //   var data = {
+    //     username: this.username,
+    //     password: this.password,
+    //   };
+    //   axios
+    //     .post("http://localhost:3000/user/login", data)
+    //     .then((response) => {
+    //       // console.log(response.data)
+    //       const token = response.data.token;
+    //       localStorage.setItem("user", token);
+    //       this.$emit("auth-change");
+    //       this.isActive_Sign_in = false;
+    //       this.logins = true;
+    //       this.username = "";
+    //       this.password = "";
+    //     })
+    //     .catch((error) => {
+    //       this.error = error.response.data;
+    //       console.log(error.response.data);
+    //     });
+    // },
+    // logOut() {
+    //   localStorage.removeItem("user");
+    //   this.logins = false;
+    //   this.isActive_Sign_in = false;
+    // },
+    // signUp() {
+    //   this.$v.$touch();
 
-      // if (!this.$v.$invalid) {
-        var data = {
-          fname: this.sign_fname,
-          lname: this.sign_lname,
-          phone: this.sign_phone,
-          dob: this.sign_dob,
-          email: this.sign_email,
-          username: this.sign_username,
-          confirm_password: this.confirm_password,
-          password: this.sign_password,
+    //   // if (!this.$v.$invalid) {
+    //     var data = {
+    //       fname: this.sign_fname,
+    //       lname: this.sign_lname,
+    //       phone: this.sign_phone,
+    //       dob: this.sign_dob,
+    //       email: this.sign_email,
+    //       username: this.sign_username,
+    //       confirm_password: this.confirm_password,
+    //       password: this.sign_password,
 
-        };
+    //     };
 
-        console.log(data)
+    //     console.log(data)
 
-        axios
-          .post("http://localhost:3000/signUp", data)
-          .then((response) => {
-            console.log(response);
+    //     axios
+    //       .post("http://localhost:3000/signUp", data)
+    //       .then((response) => {
+    //         console.log(response);
 
-            this.isActive_Sign_in = true;
-            this.isActive_Sign_up = false;
-          })
-          .catch((error) => {
-            this.error = error.response.error;
-            console.log(error.response.error);
-          });
-      // }
-    },
+    //         this.isActive_Sign_in = true;
+    //         this.isActive_Sign_up = false;
+    //       })
+    //       .catch((error) => {
+    //         this.error = error.response.error;
+    //         console.log(error.response.error);
+    //       });
+    //   // }
+    // },
     serach(){
       if(this.begin == '' && this.end == ''){
         this.$v.$touch();

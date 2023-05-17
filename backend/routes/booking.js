@@ -96,7 +96,7 @@ router.post('/invoice', isLoggedIn, upload.single('file_image'), async function(
         console.log(num[j])
       }
     }
-
+    //จำนวนห้อง
     console.log(num)
 
     
@@ -156,9 +156,6 @@ router.post('/invoice', isLoggedIn, upload.single('file_image'), async function(
 
         }
         }
-        
-      
-       
 
         
         // res.send(payment)
@@ -178,25 +175,147 @@ router.post('/invoice', isLoggedIn, upload.single('file_image'), async function(
     
 })
 
-// Create new comment
-router.post('/:blogId/comments', function(req, res, next){
-    return
-});
 
-// Update comment
-router.put('/comments/:commentId', function(req, res, next){
-    return
+
+
+// Delete payment
+router.delete('/deleteBooking/:id', isLoggedIn, async function(req, res, next){
+    console.log(req.params.id)
+
+
+    const conn = await pool.getConnection()
+    await conn.beginTransaction()
+
+    try {
+      
+            await conn.query("delete from payments where payment_id =?", [req.params.id])
+
+            
+
+            conn.commit()
+            res.status(201).send("ถูกcancel")
+       
+        
+    } catch (err) {
+        conn.rollback()
+        res.status(400).json(err.toString())
+    } finally {
+        conn.release()
+    }
+  
+    
+    
 });
 
 // Delete comment
-router.delete('/comments/:commentId', function(req, res, next){
-    return
+router.put('/editBooking',isLoggedIn, async function(req, res, next){
+
+    console.log(req.body)
+      const bookedId = req.body.bookedId
+    const bookedCheckIn = req.body.bookedCheckIn
+    const bookedCheckOut = req.body.bookedCheckOut
+    const bookedRoomId = req.body.bookedRoomId
+    const bookedCountRoom = req.body.bookedCountRoom
+    console.log(bookedId, bookedCheckIn, bookedCheckOut, bookedRoomId, bookedCountRoom)
+    const[dateCount] = await pool.query(`SELECT DATEDIFF(?, ?) AS DateDiff;`, [bookedCheckOut, bookedCheckIn])
+    console.log(dateCount)
+    const CountDate = dateCount[0].DateDiff
+    console.log(CountDate)
+    var dateCheckIn = bookedCheckIn
+    var alldate = []
+    //loop ไอดีห้อง จำนวนวัน ที่น้อยที่สุด วันที่
+    for(let i = 0; i < CountDate + 1; i++){
+      if(i == 0){
+        const[room] = await pool.query('SELECT room_id,  min(unvalible_room.count) as minCountRoom, DATE_FORMAT(date, "%Y-%m-%d") as date FROM unvalible_room WHERE room_id = ? and date = ?', [bookedRoomId, bookedCheckIn])
+        alldate[i] = room[0]
+
+      }
+      else{
+        const[unval] = await pool.query(`SELECT   ADDDATE( ?,  1) AS DateAdd;`, [dateCheckIn])
+        console.log(unval)
+        const[room] = await pool.query('SELECT room_id,  min(unvalible_room.count) as minCountRoom, DATE_FORMAT(date, "%Y-%m-%d") as date FROM unvalible_room WHERE room_id = ? and date = ?', [bookedRoomId, unval[0].DateAdd])
+        alldate[i] = room[0]
+        dateCheckIn = unval[0].DateAdd
+      }
+    }
+    console.log(alldate)
+    
+
+    const conn = await pool.getConnection()
+    await conn.beginTransaction()
+
+    try {
+      
+            await conn.query("update booking set status = ? where booking_id = ?", [4, bookedId])
+
+            console.log(alldate[0].minCountRoom + bookedCountRoom)
+            console.log(alldate[0].room_id)
+            console.log(alldate[0].date)
+
+            for(let i = 0; i < alldate.length; i++){
+              await conn.query("update unvalible_room set count = ? where room_id = ? and date = ?", [alldate[i].minCountRoom + bookedCountRoom, alldate[i].room_id, alldate[i].date])
+              
+            }
+
+            conn.commit()
+            res.status(201).send("ถูกcancel")
+       
+        
+    } catch (err) {
+        conn.rollback()
+        res.status(400).json(err.toString())
+    } finally {
+        conn.release()
+    }
 });
 
-// Delete comment
-router.put('/comments/addlike/:commentId', function(req, res, next){
-    return
-});
+router.put('/checkIn/:id', isLoggedIn, async function(req, res, next){
+    console.log(req.params.id)
+
+    const bookedId = req.params.id
+
+        try {
+          const [rows1, fields1] = await pool.query(
+            'update booking set status = ?  where booking_id = ?', [3, bookedId]
+          )
+          console.log(rows1)
+          const [row2, field] = await pool.query(
+            'SELECT status FROM booking WHERE booking_id = ?', [bookedId]
+          )
+          res.json(row2)
+      } catch (error) {
+          res.status(500).json(error)
+      }
+
+       
+        
+  
+})
+
+
+router.put('/checkOut/:id', isLoggedIn, async function(req, res, next){
+  console.log(req.params.id)
+
+  const bookedId = req.params.id
+
+      try {
+        const [rows1, fields1] = await pool.query(
+          'update booking set status = ?  where booking_id = ?', [2, bookedId]
+        )
+        console.log(rows1)
+        const [row2, field] = await pool.query(
+          'SELECT status FROM booking WHERE booking_id = ?', [bookedId]
+        )
+        console.log(row2)
+        res.json(row2)
+    } catch (error) {
+        res.status(500).json(error)
+    }
+
+     
+      
+
+})
 
 
 exports.router = router

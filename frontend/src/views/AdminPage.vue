@@ -1,4 +1,8 @@
 <template>
+    <div>
+        <div>
+            <NavBar />
+        </div>
             <div class="container mt-6 pt-5" id="admin">
                 <div class="container mt-6 pt-5">
                     <p class="title has-text-centered">ข้อมูลลูกค้า</p>
@@ -172,12 +176,13 @@
                 </div>
             </div>
 
-
+        </div>
 
 </template>
 
 <script>
 import axios from "axios";
+import NavBar from "@/components/NavBar.vue"
 
 export default {
   data() {
@@ -198,6 +203,8 @@ export default {
       });
     this.getRooms();
   },
+  components: { NavBar },
+
   methods: {
     async getRooms() {
       try {

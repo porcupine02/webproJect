@@ -1,4 +1,10 @@
 <template>
+
+<div>
+   <div>
+    <NavBar />
+   </div>
+
   <div class="container mt-6 pt-5" id="profile">
     <div class="columns">
       <!-- profile -->
@@ -106,8 +112,7 @@
         <strong class="content is-size-5"> ประวัติการจอง </strong>
         <article
           class="media mt-3 card p-3"
-          v-for="booked in booking"
-          :key="booked"
+          v-for="(booked, index) in booking" :key="booked"
         >
           <div class="media-content">
             <div class="content has-icons-left">
@@ -144,29 +149,55 @@
                 <strong
                   class="has-text-success"
                   v-if="booked.payment_amount >= booked.payment_total_money"
-                  >complate</strong
+                  >complete</strong
                 >
-                <strong class="has-text-danger" v-else>incomplate</strong>
+                <strong class="has-text-danger" v-else>incomplete</strong>
 
                 <span class="is-size-5" style="float: right">
                   {{ booked.payment_total_money }}
+                  
+                  
                 </span>
               </p>
-              <div class="button">check in</div>
-              <div class="button">check out</div>
+              
+
+              <div v-if="booked.status == 'complete' && booked.bstatus == 'booked'" >
+                <div class="button" @click="checkIn(booked.booking_id, index)">check in </div>
+                <div class="button">check out</div>
+              </div>
+       
+              
+              <div v-else-if="booked.bstatus == 'checkIn'">
+                <div class="button has-background-success">check in </div>
+                <div class="button"  @click="checkOut(booked.booking_id, index)">check out</div>
+              </div>
+              <div v-else-if="booked.bstatus == 'checkOut'">
+                <div class="button">check in </div>
+                <div class="button  has-background-danger"  >check out</div>
+              </div>
+              <div v-else>
+                <div class="button" disabled>check in</div>
+                <div class="button" disabled>check out</div>
+              </div>
             </div>
           </div>
-          <div class="media-right">
-            <div class="button has-background-danger">cancel</div>
+          <div class="media-right" v-if="booked.payment_amount < booked.payment_total_money">
+            <div class="button has-background-danger" @click="cancelRoom(booked.booking_id, booked.check_in, booked.check_out, booked.room_id, booked.countRoom, booked.payment_id, index)">cancel</div>
+          </div>
+          <div class="media-right" v-else>
+            <div class="button has-background-light" disabled >cancel</div>
           </div>
         </article>
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
 import axios from "@/plugins/axios";
+import NavBar from "@/components/NavBar.vue"
+
 import { required } from "vuelidate/lib/validators";
 function complexPassword(value) {
   if (!(value.match(/[a-z]/) && value.match(/[A-Z]/) && value.match(/[0-9]/))) {
@@ -188,8 +219,10 @@ export default {
       images: [],
       complete: null,
       error: null,
+      data: '',
     };
   },
+  components: { NavBar },
 
   validations: {
     oldPassword: {
@@ -259,6 +292,65 @@ export default {
           console.log(err);
         });
     },
+    checkIn(bookingId, index){
+      console.log('checkIn')
+      axios.put(`http://localhost:3000/checkIn/${bookingId}`).then((res)=>{
+          console.log(res.data[0].status)
+          this.booking[index].status = res.data[0].status
+          // console.log(this.booking[index].comment)
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    checkOut(bookingId,  index){
+      // console.log('checkOut')
+      axios.put(`http://localhost:3000/checkOut/${bookingId}`).then((res) =>{
+        console.log(res.data[0].status)
+        this.booking[index].bstatus = res.data[0].status
+        console.log(this.booking)
+      }).catch((err)=>{
+        console.log(err)
+      })
+
+    },
+    cancelRoom(bookedId, bookedCheckIn, bookedIdCheckOut, bookedRoomId, bookedCountRoom, bookedPaymentId, index){
+        console.log(bookedId, bookedCheckIn, bookedIdCheckOut, bookedRoomId, bookedCountRoom, bookedPaymentId, index)
+        const result = confirm(
+        `Are you sure you want to delete ${bookedId}`
+      );
+
+      if(result){
+        
+        const data = {
+          bookedId : bookedId,
+          bookedCheckIn : bookedCheckIn,
+          bookedCheckOut :bookedIdCheckOut,
+          bookedRoomId : bookedRoomId,
+          bookedCountRoom : bookedCountRoom
+        }
+  
+        axios.put(`http://localhost:3000/editBooking`, data ).then((res) =>{
+            console.log(res.data)
+            this.data = res.data
+  
+        }).catch((err)=>{
+          console.log(err)
+        })
+      //  console.log(this.data)
+  
+  
+    
+         axios.delete(`http://localhost:3000/deleteBooking/${bookedPaymentId}`,).then((res) =>{
+           console.log(res)
+           this.booking.splice(index, 1);
+         }).catch((err) =>{
+           
+           console.log(err)
+         })
+       
+      }
+
+    }
   },
 
   created() {

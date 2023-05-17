@@ -1,4 +1,7 @@
 <template>
+
+  
+  
   <div class="container is-widescreen">
     <section class="hero">
       <div class="hero-body">
