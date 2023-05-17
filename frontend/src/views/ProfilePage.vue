@@ -296,7 +296,7 @@ export default {
       console.log('checkIn')
       axios.put(`http://localhost:3000/checkIn/${bookingId}`).then((res)=>{
           console.log(res.data[0].status)
-          this.booking[index].status = res.data[0].status
+          this.booking[index].bstatus = res.data[0].status
           // console.log(this.booking[index].comment)
       }).catch((err) => {
         console.log(err)
