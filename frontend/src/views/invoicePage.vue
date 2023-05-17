@@ -33,7 +33,7 @@
         <tr>
           <td colspan="2">ราคาต่อคืน : {{ priceForDay }}</td>
           <td colspan="2">
-            ราคา : {{ priceForDay + " x " + countRooms + " x " + countDays }}
+            ราคา : {{ priceForDay + " x " + countRooms + " x " + countDays + " = " + allPrice }}
           </td>
         </tr>
         <tr>
