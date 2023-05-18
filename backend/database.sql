@@ -12,9 +12,9 @@ CREATE TABLE `images` (
 
 CREATE TABLE `roomDetail` (
     `room_id` int(5) unsigned NOT NULL AUTO_INCREMENT,
-    `room_type` varchar(25) NOT NULL,
+    `room_type` varchar(100) NOT NULL,
     `price` int(10) NOT NULL,
-    `description` varchar(500),
+    `description` varchar(2500),
     `service_id` int(5) unsigned,
     `room_img_id` int(2) unsigned,
     `people`int(2) unsigned NOT NUll,
@@ -47,7 +47,7 @@ CREATE TABLE `booking` (
     `timestamp_booking` datetime NOT NULL,
     `people` int(1) NOT NULL,
     `countRoom` int(2) NOT NULL,
-    `status` enum('booked', 'complete', 'doing') NOT NUll DEFAULT 'booked',
+    `status` enum('booked', 'checkOut', 'checkIn', 'cancel') NOT NUll DEFAULT 'booked',
     PRIMARY KEY (`booking_id`),
     FOREIGN KEY (`room_id`) REFERENCES `roomDetail`(`room_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
