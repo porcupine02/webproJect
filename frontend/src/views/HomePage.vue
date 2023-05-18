@@ -13,12 +13,10 @@
             <div class="">
               <p>{{ begin }}</p>
 
-              <input
-                class="input"
-                type="date"
-                v-model="$v.begin.$model"
-                :min="dateNow"
-              />
+          
+              
+              <input class="input" type="date" v-model="$v.begin.$model" :min="dateNow"  :class="{ 'is-danger': $v.begin.$error }">
+           
             </div>
             <template v-if="$v.begin.$error">
               <p class="help is-danger" v-if="!$v.begin.required">
