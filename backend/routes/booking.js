@@ -34,13 +34,15 @@ router.get('/booking', isLoggedIn,  async function(req, res, next){
     const end = req.query.room.split(' ')[2]
     console.log(begin)
     try{
-        const[room, fields] = await pool.query(`SELECT * FROM roomdetail join images using(room_id) WHERE room_id = ? and main = 1`, [roomId])
-        const[countRooms, feild3] = await pool.query('SELECT min(ur.count) as ucount FROM roomdetail rd join unvalible_room ur using(room_id) WHERE room_id = ? and (date between  ? and  ?)', [roomId, begin, end])
-        const [countDays, feild1] = await pool.query('SELECT DATEDIFF( ? , ?) AS counts', [end, begin])
-        const [dateNow, feilds] = await pool.query(`SELECT NOW() as 'date' `)
-        const [dob, feild2] = await pool.query('SELECT * FROM customers')
-        console.log(countDays[0].counts)
-        console.log(dateNow[0].date)
+        const[room] = await pool.query(`SELECT * FROM roomdetail join images using(room_id) WHERE room_id = ? and main = 1`, [roomId])
+        const[countRooms] = await pool.query('SELECT min(ur.count) as ucount FROM roomdetail rd join unvalible_room ur using(room_id) WHERE room_id = ? and (date between  ? and  ?)', [roomId, begin, end])
+        const [countDays] = await pool.query('SELECT DATEDIFF( ? , ?) AS counts', [end, begin])
+        const [dateNow] = await pool.query(`SELECT DATE_FORMAT(NOW(), '%Y-%m-%d')  as 'date' `)
+        const [cusId] = await pool.query('SELECT cus_id FROM login WHERE login_id = ?', req.user.login_id)
+        console.log(cusId[0].cus_id)
+        const [dob, feild2] = await pool.query(`SELECT DATE_FORMAT(DOB, '%Y-%m-%d') as DOB FROM customers WHERE cus_id = ?`, cusId[0].cus_id)
+        // console.log(countDays[0].counts)
+        // console.log(dateNow[0].date)
 
         // console.log(countRooms)
       

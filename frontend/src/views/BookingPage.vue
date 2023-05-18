@@ -43,7 +43,7 @@
              <div class="column is-6">{{total(room.price)}} บาท </div>
           </div>
           <!-- {{ dayNow.split('T')[0] }} -->
-          <div class="columns has-text-danger" v-if="dob == dayNow.split('T')[0]">
+          <div class="columns has-text-danger" v-if="dob.split('-')[1]  == dayNow.split('-')[1]">
              <div class="column is-6">โปรโมชั่น {{ dob }}</div>
              <div class="column is-6">ลด 10% </div>
           </div>
@@ -51,7 +51,7 @@
 
           <div class="columns ">
              <div class="column is-6">ที่ต้องชำระ</div>
-             <div class="column is-6"  v-if="dob == dayNow.split('T')[0]" >{{promotion(room.price)}} บาท</div>
+             <div class="column is-6"  v-if="dob.split('-')[1]  == dayNow.split('-')[1]" >{{promotion(room.price)}} บาท</div>
              <div class="column is-6" v-else  >{{total(room.price)}} บาท</div>
           </div>
           <div class="columns mt-4">

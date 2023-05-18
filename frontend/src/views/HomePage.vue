@@ -161,7 +161,7 @@
           </template>
         </div> -->
 
-        <!-- <div class="field">
+    <!-- <div class="field">
           <label class="label">User Name</label>
           <div class="control">
             <input
@@ -301,28 +301,37 @@
             <div class="subtitle is-4">เช็คอิน :</div>
             <div class="">
               <p>{{ begin }}</p>
-              <input type="date" class="input" :class="{ 'is-danger': $v.begin.$error }" v-model="$v.begin.$model" />
+              
+              <input class="input" type="date" v-model="$v.begin.$model" :min="dateNow">
+           
             </div>
             <template v-if="$v.begin.$error">
-            <p class="help is-danger" v-if="!$v.begin.required">
-              This field is required
-            </p>
-          </template>
+              <p class="help is-danger" v-if="!$v.begin.required">
+                This field is required
+              </p>
+            </template>
           </div>
           <div class="column is-4">
             <div class="subtitle is-4">เช็คเอ้าท์ :</div>
             <div class="">
               <p>{{ end }}</p>
-              <input type="date" class="input" :class="{ 'is-danger': $v.end.$error }" v-model="$v.end.$model" />
+              <input
+                type="date"
+                class="input"
+                :class="{ 'is-danger': $v.end.$error }"
+                v-model="$v.end.$model"
+                :min="begin"
+             
+              />
             </div>
             <template v-if="$v.end.$error">
-            <p class="help is-danger" v-if="!$v.end.required">
-              This field is required
-            </p>
-            <p class="help is-danger" v-else-if="!$v.end.ErrDate">
-              ใส่เวลาให้น้อยกว่าเริ่มต้น
-            </p>
-          </template>
+              <p class="help is-danger" v-if="!$v.end.required">
+                This field is required
+              </p>
+              <p class="help is-danger" v-else-if="!$v.end.ErrDate">
+                ใส่เวลาให้น้อยกว่าเริ่มต้น
+              </p>
+            </template>
           </div>
           <div class="column is-3">
             <div class="subtitle is-4">จำนวนคน</div>
@@ -331,27 +340,25 @@
             <a class="is-size-4 mx-4" v-if="count > 0">{{ count }}</a>
             <a class="button" @click="count++">+</a>
 
-            <a  class="button is-link mx-5" @click="serach()">ค้นหา</a>
+            <a class="button is-link mx-5" @click="serach()">ค้นหา</a>
           </div>
         </div>
       </div>
-      <br /> 
-     
+      <br />
 
       <!-- </div> -->
       <!-- <div class="container"> -->
       <div class="columns is-centered" v-if="rooms.length == 0">
-           <h1>ไม่พบสิ่งที่ต้องการค้นหา</h1>
-      </div> 
+        <h1>ไม่พบสิ่งที่ต้องการค้นหา</h1>
+      </div>
       <div class="columns is-multiline">
         <div
-          class="column is-3 card " style="margin-left : 6%; margin-bottom: 4%"
+          class="column is-3 card"
+          style="margin-left: 6%; margin-bottom: 4%"
           v-for="room in rooms"
           :key="room.id"
-          
         >
-        <div v-if="room == ''">
-        </div>
+          <div v-if="room == ''"></div>
           <div class="card-image">
             <figure class="image is-4by3">
               <img
@@ -404,20 +411,16 @@
               >เพิ่มเติม</a
             >
             <!-- :href="'#/booking?room=' + room.room_id + ' ' + begin + ' ' + end" -->
-            <a
-              @click="booking(room.room_id)"
-              class="card-footer-item"
+            <a @click="booking(room.room_id)" class="card-footer-item"
               >จองเลย</a
             >
           </footer>
         </div>
       </div>
     </div>
-    <br>
-    <br>
-    <br>
- 
-
+    <br />
+    <br />
+    <br />
 
     <!-- Contact -->
     <div class="container">
@@ -482,8 +485,10 @@
 </template>
 
 <script>
+// import Datepicker from "vuejs-datepicker";
+
 import axios from "@/plugins/axios";
-import NavBar from "@/components/NavBar.vue"
+import NavBar from "@/components/NavBar.vue";
 import {
   required,
   maxLength,
@@ -503,15 +508,14 @@ function phone(value) {
   return !!value.match(/0[0-9]{9}/);
 }
 
-function ErrDate(value){
-  if(value < this.begin){
-    return false
+function ErrDate(value) {
+  if (value <= this.begin) {
+    return false;
   }
-  return true
+  return true;
 }
 
 export default {
-
   props: ["user"],
   data() {
     return {
@@ -532,8 +536,16 @@ export default {
       confirm_password: "",
       error: "",
       count: 1,
-      begin: "",
+      begin: '',
+      dateNow : '',
       end: "",
+      // model: {
+      //   date: "",
+      // },
+      // DatePickerFormat: "dd/MM/yyyy",
+      // disabledDates: {
+      //   to: new Date(Date.now() - 8640000),
+      // },
     };
   },
   // name : 'app',
@@ -545,21 +557,25 @@ export default {
     //   this.logins = true;
     // } else {
     //   this.logins = false;
-     
+
     // }
     axios
       .get("http://localhost:3000/showRoom")
       .then((response) => {
         this.rooms = response.data;
-        console.log(this.rooms)
+        console.log(this.rooms);
       })
       .catch((err) => {
         console.log(err);
       });
-   
   },
-  mounted(){
+  mounted() {
     // this.serach()
+    const currentDate = new Date();
+    
+
+const formattedDate = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
+this.dateNow = formattedDate
   },
 
   validations: {
@@ -598,13 +614,13 @@ export default {
     confirm_password: {
       sameAs: sameAs("sign_password"),
     },
-    begin:{
+    begin: {
       required: required,
     },
-    end :{
+    end: {
       required: required,
-      ErrDate : ErrDate
-    }
+      ErrDate: ErrDate,
+    },
   },
   methods: {
     minus() {
@@ -687,39 +703,41 @@ export default {
     //       });
     //   // }
     // },
-    serach(){
-      if(this.begin == '' && this.end == ''){
+    serach() {
+      if (this.begin == "" && this.end == "") {
         this.$v.$touch();
-
       }
-      if(this.begin != '' && this.end != ''){
-        
-      axios
-        .get("http://localhost:3000", {
-          params: {
-            begin: this.begin,
-            end : this.end,
-            people : this.count
-          },
-        })
-        .then((response) => {
-          this.rooms = response.data;
-          console.log(this.rooms)
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-   
+      if (this.begin != "" && this.end != "") {
+        axios
+          .get("http://localhost:3000", {
+            params: {
+              begin: this.begin,
+              end: this.end,
+              people: this.count,
+            },
+          })
+          .then((response) => {
+            this.rooms = response.data;
+            console.log(this.rooms);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
     },
-    booking(roomId){
+    booking(roomId) {
       this.$v.$touch();
       // if(!this.$v.$invalid){
-      if(this.begin != '' && this.end != ''){
-        this.$router.push({ path: '/booking' , query: { room:  roomId + ' ' + this.begin + ' ' + this.end + ' ' + this.count}  })
+      if (this.begin != "" && this.end != "") {
+        this.$router.push({
+          path: "/booking",
+          query: {
+            room: roomId + " " + this.begin + " " + this.end + " " + this.count,
+          },
+        });
       }
       // }
-    }
+    },
   },
 };
 </script>

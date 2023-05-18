@@ -448,6 +448,7 @@ export default {
           console.log(token)
           localStorage.setItem("user", token);
           this.$emit("auth-change");
+         this.getUser()
           this.isActive_Sign_in = false;
           this.logins = true;
           this.username = "";

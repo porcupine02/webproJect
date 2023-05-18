@@ -63,13 +63,8 @@ router.get("/",async function (req, res, next) {
            roomblank[i] = roomBlank[i]
       
          }
-        // else{
-        //   // const[roomBlank] = await pool.query('SELECT * FROM roomdetail join services using(service_id) join images using (room_id) WHERE people >= ?', people)
-        //   console.log('folk')
-       
-        //  }
       }
-      // console.log(roomblank)
+     
       var blank = [0]
       var difference = roomblank.filter(x => blank.indexOf(x) === -1)
       console.log(difference)
@@ -96,20 +91,7 @@ router.get('/showRoom', async function(req, res, next){
   }
 })
 
-// router.post("/register", async function(req, res, next){
-//   try{
-//     console.log(req.body)
-//     const email = req.body.email
-//     const password = req.body.password
-//     const [rows, fields] = await pool.query('SELECT user_name, password FROM login WHERE user_name = ? and password = ?', [email, password])
-//     console.log(rows)
 
-//     res.json(rows)
-//     // const [rows, fields] = await pool.query()
-//   }catch(err){
-//     console.log(err)
-//   }
-// });
 
 
 
