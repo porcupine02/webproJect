@@ -189,7 +189,47 @@ const passForgotSchema = Joi.object({
     username: Joi.string().required()
 })
 
+const checkReport = Joi.object({
+    content: Joi.string().required()
+})
+router.post('/report', isLoggedIn, async function (req, res, next) {
 
+    try {
+        await checkReport.validateAsync(req.body, { abortEarly: false })
+    } catch (err) {
+        return res.status(400).send('กรุณากรอกข้อมูล')
+    }
+    const content = req.body.content
+    const login_id = req.user.login_id
+
+    const [customer] = await pool.query('select cus_id from login where login_id = ?', [login_id])
+    const cus_id = customer[0].cus_id
+
+
+    const conn = await pool.getConnection()
+    await conn.beginTransaction()
+
+    try {
+        await conn.query("insert into reports(content, cus_id) values(?, ?)", [content, cus_id])
+        conn.commit()
+        res.status(201).json("กำลังจะดำเนินการ")
+    } catch (err) {
+        conn.rollback()
+        res.status(400).send(err.toString())
+    } finally {
+        conn.release()
+    }
+})
+router.put('/report', async function (req, res, next) {
+
+})
+router.get('/report', async function (req, res, next) {
+
+    console.log(req.body.username)
+
+
+
+})
 router.post('/forgot', async function (req, res, next) {
 
     console.log(req.body.username)

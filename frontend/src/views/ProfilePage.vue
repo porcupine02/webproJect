@@ -31,6 +31,38 @@
         >
       </div>
     </div>
+    <div :class="{ modal: modal, 'is-active': is_active_report }">
+      <div class="modal-background"></div>
+      <div class="box modal-content">
+        <label class="label has-text-danger" style="font-size: 1.5rem"
+          >Report</label
+        >
+        <textarea
+          :class="$v.reportContent.$error ? 'is-danger' : ''"
+          class="textarea mb-3"
+          placeholder="บอกปัญหาของคุณ"
+          v-model="$v.reportContent.$model"
+        ></textarea>
+
+        <template v-if="$v.reportContent.$error">
+          <p class="help is-danger" v-if="!$v.reportContent.required">
+            กรุณากรอกข้อมูล
+          </p>
+        </template>
+        <div
+          class="button has-background-danger-light mx-2"
+          @click="reportButton()"
+        >
+          cancel
+        </div>
+        <div
+          class="button has-background-info-light mx-2"
+          @click="sentReport()"
+        >
+          report
+        </div>
+      </div>
+    </div>
 
     <div class="container mt-6 pt-5" id="profile">
       <div class="columns">
@@ -137,8 +169,15 @@
           </div>
         </div>
         <!-- history booking operate -->
-        <div class="column">
+        <div class="column has-icons-right">
           <strong class="content is-size-5"> ประวัติการจอง </strong>
+          <span
+            @click="reportButton()"
+            class="icon is-right mr-5 button py-4 is-danger"
+            style="float: right; font-size: 25px"
+          >
+            <i class="fas fa-bell"></i>
+          </span>
           <article
             class="media mt-3 card p-3"
             v-for="(booked, index) in booking"
@@ -217,34 +256,13 @@
                   <div class="button mx-3" disabled>check in</div>
                   <div class="button has-background-danger">check out</div>
 
-
-
-
-
-
-
-
-
                   <div class="button is-warning mx-3">confirm payment</div>
-
-
-
-
-
-
-
-
-
                 </div>
                 <div v-else>
                   <div class="button mx-1" disabled>check in</div>
                   <div class="button mx-1" disabled>check out</div>
 
-
-
                   <div class="button is-warning mx-3">confirm payment</div>
-
-
                 </div>
               </div>
             </div>
@@ -310,6 +328,8 @@ export default {
       comment: "",
       room_id: "",
       rate: 5,
+      is_active_report: false,
+      reportContent: "",
     };
   },
   components: { NavBar },
@@ -321,6 +341,9 @@ export default {
     newPassword: {
       required: required,
       complexPassword: complexPassword,
+    },
+    reportContent: {
+      required: required,
     },
   },
   methods: {
@@ -430,6 +453,29 @@ export default {
     rateJaa(index) {
       console.log(index);
       this.rate = index;
+    },
+    reportButton() {
+      if (this.is_active_report) {
+        this.is_active_report = false;
+      } else {
+        this.is_active_report = true;
+      }
+    },
+    sentReport() {
+      this.$v.$touch();
+      axios
+        .post(`http://localhost:3000/report/`, {
+          content: this.reportContent,
+        })
+        .then((res) => {
+          console.log(res);
+          alert(res.data);
+          this.is_active_report = false;
+        })
+        .catch((err) => {
+          console.log(err);
+          alert(err.response.data);
+        });
     },
     cancelRoom(
       bookedId,
