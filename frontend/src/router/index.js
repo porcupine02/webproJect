@@ -55,6 +55,11 @@ const routes = [
     path: '/createRoom',
     name: 'CreateRoom',
     component: () => import('../views/CreatePage.vue')
+  },
+  {
+    path: '/editroom/:id',
+    name: 'EditRoom',
+    component: () => import('../views/EditRoomPage.vue')
   }
 
 ]

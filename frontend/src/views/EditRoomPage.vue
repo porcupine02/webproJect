@@ -2,76 +2,58 @@
   <div class="container is-widescreen">
     <section class="hero">
       <div class="hero-body">
-        <p class="title">Create new Room</p>
+        <p class="title">Edit Room</p>
       </div>
     </section>
     <section class="px-6">
       <!-- <%= error.code + ': ' + error.sqlMessage %> -->
       <!---->
-      <div class="content">
-        <h1 class="has-text-danger has-text-centered">
-          {{ error }}
-        </h1>
-      </div>
-      <input
-        class="mb-5"
-        multiple
-        type="file"
-        accept="image/png, image/jpeg, image/webp"
-        @change="selectImages"
-      />
 
-      <div v-if="images" class="columns is-multiline">
-        <div
-          v-for="(image, index) in images"
-          :key="image.id"
-          class="column is-one-quarter"
-        >
-          <div class="card">
-            <div class="card-image">
-              <figure class="image is-4by3">
-                <img :src="showSelectImage(image)" alt="Placeholder image" />
-              </figure>
+      <!-- <label class="checkbox column is-2">
+        <input type="checkbox" v-model="addNewImage" />
+        ต้องการเปลี่ยนรูปใหม่
+      </label>
+      <div v-if="addNewImage">
+        <div class="content">
+          <h1 class="has-text-danger has-text-centered">
+            {{ error }}
+          </h1>
+        </div>
+        <input
+          class="mb-5"
+          multiple
+          type="file"
+          accept="image/png, image/jpeg, image/webp"
+          @change="selectImages"
+        />
+
+        <div v-if="images" class="columns is-multiline">
+          <div
+            v-for="(image, index) in images"
+            :key="image.id"
+            class="column is-one-quarter"
+          >
+            <div class="card">
+              <div class="card-image">
+                <figure class="image is-4by3">
+                  <img :src="showSelectImage(image)" alt="Placeholder image" />
+                </figure>
+              </div>
+              <footer class="card-footer">
+                <a
+                  @click="deleteSelectImage(index)"
+                  class="card-footer-item has-text-danger"
+                  >Delete</a
+                >
+              </footer>
             </div>
-            <footer class="card-footer">
-              <a
-                @click="deleteSelectImage(index)"
-                class="card-footer-item has-text-danger"
-                >Delete</a
-              >
-            </footer>
           </div>
         </div>
-      </div>
-
+      </div> -->
       <div class="field mt-5">
         <label class="label">ประเภทห้องพัก</label>
         <div class="control">
-          <div class="select">
-            <select v-model="$v.selected.$model">
-              <option v-for="type in roomtype" :key="type.room_id">
-                {{ type.room_type }}
-              </option>
-              <option value="0">อื่นๆ โปรดระบุ</option>
-            </select>
-          </div>
-          <input
-            :class="$v.newRoom.$error ? 'is-danger' : ''"
-            class="input mt-2"
-            type="text"
-            placeholder="ประเภทห้องพัก"
-            v-show="selected == 0"
-            v-model="$v.newRoom.$model"
-          />
-
-          <template v-if="$v.newRoom.$error">
-            <p class="help is-danger" v-if="!$v.newRoom.minLength">
-              ต้องมีข้อมูลมากกว่า 10 ตัวอักษร
-            </p>
-            <p class="help is-danger" v-if="!$v.newRoom.maxLength">
-              ต้องมีข้อมูลไม่เกิน 50 ตัวอักษร
-            </p>
-          </template>
+          <input class="input" type="text" v-model="room_type" disabled />
         </div>
       </div>
 
@@ -88,9 +70,6 @@
           <template v-if="$v.description.$error">
             <p class="help is-danger" v-if="!$v.description.minLength">
               ต้องมีข้อมูลมากกว่า 50 ตัวอักษร
-            </p>
-            <p class="help is-danger" v-if="!$v.description.required">
-              กรุณากรอกข้อมูล
             </p>
           </template>
         </div>
@@ -109,9 +88,6 @@
         <template v-if="$v.price.$error">
           <p class="help is-danger" v-if="!$v.price.integer">
             จำนวณเงินต้องมากกว่า 0
-          </p>
-          <p class="help is-danger" v-if="!$v.price.required">
-            กรุณากรอกข้อมูล
           </p>
         </template>
       </div>
@@ -152,9 +128,6 @@
           <p class="help is-danger" v-if="!$v.people.integer">
             จำนวณเงินต้องมากกว่า 0
           </p>
-          <p class="help is-danger" v-if="!$v.people.required">
-            กรุณากรอกข้อมูล
-          </p>
         </template>
       </div>
       <div class="field">
@@ -171,9 +144,6 @@
           <p class="help is-danger" v-if="!$v.count.integer">
             จำนวนห้องต้องมากกว่า 0
           </p>
-          <p class="help is-danger" v-if="!$v.count.required">
-            กรุณากรอกข้อมูล
-          </p>
         </template>
       </div>
 
@@ -181,7 +151,7 @@
 
       <div class="field is-grouped">
         <div class="control">
-          <button class="button is-link" @click="submitNewRoom()">
+          <button class="button is-link" @click="submitUpdateRoom()">
             Submit
           </button>
         </div>
@@ -206,11 +176,10 @@ import {
 export default {
   data() {
     return {
-      newRoom: "",
-      roomtype: [],
+      addNewImage: false,
       error: null,
       images: [], // array of image
-      selected: "asdf",
+      room_type: "",
       price: "",
       description: "",
       service1: false,
@@ -219,16 +188,12 @@ export default {
       service4: false,
       people: "",
       count: "",
+      service_id: ''
     };
   },
   validations: {
-    selected: {
-      required,
-      minLength: minLength(10),
-      maxLength: maxLength(50),
-    },
     description: {
-      required: required,
+      required,
       minLength: minLength(50),
     },
     price: {
@@ -263,36 +228,30 @@ export default {
       this.images = Array.from(this.images);
       this.images.splice(index, 1);
     },
-    submitNewRoom() {
+    submitUpdateRoom() {
       console.log("submit");
-
-      this.$v.$touch();
-      if (this.selected == 0) {
-        this.selected = this.newRoom;
-      }
-      let formData = new FormData();
-      formData.append("room_type", this.selected);
-      formData.append("description", this.description);
-      formData.append("price", this.price);
-      formData.append("service1", this.service1 ? "yes" : "no");
-      formData.append("service2", this.service2 ? "yes" : "no");
-      formData.append("service3", this.service3 ? "yes" : "no");
-      formData.append("service4", this.service4 ? "yes" : "no");
-      formData.append("people", this.people);
-      formData.append("count", this.count);
-      this.images = Array.from(this.images);
-      this.images.forEach((image) => {
-        if (image.size > 1000000) {
-          console.log("too large image");
-        }
-        formData.append("myImage", image);
-      });
+      const formData = {
+        room_type: this.room_type,
+        description: this.description,
+        price: this.price,
+        service1: this.service1 ? "yes" : "no",
+        service2: this.service2 ? "yes" : "no",
+        service3: this.service3 ? "yes" : "no",
+        service4: this.service4 ? "yes" : "no",
+        people: this.people,
+        count: this.count,
+        service_id: this.service_id
+      };
       console.log(formData);
 
       axios
-        .post("http://localhost:3000/admin/create", formData)
+        .put(
+          `http://localhost:3000/admin/update/${this.$route.params.id}`,
+          formData
+        )
         .then((res) => {
           console.log(res);
+          console.log("send");
           this.$router.push({
             name: "Home",
           });
@@ -306,9 +265,36 @@ export default {
   created() {
     this.images = Array.from(this.images);
     axios
-      .get("http://localhost:3000/admin/create")
+      .get(`http://localhost:3000/admin/update/${this.$route.params.id}`)
       .then((res) => {
-        this.roomtype = res.data;
+        console.log(res.data);
+        const room = res.data[0];
+        this.price = room.price;
+        this.count = room.count;
+        this.people = room.people;
+        this.description = room.description;
+        this.room_type = room.room_type;
+        this.service_id = room.service_id
+        if (room.breakfast == "yes") {
+          this.service1 = true;
+        } else {
+          this.service1 = false;
+        }
+        if (room.pool == "yes") {
+          this.service2 = true;
+        } else {
+          this.service2 = false;
+        }
+        if (room.wifi == "yes") {
+          this.service3 = true;
+        } else {
+          this.service3 = false;
+        }
+        if (room.air_conditioner == "yes") {
+          this.service4 = true;
+        } else {
+          this.service4 = false;
+        }
         console.log(res.data);
       })
       .catch((error) => {

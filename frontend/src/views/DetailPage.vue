@@ -143,7 +143,7 @@
                   {{ comment.content }}
                 </p>
               </div>
-              <nav class="level is-mobile">
+              <!-- <nav class="level is-mobile">
                 <div class="level-left">
                   <a class="level-item" @click="addLike(comment.comment_id)">
                     <span class="icon is-small"
@@ -152,7 +152,7 @@
                   </a>
                   Like {{ comment.like }}
                 </div>
-              </nav>
+              </nav> -->
             </div>
             <div class="media-right">
               <button class="delete"></button>

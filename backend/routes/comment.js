@@ -3,13 +3,39 @@ const express = require("express");
 const pool = require("../config");
 const router = express.Router();
 
+const { isLoggedIn } = require("../middlewares");
 // Get comment
 router.get('/:blogId/comments', function (req, res, next) {
 });
 
 // Create new comment
-router.post('/:blogId/comments', function (req, res, next) {
-    return
+router.post('/comment', isLoggedIn, async function (req, res, next) {
+    console.log(req.body)
+    const content = req.body.content
+    const room_id = req.body.room_id
+    const rate = req.body.rate
+    const login_id = req.user.login_id
+
+    const [customer] = await pool.query('select cus_id from login where login_id = ?', [login_id])
+    const cus_id = customer[0].cus_id
+    console.log("room_id")
+    console.log(room_id)
+
+    const conn = await pool.getConnection()
+    await conn.beginTransaction();
+
+    try {
+        await conn.query('insert into comments(content, cus_id, room_id, rate) values (?, ?, ?, ?)', [content, cus_id, room_id, rate])
+        conn.commit()
+        res.status(201).send("comment done!")
+    } catch (err) {
+        console.log(err)
+        conn.rollback()
+        res.status(400).send("comment fail!")
+    } finally {
+        conn.release()
+    }
+
 });
 
 // Update comment

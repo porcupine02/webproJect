@@ -1,6 +1,4 @@
 <template>
-
-  
   <div class="columns" style="margin-top: 100px" id="invoice">
     <div class="column"></div>
     <div class="column is-three box">
@@ -33,7 +31,16 @@
         <tr>
           <td colspan="2">ราคาต่อคืน : {{ priceForDay }}</td>
           <td colspan="2">
-            ราคา : {{ priceForDay + " x " + countRooms + " x " + countDays + " = " + allPrice }}
+            ราคา :
+            {{
+              priceForDay +
+              " x " +
+              countRooms +
+              " x " +
+              countDays +
+              " = " +
+              allPrice
+            }}
           </td>
         </tr>
         <tr>
@@ -47,6 +54,7 @@
             <div class="file">
               <label class="file-label">
                 <input
+                  accept="image/png, image/jpeg, image/webp"
                   class="file-input"
                   type="file"
                   id="file"
@@ -60,17 +68,16 @@
                   <span class="file-label"> สลิป : </span>
                 </span>
               </label>
- 
             </div>
             <div>
               <label for="">กรอกเงินที่จ่าย {{ paidAmount }}</label>
               <input type="number" v-model="paidAmount" />
             </div>
             <template v-if="$v.fileSize.$error">
-            <p class="help is-danger" v-if="!$v.fileSize.checkuploadfile">
-              กรุณากรอกทั้งสองฝั่ง
-            </p>
-          </template>
+              <p class="help is-danger" v-if="!$v.fileSize.checkuploadfile">
+                กรุณากรอกทั้งสองฝั่ง
+              </p>
+            </template>
           </td>
         </tr>
       </table>
@@ -93,31 +100,27 @@
 </template>
 
 <script>
-
 import axios from "@/plugins/axios";
 
 // import { required } from "vuelidate/lib/validators";
 
 function checkuploadfile(value) {
-  console.log(value)
-   if(value == 0){
+  console.log(value);
+  if (value == 0) {
     // console.log(this.paidAmount)
-     if(this.paidAmount != ''){
-      return false
-     }
-     else{
-      return true
-     }
-   }
-   else{
-    console.log(this.paidAmount)
-    if(this.paidAmount != ''){
-      return true
+    if (this.paidAmount != "") {
+      return false;
+    } else {
+      return true;
     }
-    else{
-      return false
+  } else {
+    console.log(this.paidAmount);
+    if (this.paidAmount != "") {
+      return true;
+    } else {
+      return false;
     }
-   }
+  }
 }
 export default {
   props: ["user"],
@@ -139,8 +142,8 @@ export default {
       roomId: "",
       file: null,
       paidAmount: "",
-      fileSize : 0,
-      allCountRooms : 0
+      fileSize: 0,
+      allCountRooms: 0,
       // user : this.user.username
     };
   },
@@ -152,46 +155,46 @@ export default {
   methods: {
     handleFileUpload() {
       this.file = this.$refs.file.files[0];
-      console.log(this.file)
+      console.log(this.file);
 
-      this.fileSize += this.$refs.file.files[0].size
-      console.log(this.fileSize)
+      this.fileSize += this.$refs.file.files[0].size;
+      console.log(this.fileSize);
       // console.log(this.file);
     },
     confirm() {
       this.$v.$touch();
       if (!this.$v.$invalid) {
-      // console.log(this.file)
-      var formData = new FormData();
-      formData.append("file_image", this.file);
-      formData.append("fname", this.fname);
-      formData.append("lname", this.lname);
-      formData.append("checkIn", this.checkIn);
-      formData.append("checkOut", this.checkOut);
-      formData.append("countDays", this.countDays);
-      formData.append("countRooms", this.countRooms);
-      formData.append("priceForDay", this.priceForDay);
-      formData.append("price", this.price);
-      formData.append("allPrice", this.allPrice);
-      formData.append("roomId", this.roomId);
-      formData.append("paidAmount", this.paidAmount);
-      formData.append("people", this.people);
-      formData.append("allCountRooms", this.allCountRooms);
-      // console.log(formData);
+        // console.log(this.file)
+        var formData = new FormData();
+        formData.append("file_image", this.file);
+        formData.append("fname", this.fname);
+        formData.append("lname", this.lname);
+        formData.append("checkIn", this.checkIn);
+        formData.append("checkOut", this.checkOut);
+        formData.append("countDays", this.countDays);
+        formData.append("countRooms", this.countRooms);
+        formData.append("priceForDay", this.priceForDay);
+        formData.append("price", this.price);
+        formData.append("allPrice", this.allPrice);
+        formData.append("roomId", this.roomId);
+        formData.append("paidAmount", this.paidAmount);
+        formData.append("people", this.people);
+        formData.append("allCountRooms", this.allCountRooms);
+        // console.log(formData);
 
-      axios
-        .post("http://localhost:3000/invoice", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then((response) => {
-          console.log(response.data);
-          this.$router.push({ path: "/" }); // Success! -> redirect to home page
-        })
-        .catch((error) => {
-          console.log(error.message);
-        });
+        axios
+          .post("http://localhost:3000/invoice", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then((response) => {
+            console.log(response.data);
+            this.$router.push({ path: "/" }); // Success! -> redirect to home page
+          })
+          .catch((error) => {
+            console.log(error.message);
+          });
       }
     },
   },
@@ -199,7 +202,7 @@ export default {
     this.roomId = this.booking.split(" ")[0];
     this.fname = this.booking.split(" ")[5];
     this.lname = this.booking.split(" ")[6];
-    this.people = this.booking.split(" ")[3]
+    this.people = this.booking.split(" ")[3];
     this.checkIn = this.booking.split(" ")[1];
     this.checkOut = this.booking.split(" ")[2];
     this.countDays = this.booking.split(" ")[10];
@@ -210,9 +213,9 @@ export default {
       this.booking.split(" ")[4] *
       this.booking.split(" ")[10];
     this.allPrice = this.booking.split(" ")[9];
-    console.log("folK" + this.allPrice)
-    this.allCountRooms = this.booking.split(" ")[11]
-    
+    console.log("folK" + this.allPrice);
+    this.allCountRooms = this.booking.split(" ")[11];
+
     console.log(this.allPrice);
     console.log(this.user);
 
