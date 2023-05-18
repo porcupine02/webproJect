@@ -138,6 +138,7 @@
             v-model="$v.count.$model"
             :class="$v.count.$error ? 'is-danger' : ''"
             type="number"
+            disabled
           />
         </div>
         <template v-if="$v.people.$error">
