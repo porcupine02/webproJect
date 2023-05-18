@@ -9,9 +9,13 @@
         <!-- <label class="label">room_id {{ room_id }}</label> -->
         <label class="label">Rate</label>
         <label v-for="index in 5" :key="index">
-          <label @click="rateJaa(index)" style="font-size: 2em;">
-          <span class="fa fa-star fa-2xl" v-if="rate < index"></span>
-          <span class="fa fa-star checked fa-2xl" style="color: #ff0"  v-if="rate >= index"></span>
+          <label @click="rateJaa(index)" style="font-size: 2em">
+            <span class="fa fa-star fa-2xl" v-if="rate < index"></span>
+            <span
+              class="fa fa-star checked fa-2xl"
+              style="color: #ff0"
+              v-if="rate >= index"
+            ></span>
           </label>
         </label>
         <label class="label">Review</label>
@@ -210,12 +214,37 @@
                   </div>
                 </div>
                 <div v-else-if="booked.bstatus == 'checkOut'">
-                  <div class="button" disabled>check in</div>
+                  <div class="button mx-3" disabled>check in</div>
                   <div class="button has-background-danger">check out</div>
+
+
+
+
+
+
+
+
+
+                  <div class="button is-warning mx-3">confirm payment</div>
+
+
+
+
+
+
+
+
+
                 </div>
                 <div v-else>
-                  <div class="button" disabled>check in</div>
-                  <div class="button" disabled>check out</div>
+                  <div class="button mx-1" disabled>check in</div>
+                  <div class="button mx-1" disabled>check out</div>
+
+
+
+                  <div class="button is-warning mx-3">confirm payment</div>
+
+
                 </div>
               </div>
             </div>
@@ -392,7 +421,7 @@ export default {
         .post(`http://localhost:3000/comment/`, comment_data)
         .then((res) => {
           console.log(res);
-          this.is_active_comments = false
+          this.is_active_comments = false;
         })
         .catch((err) => {
           console.log(err);
@@ -400,7 +429,7 @@ export default {
     },
     rateJaa(index) {
       console.log(index);
-      this.rate = index
+      this.rate = index;
     },
     cancelRoom(
       bookedId,

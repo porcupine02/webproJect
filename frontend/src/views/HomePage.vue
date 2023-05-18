@@ -1,294 +1,5 @@
 <template>
   <div id="home">
-    <!-- login signout -->
-    <!-- <div :class="{ modal: modal, 'is-active': isActive_Sign_in }">
-      <div class="modal-background"></div>
-      <div class="box modal-content">
-        <div class="field">
-          <label class="label has-text-centered">ล็อคอิน</label>
-        </div>
-        <div class="field">
-          <h1 class="label">Username {{ username }}</h1>
-          <div class="control has-icons-left">
-            <span class="icon is-small is-left">
-              <i class="fas fa-envelope"></i>
-            </span>
-            <input
-              class="input"
-              type="username"
-              placeholder="e.g. alex@example.com"
-              v-model="username"
-            />
-          </div>
-        </div>
-
-        <div class="field">
-          <label class="label">Password {{ password }}</label>
-          <div class="control has-icons-left">
-            <span class="icon is-small is-left">
-              <i class="fas fa-lock"></i>
-            </span>
-            <input
-              class="input"
-              type="password"
-              placeholder="********"
-              v-model="password"
-            />
-          </div>
-        </div>
-        <p
-          v-if="error"
-          class="px-3 py-2 mb-3 has-text-danger-dark has-background-danger-light"
-        >
-          {{ error }}
-        </p>
-        <div class="field is-grouped is-grouped">
-          <p class="control">
-            <a class="button is-primary" @click="login()">เข้าสู่ระบบ</a>
-          </p>
-          <p class="control">
-            <a class="button is-danger" @click="Close()">ปิด</a>
-          </p>
-        </div>
-        <router-link :to="{ name: 'Forgot' }"> ลืมรหัสผ่าน </router-link>
-      </div>
-    </div>
-    <div :class="{ modal: modal, 'is-active': isActive_Sign_up }">
-      <div class="modal-background"></div>
-
-      <form class="box modal-content">
-        <div class="field">
-          <label class="label has-text-centered">สมัครสมาชิก</label>
-        </div>
-
-        <div class="field">
-          <h1 class="label">First Name{{ sign_fname }}</h1>
-          <div class="control">
-            <input
-              class="input"
-              :class="{ 'is-danger': $v.sign_fname.$error }"
-              type="text"
-              placeholder="Puttipong"
-              v-model="$v.sign_fname.$model"
-            />
-          </div>
-
-          <template v-if="$v.sign_fname.$error">
-            <p class="help is-danger" v-if="!$v.sign_fname.required">
-              This field is required
-            </p>
-            <p class="help is-danger" v-if="!$v.sign_fname.minLength">min 5</p>
-            <p class="help is-danger" v-if="!$v.sign_fname.maxLength">max 15</p>
-          </template>
-        </div>
-        <div class="field">
-          <h1 class="label">Last Name</h1>
-          <div class="control">
-            <input
-              class="input"
-              :class="{ 'is-danger': $v.sign_lname.$error }"
-              type="text"
-              placeholder="Panich"
-              v-model="$v.sign_lname.$model"
-            />
-          </div>
-          <template v-if="$v.sign_lname.$error">
-            <p class="help is-danger" v-if="!$v.sign_lname.required">
-              This field is required
-            </p>
-            <p class="help is-danger" v-if="!$v.sign_lname.minLength">min 5</p>
-            <p class="help is-danger" v-if="!$v.sign_lname.maxLength">max 15</p>
-          </template>
-        </div>
-        <div class="field">
-          <label class="label">Phone number</label>
-          <div class="control">
-            <input
-              class="input"
-              :class="{ 'is-danger': $v.sign_phone.$error }"
-              type="number"
-              placeholder="083-3343-xxx"
-              v-model="$v.sign_phone.$model"
-            />
-          </div>
-          <template v-if="$v.sign_phone.$error">
-            <p class="help is-danger" v-if="!$v.sign_phone.required">
-              This field is required
-            </p>
-            <p class="help is-danger" v-else-if="!$v.sign_phone.sign_phone">
-              เบอร์โทรศัพท์ 10 ตัว
-            </p>
-            <p class="help is-danger" v-else-if="!$v.sign_phone.maxLength">
-              เบอร์โทรศัพท์ 10 ตัว
-            </p>
-          </template>
-        </div>
-        <div class="field">
-          <label class="label">Date</label>
-          <div class="control">
-            <input
-              class="input"
-              :class="{ 'is-danger': $v.sign_dob.$error }"
-              type="date"
-              placeholder="24/07/2002"
-              v-model="$v.sign_dob.$model"
-            />
-          </div>
-          <template v-if="$v.sign_dob.$error">
-            <p class="help is-danger" v-if="!$v.sign_dob.required">
-              This field is required
-            </p>
-          </template>
-        </div>
-        <div class="field">
-          <h1 class="label">Email</h1>
-          <div class="control">
-            <input
-              class="input"
-              :class="{ 'is-danger': $v.sign_email.$error }"
-              type="email"
-              placeholder="e.g. alex@example.com"
-              v-model="$v.sign_email.$model"
-            />
-          </div>
-          <template v-if="$v.sign_email.$error">
-            <p class="help is-danger" v-if="!$v.sign_email.required">
-              This field is required
-            </p>
-            <p class="help is-danger" v-else-if="!$v.sign_email.email">
-              not email
-            </p>
-          </template>
-        </div> -->
-
-    <!-- <div class="field">
-          <label class="label">User Name</label>
-          <div class="control">
-            <input
-              class="input"
-              :class="{ 'is-danger': $v.sign_username.$error }"
-              type="text"
-              placeholder="Folk"
-              v-model="$v.sign_username.$model"
-            />
-          </div>
-          <template v-if="$v.sign_username.$error">
-            <p class="help is-danger" v-if="!$v.sign_username.required">
-              This field is required
-            </p>
-            <p class="help is-danger" v-else-if="!$v.sign_username.maxLength">
-              25
-            </p>
-            <p class="help is-danger" v-else-if="!$v.sign_username.minLength">
-              5
-            </p>
-          </template>
-        </div>
-
-        <div class="field">
-          <label class="label">Password</label>
-          <div class="control">
-            <input
-              class="input"
-              :class="{ 'is-danger': $v.sign_password.$error }"
-              type="password"
-              placeholder="********"
-              v-model="$v.sign_password.$model"
-            />
-          </div>
-          <template v-if="$v.sign_password.$error">
-            <p class="help is-danger" v-if="!$v.sign_password.required">
-              กรุณากรอกข้อมูล
-            </p>
-            <p class="help is-danger" v-else-if="!$v.sign_password.complex">
-              รหัสมีความปลอดภัยน้อย
-            </p>
-            <p class="help is-danger" v-else-if="!$v.sign_password.minLength">
-              จำนวนตัวอักษรมากกว่า 8 ตัว
-            </p>
-          </template>
-        </div>
-        <div class="field">
-          <label class="label">confirm_password</label>
-          <div class="control">
-            <input
-              class="input"
-              :class="{ 'is-danger': $v.confirm_password.$error }"
-              type="password"
-              placeholder="********"
-              v-model="$v.confirm_password.$model"
-            />
-          </div>
-          <template v-if="$v.confirm_password.$error">
-      
-            <p class="help is-danger" v-if="!$v.confirm_password.sameAs">
-              รหัสไม่เหมือนกัน
-            </p>
-          </template>
-        </div>
-        <div class="field is-grouped">
-          <div class="control">
-            <a class="button is-primary" value="submit" @click="signUp()"
-              >ลงทะเบียน</a
-            >
-          </div>
-          <div class="control">
-            <a class="button is-danger" @click="Close()">ปิด</a>
-          </div>
-        </div>
-      </form>
-    </div> -->
-
-    <!-- nav bar -->
-    <!-- <nav
-      class="navbar is-dark"
-      role="navigation"
-      aria-label="main navigation"
-      style="position: fixed; top: 0; width: 100%"
-    >
-      <div class="navbar-brand">
-        <a class="navbar-item" href="http://localhost:8080/">
-          <strong> <i class="fas fa-home"> </i> Home</strong>
-        </a>
-      </div>
-      <div class="navbar-menu">
-      
-        <div class="navbar-end">
-          <div class="navbar-item">
-            <div class="buttons asd">
-              <a
-                class="button is-info"
-                v-if="logins == false"
-                @click="isActive_Sign_up = true"
-              >
-                <strong>สมัครสมาชิก</strong>
-              </a>
-              <a class="button is-dark" v-if="logins == true" href="#/profile">
-                <strong> <i class="fas fa-user"> </i> {{ user.username }}</strong>
-              </a>
-              <a
-                class="button is-dark"
-                v-if="logins == false"
-                @click="isActive_Sign_in = true"
-              >
-                ล็อคอิน
-              </a>
-              <a
-                class="button is-danger"
-                v-if="logins == true"
-                @click="logOut()"
-                >ล็อคเอ้า</a
-              ><a
-                class="navbar-item"
-                href="http://localhost:8080/#/createRoom/"
-              >
-                create
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </nav> -->
     <div>
       <NavBar />
     </div>
@@ -301,9 +12,13 @@
             <div class="subtitle is-4">เช็คอิน :</div>
             <div class="">
               <p>{{ begin }}</p>
-              
-              <input class="input" type="date" v-model="$v.begin.$model" :min="dateNow">
-           
+
+              <input
+                class="input"
+                type="date"
+                v-model="$v.begin.$model"
+                :min="dateNow"
+              />
             </div>
             <template v-if="$v.begin.$error">
               <p class="help is-danger" v-if="!$v.begin.required">
@@ -321,7 +36,6 @@
                 :class="{ 'is-danger': $v.end.$error }"
                 v-model="$v.end.$model"
                 :min="begin"
-             
               />
             </div>
             <template v-if="$v.end.$error">
@@ -413,6 +127,9 @@
             <!-- :href="'#/booking?room=' + room.room_id + ' ' + begin + ' ' + end" -->
             <a @click="booking(room.room_id)" class="card-footer-item"
               >จองเลย</a
+            >
+            <a :href="`/#/editroom/${room.room_id}`" class="card-footer-item"
+              >แก้ไขห้อง</a
             >
           </footer>
         </div>
@@ -536,8 +253,8 @@ export default {
       confirm_password: "",
       error: "",
       count: 1,
-      begin: '',
-      dateNow : '',
+      begin: "",
+      dateNow: "",
       end: "",
       // model: {
       //   date: "",
@@ -572,10 +289,13 @@ export default {
   mounted() {
     // this.serach()
     const currentDate = new Date();
-    
 
-const formattedDate = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
-this.dateNow = formattedDate
+    const formattedDate = `${currentDate.getFullYear()}-${(
+      currentDate.getMonth() + 1
+    )
+      .toString()
+      .padStart(2, "0")}-${currentDate.getDate().toString().padStart(2, "0")}`;
+    this.dateNow = formattedDate;
   },
 
   validations: {

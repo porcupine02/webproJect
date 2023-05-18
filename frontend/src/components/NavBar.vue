@@ -283,7 +283,7 @@
                 @click="logOut()"
                 >ล็อคเอ้า</a
               ><a
-                class="navbar-item"
+                class="navbar-item button is-info"
                 href="http://localhost:8080/#/createRoom/"
               >
                 create
@@ -353,7 +353,7 @@ export default {
       begin: "",
       end: "",
       profile : ''
-     
+
         }
     },
 
@@ -365,11 +365,11 @@ export default {
       this.logins = true;
     } else {
       this.logins = false;
-     
+
     }
     },
 
-    
+
   validations: {
     sign_fname: {
       required: required,
@@ -414,7 +414,7 @@ export default {
       ErrDate : ErrDate
     }
   },
-    
+
     methods:{
         Close() {
       this.isActive_Sign_in = false;
@@ -499,7 +499,7 @@ export default {
 
     getUser(){
       axios.get('/user/me').then((res => {
-     
+
           this.user = res.data
           this.profile = this.user
       }))
