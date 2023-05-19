@@ -185,9 +185,14 @@ const userNameForgotSchema = Joi.object({
     username: Joi.string().required().external(usernameForgotValidator)
 })
 
+// const userNameForgot = Joi.object({
+//     username: Joi.string().required
+// })
+
 const passForgotSchema = Joi.object({
     password: Joi.string().required().custom(passwordValidator),
-    username: Joi.string().required()
+    username: Joi.string().required(),
+    confirm_password : Joi.string().required()
 })
 
 const checkReport = Joi.object({
@@ -280,6 +285,7 @@ router.post('/forgot', async function (req, res, next) {
 })
 
 router.put('/forgot', async function (req, res, next) {
+    console.log(req.body.confirm_password)
 
     try {
         await passForgotSchema.validateAsync(req.body, { abortEarly: false })
@@ -304,8 +310,11 @@ router.get('/user/', isLoggedIn, async (req, res, next) => {
     try {
         const [booking, fields1] = await pool.query("select *, DATE_FORMAT(check_in, '%Y-%m-%d') as check_in, date_format(check_out, '%Y-%m-%d') as check_out, DATE_FORMAT(timestamp_booking, '%Y-%m-%d %H:%i') as timestamp_booking, booking.status as bstatus from booking join payments using (booking_id) where cus_id = ? order by timestamp_booking desc", [id])
         const [user, fields2] = await pool.query("select *, DATE_FORMAT(DOB, '%Y-%m-%d') as DOB from customers join login using (cus_id)  where cus_id = ?", [id])
+        const [allbooking, fields3] = await pool.query("select *, DATE_FORMAT(check_in, '%Y-%m-%d') as check_in, date_format(check_out, '%Y-%m-%d') as check_out, DATE_FORMAT(timestamp_booking, '%Y-%m-%d %H:%i') as timestamp_booking, booking.status as bstatus from booking join payments using (booking_id) order by timestamp_booking desc")
+
+
         console.log(user)
-        res.status(200).send({ "booking": booking, "user": user })
+        res.status(200).send({ "booking": booking, "user": user, 'allbooking' : allbooking })
     } catch (err) {
         console.log(err)
         res.status(400).send(err)

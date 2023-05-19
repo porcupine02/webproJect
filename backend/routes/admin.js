@@ -211,6 +211,27 @@ router.post("/admin/create", isLoggedIn, upload.array("myImage", 6), async funct
 });
 
 
+router.put('/confirmPayment/:id', isLoggedIn, async function(req, res, next){
+    console.log(req.params.id)
+
+    const bookedId = req.params.id
+
+    try {
+      const [rows1, fields1] = await pool.query(
+        'update payments set status = ?  where booking_id = ?', [2, bookedId]
+      )
+      console.log(rows1)
+      const [row2, field] = await pool.query(
+        'SELECT status FROM payments WHERE booking_id = ?', [bookedId]
+      )
+      res.json(row2)
+  } catch (error) {
+      res.status(500).json(error)
+  }
+
+})
+
+
 
 
 
