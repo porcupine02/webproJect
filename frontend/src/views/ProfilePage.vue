@@ -219,14 +219,17 @@
                   สถานะการจ่ายเงิน :
                   <strong
                     class="has-text-success"
-                    v-if="booked.payment_amount >= booked.payment_total_money"
+                    v-if="booked.status == 'complete'"
                     >complete</strong
                   >
-                  <strong class="has-text-danger" v-else>incomplete</strong>
+                  
+                  <strong class="has-text-danger" v-else >{{ booked.status }}</strong>
 
                   <span class="is-size-5" style="float: right">
-                    {{ booked.payment_total_money }}
+                    {{ booked.payment_total_money}}
+                 
                   </span>
+
                 </p>
 
                 <div
@@ -255,20 +258,24 @@
                 <div v-else-if="booked.bstatus == 'checkOut'">
                   <div class="button mx-3" disabled>check in</div>
                   <div class="button has-background-danger">check out</div>
+                </div>
+                     
+                <div v-else-if=" user[0].login_role == 'manager' ">
+                  <div class="button mx-1" disabled>check in</div>
+                  <div class="button mx-1" disabled>check out</div>
 
-                  <div class="button is-warning mx-3">confirm payment</div>
+                  <div class="button is-warning mx-3" @click="confirmPayment(booked.booking_id, index)">confirm payment</div>
                 </div>
                 <div v-else>
                   <div class="button mx-1" disabled>check in</div>
                   <div class="button mx-1" disabled>check out</div>
 
-                  <div class="button is-warning mx-3">confirm payment</div>
                 </div>
               </div>
             </div>
             <div
               class="media-right"
-              v-if="booked.payment_amount < booked.payment_total_money"
+              v-if="booked.status == 'incomplete'"
             >
               <div
                 class="button has-background-danger"
@@ -528,6 +535,15 @@ export default {
           });
       }
     },
+    confirmPayment(bookingId, index){
+        console.log(bookingId, index)
+        axios.put(`http://localhost:3000/confirmPayment/${bookingId}`).then((res) =>{
+          console.log(res.data[0].status)
+          this.booking[index].status = res.data[0].status;
+        }).catch((err)=>{
+            console.log(err)
+        })
+    }
   },
 
   created() {
@@ -537,8 +553,18 @@ export default {
     axios
       .get(`http://localhost:3000/user/`)
       .then((res) => {
-        this.booking = res.data.booking;
+        // this.booking = res.data.booking;
         this.user = res.data.user;
+        // this.allbooking = res.data.allbooking;
+        console.log(this.user[0])
+        console.log(this.booking)
+        console.log(this.allbooking)
+      if(this.user[0].login_role == 'manager'){
+        this.booking = res.data.allbooking
+      }
+      else{
+        this.booking = res.data.booking
+      }
       })
       .catch((err) => {
         console.log(err);
