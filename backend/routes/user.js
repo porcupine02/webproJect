@@ -6,6 +6,7 @@ const { generateToken } = require('../utils/token');
 const { isLoggedIn } = require("../middlewares");
 const multer = require('multer');
 const path = require('path');
+const { report } = require('process');
 
 router = express.Router();
 const loginSchema = Joi.object({
@@ -220,12 +221,35 @@ router.post('/report', isLoggedIn, async function (req, res, next) {
         conn.release()
     }
 })
-router.put('/report', async function (req, res, next) {
+router.put('/report/:reportId', async function (req, res, next) {
+    console.log(req.params.reportId)
+    const conn = await pool.getConnection()
+    await conn.beginTransaction()
+
+    try {
+        await conn.query("update reports set status = 'accept' where report_id = ?", [req.params.reportId])
+        const [reports] = await pool.query("select * from reports where status = 'submit'")
+        const [allReports] = await pool.query("select * from reports")
+        conn.commit()
+        res.status(202).send({ reports: reports, allReports: allReports })
+    } catch (err) {
+        conn.rollback()
+        res.status(400).send(err.toString())
+    } finally {
+        conn.release()
+    }
 
 })
 router.get('/report', async function (req, res, next) {
+    try {
+        const [reports] = await pool.query("select * from reports where status = 'submit'")
+        const [allReports] = await pool.query("select *, concat(c.first_name, ' ', last_name) as 'name' from reports join customers c using (cus_id)")
+        res.status(200).send({ reports: reports, allReports: allReports })
+    } catch (err) {
+        console.log(err)
+        res.status(400).send({ message: "เกิดข้อผิดพลาด" })
+    }
 
-    console.log(req.body.username)
 
 
 

@@ -1,5 +1,5 @@
 <template>
-   <div id="app">
+  <div id="app">
     <div :class="{ modal: modal, 'is-active': isActive_Sign_in }">
       <div class="modal-background"></div>
       <div class="box modal-content">
@@ -267,8 +267,46 @@
               >
                 <strong>สมัครสมาชิก</strong>
               </a>
+
+              <div class="navbar-brand">
+                <!-- <div class="navbar-end"> -->
+                <div class="navbar-item has-dropdown is-hoverable">
+                  <a class="navbar-link"> REPORT </a>
+
+                  <div class="navbar-dropdown is-right">
+                    <div
+                      class="columns"
+                      v-for="report in reports"
+                      :key="report"
+                    >
+                      <div class="navbar-item column">
+                        {{ report.content }}
+                        <div
+                          class="button is-primary column"
+                          @click="acceptReport(report.report_id)"
+                        >
+                          accept
+                        </div>
+                      </div>
+                    </div>
+                    <div class="columns">
+                      <a class="navbar-item column" v-if="reports">
+                        ไม่มีการร้องเรียนที่ค้างอยู่
+                        <div class="button is-primary column">accept</div>
+                      </a>
+                    </div>
+                    <!-- <a class="navbar-item"> Elements </a>
+                    <a class="navbar-item"> Components </a> -->
+                    <!-- <hr class="navbar-divider" /> -->
+                  </div>
+                  <!-- </div> -->
+                </div>
+              </div>
+
               <a class="button is-dark" v-if="logins == true" href="#/profile">
-                <strong> <i class="fas fa-user"> </i> {{profile.username }}</strong>
+                <strong>
+                  <i class="fas fa-user"> </i> {{ profile.username }}</strong
+                >
               </a>
               <a
                 class="button is-dark"
@@ -293,13 +331,11 @@
         </div>
       </div>
     </nav>
-   </div>
+  </div>
 </template>
 
 <script>
 import axios from "@/plugins/axios";
-
-
 
 import {
   required,
@@ -320,19 +356,19 @@ function phone(value) {
   return !!value.match(/0[0-9]{9}/);
 }
 
-function ErrDate(value){
-  if(value < this.begin){
-    return false
+function ErrDate(value) {
+  if (value < this.begin) {
+    return false;
   }
-  return true
+  return true;
 }
 
 export default {
   // props: ["user"],
-  name : "NavBar",
+  name: "NavBar",
 
-    data() {
-        return {
+  data() {
+    return {
       username: "",
       password: "",
       rooms: null,
@@ -352,23 +388,31 @@ export default {
       count: 1,
       begin: "",
       end: "",
-      profile : ''
+      profile: "",
+      reports: "",
+    };
+  },
 
-        }
-    },
-
-    created(){
-       console.log(this.user);
-       this.getUser()
-       console.log(this.getUser())
+  created() {
+    console.log(this.user);
+    this.getUser();
+    console.log(this.getUser());
     if (localStorage.getItem("user") != null) {
       this.logins = true;
     } else {
       this.logins = false;
-
     }
-    },
 
+    axios
+      .get("http://localhost:3000/report")
+      .then((res) => {
+        this.reports = res.data.reports;
+      })
+      .catch((error) => {
+        this.error = error.response.data;
+        console.log(error.response.data);
+      });
+  },
 
   validations: {
     sign_fname: {
@@ -406,17 +450,32 @@ export default {
     confirm_password: {
       sameAs: sameAs("sign_password"),
     },
-    begin:{
+    begin: {
       required: required,
     },
-    end :{
+    end: {
       required: required,
-      ErrDate : ErrDate
-    }
+      ErrDate: ErrDate,
+    },
   },
 
-    methods:{
-        Close() {
+  methods: {
+    acceptReport(reportId) {
+      console.log(reportId);
+      axios
+        .put(`http://localhost:3000/report/${reportId}`)
+        .then((res) => {
+          console.log(res);
+          this.reports = res.data.reports;
+          this.allReports = res.data.allReports;
+          console.log(this.reports)
+        })
+        .catch((error) => {
+          this.error = error.response.data;
+          console.log(error.response.data);
+        });
+    },
+    Close() {
       this.isActive_Sign_in = false;
       this.isActive_Sign_up = false;
       this.username = "";
@@ -432,23 +491,23 @@ export default {
         (this.confirm_password = ""),
         this.$v.$reset();
     },
-        login() {
+    login() {
       const data = {
         username: this.username,
         password: this.password,
       };
 
-      console.log(data)
+      console.log(data);
       axios
         .post("http://localhost:3000/user/login", data)
         .then((response) => {
           // console.log(response.data)
           const token = response.data.token;
 
-          console.log(token)
+          console.log(token);
           localStorage.setItem("user", token);
           this.$emit("auth-change");
-         this.getUser()
+          this.getUser();
           this.isActive_Sign_in = false;
           this.logins = true;
           this.username = "";
@@ -468,46 +527,42 @@ export default {
       this.$v.$touch();
 
       // if (!this.$v.$invalid) {
-        var data = {
-          fname: this.sign_fname,
-          lname: this.sign_lname,
-          phone: this.sign_phone,
-          dob: this.sign_dob,
-          email: this.sign_email,
-          username: this.sign_username,
-          confirm_password: this.confirm_password,
-          password: this.sign_password,
+      var data = {
+        fname: this.sign_fname,
+        lname: this.sign_lname,
+        phone: this.sign_phone,
+        dob: this.sign_dob,
+        email: this.sign_email,
+        username: this.sign_username,
+        confirm_password: this.confirm_password,
+        password: this.sign_password,
+      };
 
-        };
+      console.log(data);
 
-        console.log(data)
+      axios
+        .post("http://localhost:3000/signUp", data)
+        .then((response) => {
+          console.log(response);
 
-        axios
-          .post("http://localhost:3000/signUp", data)
-          .then((response) => {
-            console.log(response);
-
-            this.isActive_Sign_in = true;
-            this.isActive_Sign_up = false;
-          })
-          .catch((error) => {
-            this.error = error.response.error;
-            console.log(error.response.error);
-          });
+          this.isActive_Sign_in = true;
+          this.isActive_Sign_up = false;
+        })
+        .catch((error) => {
+          this.error = error.response.error;
+          console.log(error.response.error);
+        });
       // }
     },
 
-    getUser(){
-      axios.get('/user/me').then((res => {
-
-          this.user = res.data
-          this.profile = this.user
-      }))
-    }
-    }
-}
+    getUser() {
+      axios.get("/user/me").then((res) => {
+        this.user = res.data;
+        this.profile = this.user;
+      });
+    },
+  },
+};
 </script>
 
-<style>
-
-</style>
+<style></style>
