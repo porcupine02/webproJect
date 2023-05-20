@@ -82,10 +82,10 @@ router.get("/",async function (req, res, next) {
 });
 
 
-router.get('/showRoom', isLoggedIn, async function(req, res, next){
+router.get('/showRoom', async function(req, res, next){
 
   console.log(req.user)
-  const login_id = req.user.login_id
+  // const login_id = req.user.login_id
   try{
 
     const[roomShow, feild1] = await pool.query('SELECT *  FROM roomdetail join services using(service_id) join images using (room_id) WHERE main = 1')
