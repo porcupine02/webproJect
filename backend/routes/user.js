@@ -105,7 +105,7 @@ const usernameValidator = async (value, helpers) => {
     return value
 }
 
-const emailValidator = async(value, helpers) =>{
+const emailValidator = async (value, helpers) => {
     const [rows] = await pool.query("SELECT email FROM customers WHERE email = ?", [value])
     if (rows.length > 0) {
         const message = 'ใช้email ซ้ำ'
@@ -201,7 +201,7 @@ const userNameForgotSchema = Joi.object({
 const passForgotSchema = Joi.object({
     password: Joi.string().required().custom(passwordValidator),
     username: Joi.string().required(),
-    confirm_password : Joi.string().required()
+    confirm_password: Joi.string().required()
 })
 
 const checkReport = Joi.object({
@@ -243,7 +243,7 @@ router.put('/report/:reportId', async function (req, res, next) {
     try {
         await conn.query("update reports set status = 'accept' where report_id = ?", [req.params.reportId])
         const [reports] = await pool.query("select *  from reports where status = 'submit'")
-     
+
         const [allReports] = await pool.query("select *  from reports")
         conn.commit()
         res.status(202).send({ reports: reports, allReports: allReports })
@@ -260,7 +260,7 @@ router.get('/report', async function (req, res, next) {
         const [reports] = await pool.query("select * from reports where status = 'submit'")
         const [Countreports] = await pool.query("select count(report_id) as CountReport from reports where status = 'submit'")
         const [allReports] = await pool.query("select *, concat(c.first_name, ' ', last_name) as 'name' from reports join customers c using (cus_id)")
-        res.status(200).send({ reports: reports, allReports: allReports, Countreports : Countreports })
+        res.status(200).send({ reports: reports, allReports: allReports, Countreports: Countreports })
     } catch (err) {
         console.log(err)
         res.status(400).send({ message: "เกิดข้อผิดพลาด" })
@@ -305,7 +305,7 @@ router.put('/forgot', async function (req, res, next) {
     }
     const password = await bcrypt.hash(req.body.password, 5)
 
-    const[user] = await pool.query('SELECT login_id FROM login WHERE username = ?', req.body.username)
+    const [user] = await pool.query('SELECT login_id FROM login WHERE username = ?', req.body.username)
 
     console.log("user" + user[0].login_id)
 
@@ -319,7 +319,7 @@ router.put('/forgot', async function (req, res, next) {
     } catch (err) {
         console.log(err)
     }
- 
+
 })
 
 router.get('/user/', isLoggedIn, async (req, res, next) => {
@@ -327,13 +327,16 @@ router.get('/user/', isLoggedIn, async (req, res, next) => {
     const id = req.user.login_id;
     console.log(id)
     try {
+        const [customer] = await pool.query("select * from login where login_id = ?", [req.user.login_id])
         const [booking, fields1] = await pool.query("select *, DATE_FORMAT(check_in, '%Y-%m-%d') as check_in, date_format(check_out, '%Y-%m-%d') as check_out, DATE_FORMAT(timestamp_booking, '%Y-%m-%d %H:%i') as timestamp_booking, booking.status as bstatus from booking join payments using (booking_id) where cus_id = ? order by timestamp_booking desc", [id])
         const [user, fields2] = await pool.query("select *, DATE_FORMAT(DOB, '%Y-%m-%d') as DOB from customers join login using (cus_id)  where cus_id = ?", [id])
         const [allbooking, fields3] = await pool.query("select *, DATE_FORMAT(check_in, '%Y-%m-%d') as check_in, date_format(check_out, '%Y-%m-%d') as check_out, DATE_FORMAT(timestamp_booking, '%Y-%m-%d %H:%i') as timestamp_booking, booking.status as bstatus from booking join payments using (booking_id) order by timestamp_booking desc")
+        const [image] = await pool.query("select * from images where cus_id = ?", [customer[0].cus_id])
+
 
 
         console.log(user)
-        res.status(200).send({ "booking": booking, "user": user, 'allbooking' : allbooking })
+        res.status(200).send({ "booking": booking, "user": user, 'allbooking': allbooking, image: image })
     } catch (err) {
         console.log(err)
         res.status(400).send(err)
@@ -350,42 +353,21 @@ router.get('/user/me', isLoggedIn, async (req, res, next) => {
 })
 
 
-const check_changePassword = Joi.object({
-    newPassword: Joi.string().required(),
-    oldPassword: Joi.string().required().custom(passwordValidator)
-})
 router.put('/changepassword', isLoggedIn, async (req, res, next) => {
 
 
-    try {
-        await check_changePassword.validateAsync(req.body, { abortEarly: false })
-    } catch (err) {
-        return res.status(400).send('รหัสไม่ถูกต้อง')
-    }
     console.log(req.user)
     const login_id = req.user.login_id
     console.log(login_id)
-    // const req.user
-    const newPassword = req.body.newPassword
-    const oldPassword = req.body.oldPassword
-    console.log(oldPassword)
+    const newPassword = await bcrypt.hash(req.body.newPassword, 5)
 
-    const [old] = await pool.query("select * from login where login_id = ?", [login_id])
-    const older = old[0].password
-    console.log(older)
     const conn = await pool.getConnection()
     await conn.beginTransaction()
 
     try {
-        if (oldPassword == older) {
-            await conn.query("update login set password = ? where login_id = ?", [newPassword, login_id])
-            conn.commit()
-            res.status(201).send("เปลี่ยนรหัสผ่านเรียบร้อย")
-        } else {
-            return res.status(404).send({
-                message: "รหัสผ่านเก่าไม่ถูกต้อง"
-            })
-        }
+        await conn.query("update login set password = ? where login_id = ?", [newPassword, login_id])
+        conn.commit()
+        res.status(201).send("เปลี่ยนรหัสผ่านเรียบร้อย")
     } catch (err) {
         conn.rollback()
         res.status(400).json(err.toString())
@@ -402,14 +384,12 @@ router.post('/changeProfile', isLoggedIn, upload.single('file_image'), async (re
 
     const file = req.file
     console.log(file)
-    console.log(req.files)
-    let pathArray = [];
-    // if (!file.length) {
+    // if (!req.file) {
     //     return res.status(400).send({ message: "กรุณาอัพโหลดไฟล์ภาพ" });
     // }
 
     const [cus_id] = await pool.query("select * from login where login_id = ?", [login_id])
-    const [check_image] = await pool.query("select * from images where cus_id = ?", [cus_id])
+    const [check_image] = await pool.query("select * from images where cus_id = ?", [cus_id[0].cus_id])
     console.log(check_image)
 
 
@@ -419,10 +399,14 @@ router.post('/changeProfile', isLoggedIn, upload.single('file_image'), async (re
 
     try {
         if (check_image.length > 0) {
-            await conn.query("update images set file_path = ? where cus_id = ?", [])
+            await conn.query("update images set file_path = ? where cus_id = ?", [file.path.substring(6), cus_id[0].cus_id])
+        } else {
+            await conn.query("insert into images(file_path, cus_id) values(?, ?)", [file.path.substring(6), cus_id[0].cus_id])
         }
+
+        const [image] = await pool.query("select * from images where cus_id = ?", [cus_id[0].cus_id])
         conn.commit()
-        res.status(201).json("complele")
+        res.status(201).json({ image: image })
     } catch (err) {
         conn.rollback()
         res.status(400).json(err.toString())

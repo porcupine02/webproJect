@@ -44,8 +44,28 @@ router.put('/comments/:commentId', function (req, res, next) {
 });
 
 // Delete comment
-router.delete('/comments/:commentId', function (req, res, next) {
-    return
+router.delete('/comments/:commentId', async function (req, res, next) {
+    console.log("test")
+    console.log(req.params.commentId)
+    console.log(req.query.room_id)
+
+    const conn = await pool.getConnection()
+    await conn.beginTransaction();
+
+    try {
+        await conn.query('delete from comments where comment_id = ?', [req.params.commentId])
+        const [comments] = await conn.query("select * from comments where room_id = ?", [req.query.room_id])
+        res.status(200).send({ comments: comments })
+
+    } catch (err) {
+        console.log(err)
+        conn.rollback()
+    } finally {
+        conn.release()
+        res.send("complate")
+    }
+
+
 });
 
 // update like comment

@@ -77,7 +77,11 @@
           <div class="card-image">
             <figure class="image is-4by3">
               <img
-                src="https://bulma.io/images/placeholders/1280x960.png"
+                :src="
+                  image[0]
+                    ? 'http://localhost:3000/' + image[0].file_path
+                    : 'https://bulma.io/images/placeholders/1280x960.png'
+                "
                 alt="Placeholder image"
               />
             </figure>
@@ -100,18 +104,6 @@
             <div class="button" @click="changePwd()">change password</div>
             <!-- change password -->
             <div v-if="pwd">
-              <div class="field mt-3">
-                <label class="label">Old password</label>
-                <div class="control">
-                  <input
-                    :class="$v.oldPassword.$error ? 'is-danger' : ''"
-                    class="input"
-                    type="text"
-                    placeholder="e.g Alex Smith"
-                    v-model="$v.oldPassword.$model"
-                  />
-                </div>
-              </div>
               <div class="field">
                 <label class="label">New password</label>
                 <div class="control">
@@ -147,25 +139,25 @@
               class="file has-name is-small mt-3 tile is-ancestor"
               v-if="upload"
             >
-            <div class="file">
-              <label class="file-label">
-                <input
-                  accept="image/png, image/jpeg, image/webp"
-                  class="file-input"
-                  type="file"
-                  id="file"
-                  ref="file"
-                  @change="handleFileUpload()"
-                />
-                <span class="file-cta">
-                  <span class="file-icon">
-                    <i class="fas fa-upload"></i>
+              <div class="file">
+                <label class="file-label m-3">
+                  <input
+                    accept="image/png, image/jpeg, image/webp"
+                    class="file-input"
+                    type="file"
+                    id="file"
+                    ref="file"
+                    @change="handleFileUpload()"
+                  />
+                  <span class="file-cta">
+                    <span class="file-icon">
+                      <i class="fas fa-upload"></i>
+                    </span>
+                    <span class="file-label"> รูปภาพโปรไฟล์ : </span>
                   </span>
-                  <span class="file-label"> สลิป : </span>
-                </span>
-              </label>
-              <a class="button is-primary" @click="confirm()">ยืนยัน</a>
-            </div>
+                </label>
+                <a class="button is-primary mt-3" @click="confirm()">ยืนยัน</a>
+              </div>
             </div>
           </div>
         </div>
@@ -339,14 +331,12 @@ export default {
       rate: 5,
       is_active_report: false,
       reportContent: "",
+      image: "",
     };
   },
   components: { NavBar },
 
   validations: {
-    oldPassword: {
-      required: required,
-    },
     newPassword: {
       required: required,
       complexPassword: complexPassword,
@@ -393,22 +383,24 @@ export default {
       }
     },
     changePassword() {
-      console.log("change");
-      const data = {
-        newPassword: this.newPassword,
-        oldPassword: this.oldPassword,
-      };
-      axios
-        .put("http://localhost:3000/changepassword", data)
-        .then((res) => {
-          console.log(res);
-          this.pwd = false;
-          this.complete = res.data;
-        })
-        .catch((err) => {
-          console.log(err);
-          this.error = err.response.data.message;
-        });
+      this.$v.$touch();
+      if (this.$v.$touch()) {
+        console.log("change");
+        const data = {
+          newPassword: this.newPassword,
+        };
+        axios
+          .put("http://localhost:3000/changepassword", data)
+          .then((res) => {
+            console.log(res);
+            this.pwd = false;
+            this.complete = res.data;
+          })
+          .catch((err) => {
+            console.log(err);
+            this.error = err.response.data.message;
+          });
+      }
     },
     // changeProfile() {
     //   let formData = new FormData();
@@ -425,23 +417,24 @@ export default {
     //       console.log(err);
     //     });
     // },
-    confirm(){
+    confirm() {
       var formData = new FormData();
-        formData.append("file_image", this.file);
-        console.log(formData)
-        axios
+      formData.append("file_image", this.file);
+      console.log(formData);
+      axios
         .post("http://localhost:3000/changeProfile", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          })
-          .then((response) => {
-            console.log(response.data);
-     
-          })
-          .catch((error) => {
-            console.log(error.message);
-          });
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          console.log(response);
+          this.image = response.data.image;
+          location.reload();
+        })
+        .catch((error) => {
+          console.log(error.message);
+        });
     },
     checkIn(bookingId, index) {
       console.log("checkIn");
@@ -510,7 +503,7 @@ export default {
         .then((res) => {
           console.log(res);
           alert(res.data);
-          location.reload()
+          location.reload();
           this.is_active_report = false;
         })
         .catch((err) => {
@@ -593,6 +586,7 @@ export default {
         // this.booking = res.data.booking;
         this.user = res.data.user;
         // this.allbooking = res.data.allbooking;
+        this.image = res.data.image;
         console.log(this.user[0]);
         console.log(this.booking);
         console.log(this.allbooking);

@@ -79,14 +79,25 @@
                 </div>
               </div>
               <div class="table">
-                <div class="tr" v-for="item in result" :key="item">
-                  <div class="th">
-                    {{ item }}
-                    {{ item }}
+                <thead>
+                  <tr>
+                    <th v-for="item in dummyData2.length" :key="item">
+                      {{ dummyData2[item - 1] }}
+                    </th>
+                  </tr>
+                </thead>
+                <!-- <div v-for="x in 5" :key="x">
+                  <div v-for="y in 5" :key="y">
+                    {{ x }}
+                    {{ y }}
                   </div>
-                </div>
+                </div> -->
 
-                {{ result }}
+                <tfoot v-for="item in result" :key="item">
+                  <tr>
+                    <td v-for="value in item" :key="value">{{ value }}</td>
+                  </tr>
+                </tfoot>
               </div>
             </div>
             <!-- all customer -->
@@ -116,7 +127,11 @@
                   <div class="card-image">
                     <figure class="image is-4by3">
                       <img
-                        src="https://bulma.io/images/placeholders/1280x960.png"
+                        :src="
+                          customer.file_path
+                            ? 'http://localhost:3000/' + customer.file_path
+                            : 'https://bulma.io/images/placeholders/1280x960.png'
+                        "
                         alt="Placeholder image"
                       />
                     </figure>
@@ -193,7 +208,7 @@
               </div>
             </div>
             <!-- edit rooms -->
-            <div id="edit" class="content-tab content" style="display: ">
+            <div id="edit" class="content-tab content" style="display: none">
               <h3 class="has-text-centered has-text-danger m-6">{{ error }}</h3>
               <div class="columns is-multiline">
                 <div class="column is-4" v-for="room in allRooms" :key="room">
@@ -304,6 +319,8 @@ export default {
       tagInput: "",
       result: "",
       error: "",
+      dummyData2: [],
+      test: "booking_fname",
     };
   },
   created() {
@@ -360,6 +377,8 @@ export default {
         });
     },
     searchQuery() {
+      this.dummyData2 = this.tags;
+      this.result = ""
       axios
         .get(`http://localhost:3000/searchQuery`, {
           params: {
@@ -369,6 +388,7 @@ export default {
         .then((res) => {
           console.log(res);
           this.result = res.data.result;
+          console.log(this.result);
         })
         .catch((error) => {
           this.error = error.response.data;
@@ -376,7 +396,7 @@ export default {
         });
     },
     addTag(event) {
-      if (event.code == "Enter") {
+      if (event.code == "Enter" && this.tagInput != '') {
         console.log(event.code);
         this.tagInput = "";
         var val = event.target.value;

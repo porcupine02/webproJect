@@ -18,7 +18,8 @@
               v-for="(index, image) in images"
               :key="image"
             >
-              <img @click="changeImage(image)"
+              <img
+                @click="changeImage(image)"
                 :src="'http://localhost:3000/' + index.file_path"
                 alt="picture room"
               />
@@ -30,20 +31,20 @@
           <p class="title is-3 mt-6">
             {{ room.room_type }}
           </p>
-          <!-- <div>
+          <div>
             <i
-              v-for="item in room.rate"
+              v-for="item in Number(rate[0].result)"
               :key="item"
               class="fa fa-star"
               style="font-size: 30px; color: rgb(244, 247, 76)"
             ></i>
             <i
-              v-for="item in 5 - room.rate"
+              v-for="item in 5 - Number(rate[0].result)"
               :key="item"
               class="fa fa-star"
               style="font-size: 30px; color: rgb(188, 188, 165)"
             ></i>
-          </div> -->
+          </div>
           <div class="tile">
             <h1 class="title has-text-danger mt-3">
               {{ room.price
@@ -155,7 +156,10 @@
               </nav> -->
             </div>
             <div class="media-right">
-              <button class="delete"></button>
+              <button
+                class="delete"
+                @click="delelteComment(comment.comment_id)"
+              ></button>
             </div>
           </article>
         </div>
@@ -166,7 +170,7 @@
 
 <script>
 import axios from "axios";
-import NavBar from "@/components/NavBar.vue"
+import NavBar from "@/components/NavBar.vue";
 export default {
   data() {
     return {
@@ -174,24 +178,38 @@ export default {
       images: null,
       comments: null,
       display: 0,
+      rate: 0,
     };
   },
   methods: {
-    addLike(id) {
+    delelteComment(id) {
       axios
-        .put(`http://localhost:3000/comments/addLike/${id}`)
+        .delete(`http://localhost:3000/comments/${id}`, {
+          query: { room_id: this.rooms[10].room_id },
+        })
         .then((response) => {
-          console.log("add like");
           console.log(response);
-          location.reload();
+          this.comments = response.data.comments;
         })
         .catch((err) => {
           console.log(err);
         });
     },
-    changeImage(index){
-      this.display = index
-    }
+    // addLike(id) {
+    //   axios
+    //     .put(`http://localhost:3000/comments/addLike/${id}`)
+    //     .then((response) => {
+    //       console.log("add like");
+    //       console.log(response);
+    //       location.reload();
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // },
+    changeImage(index) {
+      this.display = index;
+    },
   },
   components: { NavBar },
   created() {
@@ -201,6 +219,7 @@ export default {
         this.rooms = response.data.room;
         this.images = response.data.images;
         this.comments = response.data.comments;
+        this.rate = response.data.rate;
         console.log(this.rooms);
         console.log(this.images);
         console.log(this.comments);

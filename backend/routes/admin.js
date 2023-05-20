@@ -29,10 +29,29 @@ const upload = multer({
 router.get("/searchQuery", async function (req, res, next) {
     const header = req.query.search
     console.log(header)
+    if (header.includes("check_in")) {
+        header.push(" DATE_FORMAT(check_in, '%Y-%m-%d') as check_in ")
+    }
+    if (header.includes("check_out")) {
+        header.push(" DATE_FORMAT(check_out, '%Y-%m-%d') as check_out ")
+    }
+    if (header.includes("timestamp_booking")) {
+        header.push(" DATE_FORMAT(timestamp_booking, '%Y-%m-%d (%H:%i)') as timestamp_booking ")
+    }
+    if (header.includes("payment_date")) {
+        header.push(" DATE_FORMAT(payment_date, '%Y-%m-%d') as payment_date ")
+    }
+    if (header.includes("DOB")) {
+        header.push(" DATE_FORMAT(DOB, '%Y-%m-%d') as DOB ")
+    }
+
     try {
         let query = "select " + header
+        // format date
 
-        const [result] = await pool.query(query + ' from booking')
+        console.log(query + ` from booking join payments using (booking_id) join customers using (cus_id)`)
+
+        const [result] = await pool.query(query + ` from booking join payments using (booking_id) join customers using (cus_id)`)
         console.log(result)
         res.status(200).send({ result: result })
 
@@ -84,7 +103,7 @@ router.get("/admin", async function (req, res, next) {
     try {
         console.log("hello world")
 
-        const [customers] = await pool.query(" select *, concat(first_name, ' ', last_name) as name, DATE_FORMAT(DOB, '%Y-%m-%d') as DOB from customers")
+        const [customers] = await pool.query(" select *, concat(first_name, ' ', last_name) as name, DATE_FORMAT(DOB, '%Y-%m-%d') as DOB from customers left outer join images using (cus_id)")
         const [booking] = await pool.query(" select * from booking")
         const [allRooms] = await pool.query('SELECT * FROM roomdetail join services using(service_id) join images using (room_id) WHERE main = 1')
         console.log(allRooms)

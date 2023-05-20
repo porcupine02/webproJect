@@ -3,7 +3,7 @@
     <div>
       <NavBar />
     </div>
-    
+
 
     <br>
     <br>
@@ -15,7 +15,7 @@
           <div class="step-marker"><span class="icon">
             <i class="fa fa-bed" aria-hidden="true"></i>
             </span></div>
-          
+
           <div class="step-details">
             <p class="step-title">เลือกห้องที่ต้องการ</p>
           </div>
@@ -117,9 +117,9 @@
       <br />
 
 
-   
 
-      
+
+
     <br>
     <br>
 
@@ -154,32 +154,11 @@
               <div class="media-content">
                 <p class="title is-4">{{ room.room_type }}</p>
                 <p class="subtitle is-6">
-                  <!-- <i
-                    class="fas fa-star mt-3"
-                    style="font-size: 40px; color: rgb(244, 247, 76)"
-                  ></i>
-                  <i
-                    class="fas fa-star mt-3"
-                    style="font-size: 40px; color: rgb(244, 247, 76)"
-                  ></i>
-                  <i
-                    class="fas fa-star mt-3"
-                    style="font-size: 40px; color: rgb(244, 247, 76)"
-                  ></i>
-                  <i
-                    class="fas fa-star mt-3"
-                    style="font-size: 40px; color: rgb(244, 247, 76)"
-                  ></i>
-                  <i
-                    class="fas fa-star mt-3"
-                    style="font-size: 40px; color: rgb(244, 247, 76)"
-                  ></i> -->
-          
-           {{ room }}
+
             <i
               v-for="item in rateRoom[index]"
               :key="item"
-          
+
               class="fa fa-star"
               style="font-size: 30px; color: rgb(244, 247, 76)"
             ></i>
