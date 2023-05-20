@@ -1,8 +1,7 @@
 const express = require("express");
 
 const pool = require("../config");
-const { func } = require("joi");
-const { isLoggedIn } = require("../middlewares");
+
 
 
 router = express.Router();
@@ -58,7 +57,7 @@ router.get("/",async function (req, res, next) {
            const[roomBlank] = await pool.query('SELECT * FROM roomdetail join services using(service_id) join images using (room_id) WHERE people >= ? and main = 1', people)
            const [commentRate] = await pool.query('SELECT sum(rate) as Sumrate, count(rate) as countRate FROM comments  WHERE room_id = ?', arr[i].room_id)
            roomblank[i] = roomBlank[i]
-           rateArr[i] = Number(commentRate[0].Sumrate * 5 / (5 * commentRate[0].countRate))
+           rateArr[i] = Number(Math.floor(commentRate[0].Sumrate * 5 / (5 * commentRate[0].countRate)))
 
       
          }
@@ -100,7 +99,7 @@ router.get('/showRoom', async function(req, res, next){
       const [commentRate] = await pool.query('SELECT sum(rate) as Sumrate, count(rate) as countRate FROM comments  WHERE room_id = ?', i+1)
       // console.log(commentRate[0].Sumrate * 5 / (5 * commentRate[0].countRate) )
       console.log(commentRate)
-      rateArr[i] = Number(commentRate[0].Sumrate * 5 / (5 * commentRate[0].countRate))
+      rateArr[i] = Number(Math.floor(commentRate[0].Sumrate * 5 / (5 * commentRate[0].countRate)))
     }
 
 

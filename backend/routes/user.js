@@ -242,8 +242,9 @@ router.put('/report/:reportId', async function (req, res, next) {
 
     try {
         await conn.query("update reports set status = 'accept' where report_id = ?", [req.params.reportId])
-        const [reports] = await pool.query("select * from reports where status = 'submit'")
-        const [allReports] = await pool.query("select * from reports")
+        const [reports] = await pool.query("select *  from reports where status = 'submit'")
+     
+        const [allReports] = await pool.query("select *  from reports")
         conn.commit()
         res.status(202).send({ reports: reports, allReports: allReports })
     } catch (err) {
@@ -257,8 +258,9 @@ router.put('/report/:reportId', async function (req, res, next) {
 router.get('/report', async function (req, res, next) {
     try {
         const [reports] = await pool.query("select * from reports where status = 'submit'")
+        const [Countreports] = await pool.query("select count(report_id) as CountReport from reports where status = 'submit'")
         const [allReports] = await pool.query("select *, concat(c.first_name, ' ', last_name) as 'name' from reports join customers c using (cus_id)")
-        res.status(200).send({ reports: reports, allReports: allReports })
+        res.status(200).send({ reports: reports, allReports: allReports, Countreports : Countreports })
     } catch (err) {
         console.log(err)
         res.status(400).send({ message: "เกิดข้อผิดพลาด" })
@@ -393,12 +395,12 @@ router.put('/changepassword', isLoggedIn, async (req, res, next) => {
 
 })
 
-router.put('/changeProfile', isLoggedIn, upload.single('profileImage'), async (req, res, next) => {
+router.post('/changeProfile', isLoggedIn, upload.single('file_image'), async (req, res, next) => {
     console.log(req.user)
     const login_id = req.user.login_id
     console.log(req.user.login_id)
 
-    const file = req.files
+    const file = req.file
     console.log(file)
     console.log(req.files)
     let pathArray = [];
@@ -418,7 +420,6 @@ router.put('/changeProfile', isLoggedIn, upload.single('profileImage'), async (r
     try {
         if (check_image.length > 0) {
             await conn.query("update images set file_path = ? where cus_id = ?", [])
-
         }
         conn.commit()
         res.status(201).json("complele")

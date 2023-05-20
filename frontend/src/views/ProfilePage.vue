@@ -147,30 +147,25 @@
               class="file has-name is-small mt-3 tile is-ancestor"
               v-if="upload"
             >
-              <div class="">
-                <label class="file-label">
-                  <input
-                    class="file-input"
-                    type="file"
-                    accept="image/png, image/jpeg, image/webp"
-                    @change="selectImages"
-                  />
-                  <span class="file-cta">
-                    <span class="file-icon">
-                      <i class="fas fa-upload"></i>
-                    </span>
-                    <span class="file-label"> Choose a file… </span>
+            <div class="file">
+              <label class="file-label">
+                <input
+                  accept="image/png, image/jpeg, image/webp"
+                  class="file-input"
+                  type="file"
+                  id="file"
+                  ref="file"
+                  @change="handleFileUpload()"
+                />
+                <span class="file-cta">
+                  <span class="file-icon">
+                    <i class="fas fa-upload"></i>
                   </span>
-                  <span class="file-name">
-                    Screen Shot 2017-07-29 at 15.54.25.png
-                  </span>
-                </label>
-                <label class="file-label mt-3" style="float: right">
-                  <div class="button" @click="changeProfile()">
-                    เปลี่ยนรูปภาพ
-                  </div>
-                </label>
-              </div>
+                  <span class="file-label"> สลิป : </span>
+                </span>
+              </label>
+              <a class="button is-primary" @click="confirm()">ยืนยัน</a>
+            </div>
             </div>
           </div>
         </div>
@@ -364,12 +359,20 @@ export default {
     },
   },
   methods: {
-    selectImages(event) {
-      this.images = event.target.files;
-      console.log("this.images");
-      console.log(this.images);
-      console.log(typeof this.images);
-      console.log(event.target.files);
+    // selectImages(event) {
+    //   this.images = event.target.files;
+    //   console.log("this.images");
+    //   console.log(this.images);
+    //   console.log(typeof this.images);
+    //   console.log(event.target.files);
+    // },
+    handleFileUpload() {
+      this.file = this.$refs.file.files[0];
+      console.log(this.file);
+
+      this.fileSize += this.$refs.file.files[0].size;
+      console.log(this.fileSize);
+      // console.log(this.file);
     },
     uploadFile() {
       if (!this.upload) {
@@ -407,20 +410,38 @@ export default {
           this.error = err.response.data.message;
         });
     },
-    changeProfile() {
-      let formData = new FormData();
-      this.images = Array.from(this.images);
-      formData.append("profileImage", this.images);
-      console.log("formData");
-      console.log(formData);
-      axios
-        .put("http://localhost:3000/changeProfile", formData)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    // changeProfile() {
+    //   let formData = new FormData();
+    //   this.images = Array.from(this.images);
+    //   formData.append("profileImage", this.images);
+    //   console.log("formData");
+    //   console.log(formData);
+    //   axios
+    //     .put("http://localhost:3000/changeProfile", formData)
+    //     .then((res) => {
+    //       console.log(res);
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // },
+    confirm(){
+      var formData = new FormData();
+        formData.append("file_image", this.file);
+        console.log(formData)
+        axios
+        .post("http://localhost:3000/changeProfile", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then((response) => {
+            console.log(response.data);
+     
+          })
+          .catch((error) => {
+            console.log(error.message);
+          });
     },
     checkIn(bookingId, index) {
       console.log("checkIn");
@@ -489,6 +510,7 @@ export default {
         .then((res) => {
           console.log(res);
           alert(res.data);
+          location.reload()
           this.is_active_report = false;
         })
         .catch((err) => {

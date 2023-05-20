@@ -265,6 +265,8 @@
           <strong> <i class="fas fa-home"> </i> Home</strong>
         </a>
       </div>
+
+      
       <div class="navbar-menu">
         <!-- <div class="navbar-start">
           <a class="navbar-item" v-if="logins == true" href="/search">
@@ -285,7 +287,10 @@
               <div class="navbar-brand" v-if=" isActive_createAndReport == true">
                 <!-- <div class="navbar-end"> -->
                 <div class="navbar-item has-dropdown is-hoverable">
-                  <a class="navbar-link"> REPORT </a>
+                  <a class="navbar-link"> REPORT 
+                    <span class="tag is-danger is-badge mb-5">{{CountReports}}</span>
+                  </a>
+               
 
                   <div class="navbar-dropdown is-right">
                     <div
@@ -304,9 +309,9 @@
                       </div>
                     </div>
                     <div class="columns">
-                      <a class="navbar-item column" v-if="reports">
+                      <a class="navbar-item column" v-if="reports.length == 0">
                         ไม่มีการร้องเรียนที่ค้างอยู่
-                        <div class="button is-primary column">accept</div>
+                        <!-- <div class="button is-primary column">accept</div> -->
                       </a>
                     </div>
                     <!-- <a class="navbar-item"> Elements </a>
@@ -345,6 +350,8 @@
           </div>
         </div>
       </div>
+
+      
     </nav>
   </div>
 </template>
@@ -415,6 +422,7 @@ export default {
       end: "",
       profile: "",
       reports: "",
+      CountReports: null
     };
   },
 
@@ -443,9 +451,12 @@ export default {
       .get("http://localhost:3000/report")
       .then((res) => {
         this.reports = res.data.reports;
+        this.CountReports = res.data.Countreports[0].CountReport
+        console.log(this.CountReports)
       })
       .catch((error) => {
         this.error = error.response.data;
+
         console.log(error.response.data);
       });
   },
@@ -508,6 +519,8 @@ export default {
           console.log(res);
           this.reports = res.data.reports;
           this.allReports = res.data.allReports;
+         
+          
           console.log(this.reports)
         })
         .catch((error) => {
@@ -566,7 +579,7 @@ export default {
         });
     },
     logOut() {
-      this.$router.push({name: 'Home'})
+      this.$router.push({path: '/'})
       localStorage.removeItem("user");
       this.isActive_createAndReport = false;
       this.logins = false;
