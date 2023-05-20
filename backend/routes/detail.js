@@ -116,17 +116,22 @@ router.get("/detail/:id", async function (req, res, next) {
 router.get("/search", async function (req, res, next) {
   try {
     console.log(req.query.search)
-    let query = 'SELECT * FROM roomdetail r join image i using(room_img_id)'
+    let query = 'SELECT * FROM customers'
     let params = []
     if (req.query.search) {
-      query = query + 'WHERE r.room_type LIKE ?'
-      params = [`%${req.query.search}%`]
+      query = query + ' WHERE first_name LIKE ? or last_name like ? or email like ? or cus_id = ?'
+      // params = [`%${req.query.search}%`]
+      params = [req.query.search, req.query.search, req.query.search, req.query.search]
     }
+    console.log("pass")
+    console.log(query, params)
 
-    const [row_room, columns_room] = await pool.query(query, params)
-    return res.json(row_room)
+    const [result] = await pool.query(query, params)
+    console.log("pass")
+    return res.status(200).send({ result: result })
   } catch (err) {
-    res.json(err)
+    return res.status(400).send({ message: "เกิดข้อผิดพลาด" })
+
   }
 })
 

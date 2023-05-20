@@ -3,8 +3,8 @@
     <div>
       <NavBar />
     </div>
-    <div class="container mt-6 pt-5" id="admin">
-      <div class="container mt-6 pt-5">
+    <div class="mt-6 pt-5" id="admin">
+      <div class="mt-6 pt-5">
         <p class="title has-text-centered">ข้อมูลลูกค้า</p>
 
         <div class="columns">
@@ -14,182 +14,272 @@
           <div class="column">
             <div class="is-medium tabs">
               <ul>
-                <li class="tab is-active" @click="openTab(event, 'orders')">
-                  <a>orders</a>
+                <li
+                  class="tab is-active"
+                  @click="openTab(event, 'information')"
+                >
+                  <a><i class="fa fa-question-circle mr-3"></i> information</a>
                 </li>
-                <li class="tab" @click="openTab(event, 'rooms')">
-                  <a>rooms</a>
+                <li class="tab" @click="openTab(event, 'customer')">
+                  <a><i class="fa fa-users mr-3"></i> customers</a>
                 </li>
                 <li class="tab" @click="openTab(event, 'report')">
-                  <a><i class="fas fa-bell mr-3"></i> Reports </a>
+                  <a><i class="fas fa-bell mr-3"></i> Report </a>
+                </li>
+                <li class="tab" @click="openTab(event, 'edit')">
+                  <a><i class="fas fa-cog mr-3"></i> Edit Rooms </a>
                 </li>
               </ul>
-            </div>
-            <div class="container section">
-              <!-- orders -->
-              <div id="orders" class="content-tab">
-                <table class="table has-text-centered" width="100%">
-                  <tr class="title is-5 has-background-danger-light">
-                    <td>invoice id</td>
-                    <td>type room</td>
-                    <td>check in</td>
-                    <td>check out</td>
-                    <td>price</td>
-                    <td>status</td>
-                    <td>confirm booking</td>
-                  </tr>
-                  <tbody
-                    class="title is-5 has-background-light subtitle"
-                    v-for="(item, index) in history"
-                    :key="item"
-                  >
-                    <tr>
-                      <td>{{ "000" + index + 1 }}</td>
-                      <td>{{ item.type }}</td>
-                      <td>{{ item.checkIn }}</td>
-                      <td>{{ item.checkOut }}</td>
-                      <td>{{ item.price }} ฿</td>
-                      <td
-                        :class="
-                          item.status == 'wait'
-                            ? 'has-background-success'
-                            : 'has-background-danger'
-                        "
-                      >
-                        {{ item.status }}
-                      </td>
-                      <td class="has-background-primary" @click="confirm()">
-                        confirm
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!-- all rooms -->
-              <div id="rooms" class="content-tab" style="display: none">
-                <div class="container my-5" v-for="room in allRoom" :key="room">
-                  <div
-                    class="tile is-ancestor my-5 has-background-danger-light"
-                  >
-                    <div class="tile is-4 is-vertical is-parent">
-                      <img
-                        :src="
-                          room.pic1
-                            ? 'http://localhost:3000' + room.pic1
-                            : 'https://i.pinimg.com/originals/22/c0/2f/22c02f8f67b478ef00cb12bcacde588b.jpg'
-                        "
-                        alt="image_room"
-                        width="100%"
-                      />
-                      <div class="tile is-child" style="margin: 20px">
-                        <i
-                          class="fa fa-star mt-3"
-                          style="
-                            font-size: 40px;
-                            color: rgb(244, 247, 76);
-                            margin-left: 100px;
-                          "
-                        ></i>
-                        <i
-                          class="fa fa-star mt-3"
-                          style="font-size: 40px; color: rgb(244, 247, 76)"
-                        ></i>
-                        <i
-                          class="fa fa-star mt-3"
-                          style="font-size: 40px; color: rgb(244, 247, 76)"
-                        ></i>
-                        <i
-                          class="fa fa-star mt-3"
-                          style="font-size: 40px; color: rgb(188, 188, 165)"
-                        ></i>
-                        <i
-                          class="fa fa-star mt-3"
-                          style="font-size: 40px; color: rgb(188, 188, 165)"
-                        ></i>
-                      </div>
-                    </div>
-                    <div class="tile is-parent is-vertical">
-                      <div class="tile is-child">
-                        <p class="title">{{ room.room_type }}</p>
-                        <p class="subtitle">{{ room.description }}</p>
-                      </div>
-                      <!-- services -->
-                      <hr />
-                      <p class="subtitle is-5">Facilities</p>
-                      <div class="columns">
-                        <div
-                          class="column is-2 has-text-centered"
-                          v-if="room.breakfast == 'yes'"
-                        >
-                          <i class="fa fa-coffee" style="font-size: 50px"></i
-                          ><br />
-                          breakfast
-                        </div>
-
-                        <div
-                          class="column is-2 has-text-centered"
-                          v-if="room.air_conditioner == 'yes'"
-                        >
-                          <i class="fa fa-wifi" style="font-size: 50px"></i
-                          ><br />
-                          internet
-                        </div>
-                        <div
-                          class="column is-2 has-text-centered"
-                          v-if="room.wifi == 'yes'"
-                        >
-                          <i class="fa fa-wifi" style="font-size: 50px"></i
-                          ><br />
-                          internet
-                        </div>
-                        <div
-                          class="column is-2 has-text-centered"
-                          v-if="room.pool == 'yes'"
-                        >
-                          <i
-                            class="fas fa-swimming-pool"
-                            style="font-size: 50px"
-                          ></i
-                          ><br />
-                          pool
-                        </div>
-                      </div>
-                      <div class="tile is-child has-text-right">
-                        <p class="title has-text-danger">{{ room.price }}</p>
-
-                        <a :href="'/update/' + room.room_id">
-                          <button
-                            v-if="logins == true"
-                            class="button has-background-success"
-                          >
-                            แก้ไขข้อมูล
-                          </button>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- report -->
-              <div id="report" class="content-tab" style="display: ">
-                <div v-for="report in allReports" :key="report.report_id">
-                  <article class="card p-3 m-1" :class="report.status == 'accept' ? 'has-background-success-light' : 'has-background-danger-light'">
-                    <div class="media-content">
-                      <div class="content">
-                        <i class="fa fa-user" aria-hidden="true"></i> {{ report.name }}
-                        <i class="fa fa-phone-square" aria-hidden="true"></i> {{ report.phone }}
-                        <p>
-                          {{ report.content }}
-                        </p>
-                      </div>
-                    </div>
-                  </article>
-                </div>
-              </div>
             </div>
           </div>
           <div class="column is-1">
             <!-- right -->
+          </div>
+        </div>
+        <div class="columns">
+          <div class="container section">
+            <!-- information -->
+            <div id="information" class="content-tab">
+              <div class="columns">
+                <div class="field column">
+                  <label class="label">ข้อมูลที่ต้องการ</label>
+                  <div class="control tags">
+                    <div
+                      class="field is-grouped is-grouped-multiline m-1"
+                      v-for="(tag, index) in tags"
+                      :key="tag"
+                    >
+                      <div class="control">
+                        <div class="tags has-addons">
+                          <span class="tag is-primary">{{ tag }}</span>
+                          <a
+                            class="tag is-delete"
+                            @click="deleteTag(index)"
+                          ></a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="control">
+                    <input
+                      class="input"
+                      type="text"
+                      placeholder="Add tag"
+                      v-model="tagInput"
+                      @keydown="addTag"
+                    />
+                  </div>
+                </div>
+                <div class="column is-1">
+                  <br />
+                  <br />
+                  <div class="button is-info" @click="searchQuery()">
+                    search
+                  </div>
+                </div>
+              </div>
+              <div class="table">
+                <div class="tr" v-for="item in result" :key="item">
+                  <div class="th">
+                    {{ item }}
+                    {{ item }}
+                  </div>
+                </div>
+
+                {{ result }}
+              </div>
+            </div>
+            <!-- all customer -->
+            <div id="customer" class="content-tab" style="display: none">
+              <div class="columns">
+                <div class="column is-1"></div>
+                <div class="column is-8">
+                  <input
+                    type="text"
+                    class="input is-rounded"
+                    placeholder="ค้นหาข้อมูลลูกค้า"
+                    v-model="search"
+                  />
+                </div>
+                <div class="column is-2">
+                  <div class="button is-info" @click="searchCustomer()">
+                    ค้นหา
+                  </div>
+                </div>
+              </div>
+              <div class="columns is-multiline">
+                <div
+                  class="column is-4"
+                  v-for="customer in customers"
+                  :key="customer.cus_id"
+                >
+                  <div class="card-image">
+                    <figure class="image is-4by3">
+                      <img
+                        src="https://bulma.io/images/placeholders/1280x960.png"
+                        alt="Placeholder image"
+                      />
+                    </figure>
+                  </div>
+                  <div class="card-content">
+                    <div class="content">
+                      <i class="fa fa-id-card-o" aria-hidden="true"></i>
+                      {{ "user" + customer.cus_id }}
+                      <br />
+                      <i class="fa fa-user" aria-hidden="true"></i>
+                      {{ customer.name }}
+                      <br />
+                      <i class="fa fa-phone" aria-hidden="true"></i>
+                      {{ customer.phone }}
+                      <br />
+                      <i class="fa fa-envelope" aria-hidden="true"></i>
+                      <a @click="mailTo(customer.email)">
+                        {{ customer.email }}</a
+                      >
+                      <br />
+                      <i class="fa fa-birthday-cake" aria-hidden="true"></i>
+                      {{ customer.DOB }}
+                      <br />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- report -->
+            <div id="report" class="content-tab" style="display: none">
+              <div
+                v-for="report in allReports"
+                :key="report.report_id"
+                class="content container"
+              >
+                <article
+                  class="card p-3"
+                  :class="
+                    report.status == 'accept'
+                      ? 'has-background-success-light'
+                      : 'has-background-danger-light'
+                  "
+                >
+                  <div class="media-content">
+                    <div class="content">
+                      <div class="columns">
+                        <div class="column is-2">
+                          <i class="fa fa-user" aria-hidden="true"></i>
+                          {{ report.name }}
+                          <br />
+                          <i class="fa fa-phone-square" aria-hidden="true"></i>
+                          {{ report.phone }}
+                        </div>
+                        <div class="column">
+                          <p>
+                            {{ report.content }}
+                          </p>
+                        </div>
+                        <div
+                          class="column is-1"
+                          v-if="report.status == 'submit'"
+                        >
+                          <div
+                            class="button"
+                            @click="acceptReport(report.report_id)"
+                          >
+                            รับเรื่อง
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </div>
+            <!-- edit rooms -->
+            <div id="edit" class="content-tab content" style="display: ">
+              <h3 class="has-text-centered has-text-danger m-6">{{ error }}</h3>
+              <div class="columns is-multiline">
+                <div class="column is-4" v-for="room in allRooms" :key="room">
+                  <div class="card-image">
+                    <figure class="image is-1024x1024">
+                      <img
+                        :src="'http://localhost:3000/' + room.file_path"
+                        alt="Placeholder image"
+                      />
+                    </figure>
+                  </div>
+                  <div class="card-content">
+                    <div class="content">
+                      <i class="fa fa-credit-card-alt" aria-hidden="true"></i>
+                      {{ room.room_id }}
+                      <br />
+                      <i class="fa fa-hashtag" aria-hidden="true"></i>
+                      {{ room.room_type }}
+                      <br />
+                      <i class="fa fa-info" aria-hidden="true"></i>
+                      {{ room.description.substring(0, 150) + "..." }}
+                      <br />
+                      <i class="fa fa-money" aria-hidden="true"></i>
+                      {{ room.price }}
+                      <br />
+                      <strong>จำนวนผู้เข้าพักต่อห้อง</strong>
+                      {{ room.people }}
+                      <br />
+                      <strong>จำนวนห้องที่เปิดให้บริการ</strong>
+                      {{ room.count }}
+                    </div>
+                    <div class="columns">
+                      <div
+                        class="column is-2 has-text-centered"
+                        v-if="room.breakfast == 'yes'"
+                      >
+                        <i
+                          class="fa fa-coffee"
+                          style="font-size: 40px; color: #888"
+                        ></i>
+                      </div>
+
+                      <div
+                        class="column is-4 has-text-centered"
+                        v-if="room.air_conditioner == 'yes'"
+                      >
+                        <i
+                          class="fa fa-snowflake-o"
+                          style="font-size: 40px; color: #888"
+                        ></i>
+                      </div>
+                      <div
+                        class="column is-2 has-text-centered"
+                        v-if="room.wifi == 'yes'"
+                      >
+                        <i
+                          class="fa fa-wifi"
+                          style="font-size: 40px; color: #888"
+                        ></i>
+                      </div>
+                      <div
+                        class="column is-3 has-text-centered"
+                        v-if="room.pool == 'yes'"
+                      >
+                        <i
+                          class="fas fa-swimming-pool"
+                          style="font-size: 40px; color: #888"
+                        ></i>
+                      </div>
+                    </div>
+                  </div>
+                  <footer class="card-footer">
+                    <a
+                      @click="deleteRoom(room.room_id)"
+                      class="card-footer-item"
+                      >ลบห้องพัก</a
+                    >
+                    <a
+                      :href="`/#/editroom/${room.room_id}`"
+                      class="card-footer-item"
+                      >แก้ไขห้อง</a
+                    >
+                  </footer>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -205,20 +295,29 @@ export default {
   data() {
     return {
       logins: true,
-      allRoom: null,
+      allRooms: null,
       allReports: "",
+      customers: [],
+      search: "",
+      dummyData: [],
+      tags: [],
+      tagInput: "",
+      result: "",
+      error: "",
     };
   },
   created() {
-    // axios
-    //   .get("http://localhost:3000/")
-    //   .then((response) => {
-    //     this.allRoom = response.data;
-    //     console.log(this.allRoom);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    axios
+      .get("http://localhost:3000/admin")
+      .then((response) => {
+        this.customers = response.data.customers;
+        this.dummyData = response.data.customers;
+        this.allRooms = response.data.allRooms;
+        console.log(this.customers);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     // this.getRooms();
 
     axios
@@ -232,17 +331,108 @@ export default {
       });
   },
   components: { NavBar },
+  watch: {
+    search(newVal) {
+      this.customers = this.dummyData.filter((value) => {
+        let fullname = value.first_name + " " + value.last_name;
+        return (
+          value.first_name.includes(newVal) ||
+          value.last_name.includes(newVal) ||
+          fullname.includes(newVal) ||
+          value.email.includes(newVal)
+        );
+      });
+    },
+  },
 
   methods: {
-    async getRooms() {
-      try {
-        const response = await axios.get("http://localhost:3000/admin");
-        this.allRoom = response.data;
-        console.log(this.allRoom);
-        console.log("asdfklasdfjlkasdf");
-      } catch (err) {
-        console.log(err);
+    deleteRoom(room_id) {
+      axios
+        .delete(`http://localhost:3000/deleteRoom/${room_id}`)
+        .then((res) => {
+          // this.allRooms = res.data.allRooms;
+          console.log(res);
+          location.reload();
+        })
+        .catch((error) => {
+          this.error = error.response.data;
+          console.log(error.response.data);
+        });
+    },
+    searchQuery() {
+      axios
+        .get(`http://localhost:3000/searchQuery`, {
+          params: {
+            search: this.tags,
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          this.result = res.data.result;
+        })
+        .catch((error) => {
+          this.error = error.response.data;
+          console.log(error.response.data);
+        });
+    },
+    addTag(event) {
+      if (event.code == "Enter") {
+        console.log(event.code);
+        this.tagInput = "";
+        var val = event.target.value;
+        this.tags.push(val);
+        console.log(this.tags);
       }
+    },
+    deleteTag(index) {
+      console.log(index);
+      this.tags = Array.from(this.tags);
+      this.tags.splice(index, 1);
+    },
+    // async getRooms() {
+    //   try {
+    //     const response = await axios.get("http://localhost:3000/admin");
+    //     this.allRoom = response.data;
+    //     console.log(this.allRoom);
+    //     console.log("asdfklasdfjlkasdf");
+    //   } catch (err) {
+    //     console.log(err);
+    //   }
+    // },
+    searchCustomer() {
+      axios
+        .get(`http://localhost:3000/search`, {
+          params: {
+            search: this.search,
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          this.customers = res.data.result;
+        })
+        .catch((error) => {
+          this.error = error.response.data;
+          console.log(error.response.data);
+        });
+    },
+    mailTo(target) {
+      var mailtoLink = "mailto:" + target;
+      window.location.href = mailtoLink;
+    },
+    acceptReport(reportId) {
+      console.log(reportId);
+      axios
+        .put(`http://localhost:3000/report/${reportId}`)
+        .then((res) => {
+          console.log(res);
+          this.reports = res.data.reports;
+          this.allReports = res.data.allReports;
+          console.log(this.reports);
+        })
+        .catch((error) => {
+          this.error = error.response.data;
+          console.log(error.response.data);
+        });
     },
     confirm() {
       console.log("test");

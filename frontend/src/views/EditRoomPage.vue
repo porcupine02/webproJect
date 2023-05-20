@@ -189,7 +189,7 @@ export default {
       service4: false,
       people: "",
       count: "",
-      service_id: ''
+      service_id: "",
     };
   },
   validations: {
@@ -241,7 +241,7 @@ export default {
         service4: this.service4 ? "yes" : "no",
         people: this.people,
         count: this.count,
-        service_id: this.service_id
+        service_id: this.service_id,
       };
       console.log(formData);
 
@@ -275,7 +275,7 @@ export default {
         this.people = room.people;
         this.description = room.description;
         this.room_type = room.room_type;
-        this.service_id = room.service_id
+        this.service_id = room.service_id;
         if (room.breakfast == "yes") {
           this.service1 = true;
         } else {

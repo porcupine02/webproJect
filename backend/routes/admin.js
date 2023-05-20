@@ -26,6 +26,51 @@ const upload = multer({
 
 
 
+router.get("/searchQuery", async function (req, res, next) {
+    const header = req.query.search
+    console.log(header)
+    try {
+        let query = "select " + header
+
+        const [result] = await pool.query(query + ' from booking')
+        console.log(result)
+        res.status(200).send({ result: result })
+
+    } catch (err) {
+        console.log(err)
+    }
+
+});
+router.delete("/deleteRoom/:roomId", async function (req, res, next) {
+    console.log(req.params.roomId)
+
+    const conn = await pool.getConnection()
+    await conn.beginTransaction()
+    const date = new Date()
+    const room_id = req.params.roomId
+    const [check] = await conn.query('select * from unvalible_room where room_id = ? and date > ?', [room_id, date])
+    const [allRooms] = await pool.query('SELECT * FROM roomdetail join services using(service_id) join images using (room_id) WHERE main = 1 and room_id != ?', [room_id])
+
+    console.log(check)
+    try {
+        if (check.length <= 0) {
+            await conn.query("delete from roomdetail where room_id = ?", [req.params.roomId])
+            conn.commit()
+            console.log("allRooms")
+            console.log(allRooms)
+
+            res.status(204).send({ allRooms: allRooms })
+        } else {
+            res.status(400).send("can't delete this room because have booked")
+        }
+    } catch (err) {
+        conn.rollback()
+        res.status(400).json(err.toString())
+    } finally {
+        conn.release()
+    }
+
+});
 
 
 
@@ -39,9 +84,13 @@ router.get("/admin", async function (req, res, next) {
     try {
         console.log("hello world")
 
-        const [booking, fields1] = await pool.query(" select * from booking")
-        const [rooms, fields2] = await pool.query(" select * from roomdetail r left outer join image i on (r.room_img_id = i.room_img_id)")
-        res.send({ booking: JSON.stringify(booking), rooms: JSON.stringify(rooms) })
+        const [customers] = await pool.query(" select *, concat(first_name, ' ', last_name) as name, DATE_FORMAT(DOB, '%Y-%m-%d') as DOB from customers")
+        const [booking] = await pool.query(" select * from booking")
+        const [allRooms] = await pool.query('SELECT * FROM roomdetail join services using(service_id) join images using (room_id) WHERE main = 1')
+        console.log(allRooms)
+
+        // const [rooms, fields2] = await pool.query(" select * from roomdetail r left outer join image i on (r.room_img_id = i.room_img_id)")
+        res.send({ booking: booking, customers: customers, allRooms: allRooms })
 
     } catch (err) {
         console.log(err)
@@ -94,7 +143,7 @@ router.put("/admin/update/:id", async function (req, res, next) {
         console.log("roomdetail")
         console.log(room_id)
         await conn.query("update roomdetail set room_type = ?, price = ?, description = ?, count = ?, people = ? where room_id = ? ",
-            [room_type, price, description, count,people, room_id]);
+            [room_type, price, description, count, people, room_id]);
 
         console.log("service")
         console.log(service_id)
@@ -211,23 +260,23 @@ router.post("/admin/create", isLoggedIn, upload.array("myImage", 6), async funct
 });
 
 
-router.put('/confirmPayment/:id', isLoggedIn, async function(req, res, next){
+router.put('/confirmPayment/:id', isLoggedIn, async function (req, res, next) {
     console.log(req.params.id)
 
     const bookedId = req.params.id
 
     try {
-      const [rows1, fields1] = await pool.query(
-        'update payments set status = ?  where booking_id = ?', [2, bookedId]
-      )
-      console.log(rows1)
-      const [row2, field] = await pool.query(
-        'SELECT status FROM payments WHERE booking_id = ?', [bookedId]
-      )
-      res.json(row2)
-  } catch (error) {
-      res.status(500).json(error)
-  }
+        const [rows1, fields1] = await pool.query(
+            'update payments set status = ?  where booking_id = ?', [2, bookedId]
+        )
+        console.log(rows1)
+        const [row2, field] = await pool.query(
+            'SELECT status FROM payments WHERE booking_id = ?', [bookedId]
+        )
+        res.json(row2)
+    } catch (error) {
+        res.status(500).json(error)
+    }
 
 })
 

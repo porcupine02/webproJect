@@ -20,10 +20,16 @@
         </label>
         <label class="label">Review</label>
         <textarea
+          :class="this.comment == '' ? 'is-danger' : ''"
           class="textarea"
           placeholder="ส่งต่อประสบการณ์ของคุณ"
-          v-model="comment"
+          v-model="$v.comment.$model"
         ></textarea>
+        <template v-if="$v.comment.$error">
+          <p class="help is-danger" v-if="!$v.comment.required">
+            กรุณากรอกข้อมูล
+          </p>
+        </template>
         <a @click="submitComment()"
           ><button class="button is-success mt-3" style="float: right">
             comment
@@ -222,14 +228,14 @@
                     v-if="booked.status == 'complete'"
                     >complete</strong
                   >
-                  
-                  <strong class="has-text-danger" v-else >{{ booked.status }}</strong>
+
+                  <strong class="has-text-danger" v-else>{{
+                    booked.status
+                  }}</strong>
 
                   <span class="is-size-5" style="float: right">
-                    {{ booked.payment_total_money}}
-                 
+                    {{ booked.payment_total_money }}
                   </span>
-
                 </p>
 
                 <div
@@ -259,24 +265,25 @@
                   <div class="button mx-3" disabled>check in</div>
                   <div class="button has-background-danger">check out</div>
                 </div>
-                     
-                <div v-else-if=" user[0].login_role == 'manager' ">
+
+                <div v-else-if="user[0].login_role == 'manager'">
                   <div class="button mx-1" disabled>check in</div>
                   <div class="button mx-1" disabled>check out</div>
 
-                  <div class="button is-warning mx-3" @click="confirmPayment(booked.booking_id, index)">confirm payment</div>
+                  <div
+                    class="button is-warning mx-3"
+                    @click="confirmPayment(booked.booking_id, index)"
+                  >
+                    confirm payment
+                  </div>
                 </div>
                 <div v-else>
                   <div class="button mx-1" disabled>check in</div>
                   <div class="button mx-1" disabled>check out</div>
-
                 </div>
               </div>
             </div>
-            <div
-              class="media-right"
-              v-if="booked.status == 'incomplete'"
-            >
+            <div class="media-right" v-if="booked.status == 'incomplete'">
               <div
                 class="button has-background-danger"
                 @click="
@@ -350,6 +357,9 @@ export default {
       complexPassword: complexPassword,
     },
     reportContent: {
+      required: required,
+    },
+    comment: {
       required: required,
     },
   },
@@ -447,15 +457,17 @@ export default {
         content: this.comment,
         rate: this.rate,
       };
-      axios
-        .post(`http://localhost:3000/comment/`, comment_data)
-        .then((res) => {
-          console.log(res);
-          this.is_active_comments = false;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      if (this.comment != "") {
+        axios
+          .post(`http://localhost:3000/comment/`, comment_data)
+          .then((res) => {
+            console.log(res);
+            this.is_active_comments = false;
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
     },
     rateJaa(index) {
       console.log(index);
@@ -535,15 +547,18 @@ export default {
           });
       }
     },
-    confirmPayment(bookingId, index){
-        console.log(bookingId, index)
-        axios.put(`http://localhost:3000/confirmPayment/${bookingId}`).then((res) =>{
-          console.log(res.data[0].status)
+    confirmPayment(bookingId, index) {
+      console.log(bookingId, index);
+      axios
+        .put(`http://localhost:3000/confirmPayment/${bookingId}`)
+        .then((res) => {
+          console.log(res.data[0].status);
           this.booking[index].status = res.data[0].status;
-        }).catch((err)=>{
-            console.log(err)
         })
-    }
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
 
   created() {
@@ -556,15 +571,14 @@ export default {
         // this.booking = res.data.booking;
         this.user = res.data.user;
         // this.allbooking = res.data.allbooking;
-        console.log(this.user[0])
-        console.log(this.booking)
-        console.log(this.allbooking)
-      if(this.user[0].login_role == 'manager'){
-        this.booking = res.data.allbooking
-      }
-      else{
-        this.booking = res.data.booking
-      }
+        console.log(this.user[0]);
+        console.log(this.booking);
+        console.log(this.allbooking);
+        if (this.user[0].login_role == "manager") {
+          this.booking = res.data.allbooking;
+        } else {
+          this.booking = res.data.booking;
+        }
       })
       .catch((err) => {
         console.log(err);
