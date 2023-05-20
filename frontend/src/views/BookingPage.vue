@@ -4,6 +4,48 @@
  <div>
       <NavBar />
     </div>
+
+    
+    <br>
+    <br>
+    <br>
+
+    <div class="steps is-centered">
+        <div class="step-item">
+          <div class="step-marker"><span class="icon">
+            <i class="fa fa-bed" aria-hidden="true"></i>
+            </span></div>
+          
+          <div class="step-details">
+            <p class="step-title">เลือกห้องที่ต้องการ</p>
+          </div>
+        </div>
+
+        <div class="step-item  is-active">
+          <div class="step-marker"> <span class="icon">
+              <i class="fa fa-user"></i>
+            </span></div>
+          <div class="step-details">
+            <p class="step-title">
+              กรอกข้อมูลส่วนตัว</p>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-marker"><span class="icon">
+            <i class="fa fa-check"></i>
+          </span></div>
+          <div class="step-details">
+            <p class="step-title">
+ยืนยันการจ่ายเงิน</p>
+          </div>
+        </div>
+      </div>
+
+      <br>
+      <br>
+      <br>
+
   <div class="container" id="Booking"  >
     <div class="tile is-ancestor" v-for="room in detalRoom" :key="room.room_id">
       <div class="tile is-parent is-8">
@@ -122,7 +164,13 @@
                <input type="text" class="input" placeholder="ชื่อ" v-model="$v.fname.$model" :class="{ 'is-danger': $v.fname.$error }">
                <template v-if="$v.fname.$error">
                <p class="help is-danger" v-if="!$v.fname.required">
-                 This field is required
+                กรุณากรอกชื่อ
+               </p>
+               <p class="help is-danger" v-if="!$v.fname.alphaNum">
+                กรุณาอย่าเว้นช่อง
+               </p>
+               <p class="help is-danger" v-if="!$v.fname.word">
+                 กรุณากรอกแต่ตัวอักษรเท่านั้น
                </p>
              </template>
             </div>
@@ -132,7 +180,13 @@
                <input type="text" class="input" placeholder="นามสกุล"   v-model="$v.lname.$model" :class="{ 'is-danger': $v.lname.$error }">
                <template v-if="$v.lname.$error">
                <p class="help is-danger" v-if="!$v.lname.required">
-                 This field is required
+                กรุณากรอกนามสกุล
+               </p>
+               <p class="help is-danger" v-if="!$v.lname.alphaNum">
+                กรุณาอย่าเว้นช่อง
+               </p>
+               <p class="help is-danger" v-if="!$v.lname.word">
+                กรุณากรอกแต่ตัวอักษรเท่านั้น
                </p>
              </template>
             </div>
@@ -167,14 +221,49 @@
       </div>
     </div>
   </div>
+
+  <br>
+  <br>
+  <div>
+    <FooterBar />
+  </div>
 </div>
 </template>
 
 <script>
 import axios from "@/plugins/axios";
 import NavBar from "@/components/NavBar.vue"
+import FooterBar from "@/components/FooterBar.vue";
+import "bulma/css/bulma.min.css";
+import "bulma-steps/dist/css/bulma-steps.min.css";
+
+
+
+import bulmaSteps from "bulma-steps/dist/js/bulma-steps.min.js";
+
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Get all the step items
+  var steps = document.querySelectorAll(".steps .step-item");
+
+  // Initialize the steps component
+  bulmaSteps.attach(steps);
+});
+
+
+
+function word(value){
+  if(value.match('^[^0-9]*$')){
+    return true
+  }
+  return false
+}
+
 import {
   required,
+  alphaNum
 
 } from "vuelidate/lib/validators";
 export default {
@@ -200,7 +289,7 @@ export default {
     };
   },
 
-  components: { NavBar },
+  components: { NavBar, FooterBar },
 
   created(){
    
@@ -236,10 +325,14 @@ export default {
   validations: {
     fname: {
       required: required,
+      alphaNum : alphaNum,
+      word : word
      
     },
     lname: {
-      required: required
+      required: required,
+      alphaNum : alphaNum,
+      word : word
     }
   },
   methods: {

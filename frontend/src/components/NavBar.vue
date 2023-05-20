@@ -74,10 +74,12 @@
 
           <template v-if="$v.sign_fname.$error">
             <p class="help is-danger" v-if="!$v.sign_fname.required">
-              This field is required
+              กรุณากรอกชื่อจริง
             </p>
-            <p class="help is-danger" v-if="!$v.sign_fname.minLength">min 5</p>
-            <p class="help is-danger" v-if="!$v.sign_fname.maxLength">max 15</p>
+            <p class="help is-danger" v-if="!$v.sign_fname.minLength">จำนวนตัวอักษรมากกว่า 4 ตัว</p>
+            <p class="help is-danger" v-if="!$v.sign_fname.maxLength">จำนวนตัวอักษรน้อยกว่า 16 ตัว</p>
+            <p class="help is-danger" v-if="!$v.sign_fname.alphaNum">อย่าเว้นช่อง</p>
+            <p class="help is-danger" v-if="!$v.sign_fname.word">ตัวอักษรเท่านั้น</p>
           </template>
         </div>
         <div class="field">
@@ -93,10 +95,13 @@
           </div>
           <template v-if="$v.sign_lname.$error">
             <p class="help is-danger" v-if="!$v.sign_lname.required">
-              This field is required
+              กรุณากรอกนามสกุล
             </p>
-            <p class="help is-danger" v-if="!$v.sign_lname.minLength">min 5</p>
-            <p class="help is-danger" v-if="!$v.sign_lname.maxLength">max 15</p>
+            <p class="help is-danger" v-if="!$v.sign_lname.minLength">จำนวนตัวอักษรมากกว่า 4 ตัว
+</p>
+            <p class="help is-danger" v-if="!$v.sign_lname.maxLength">จำนวนตัวอักษรน้อยกว่า 16 ตัว</p>
+            <p class="help is-danger" v-if="!$v.sign_lname.alphaNum">อย่าเว้นช่อง</p>
+            <p class="help is-danger" v-if="!$v.sign_lname.word">ตัวอักษรเท่านั้น</p>
           </template>
         </div>
         <div class="field">
@@ -112,7 +117,7 @@
           </div>
           <template v-if="$v.sign_phone.$error">
             <p class="help is-danger" v-if="!$v.sign_phone.required">
-              This field is required
+              กรุณากรอกเบอร์โทรศัพท์
             </p>
             <p class="help is-danger" v-else-if="!$v.sign_phone.sign_phone">
               เบอร์โทรศัพท์ 10 ตัว
@@ -135,7 +140,8 @@
           </div>
           <template v-if="$v.sign_dob.$error">
             <p class="help is-danger" v-if="!$v.sign_dob.required">
-              This field is required
+              กรุณากรอกวันเกิด
+
             </p>
           </template>
         </div>
@@ -152,17 +158,18 @@
           </div>
           <template v-if="$v.sign_email.$error">
             <p class="help is-danger" v-if="!$v.sign_email.required">
-              This field is required
+              กรุณากรอกอีเมล
+
             </p>
             <p class="help is-danger" v-else-if="!$v.sign_email.email">
-              not email
+              กรูณาใส่อีเมลให้ถูกต้อง
             </p>
             <!-- <p class="help is-danger" v-else-if="!$v.sign_email.minLength"> 10</p> -->
           </template>
         </div>
 
         <div class="field">
-          <label class="label">User Name</label>
+          <label class="label">Username</label>
           <div class="control">
             <input
               class="input"
@@ -174,13 +181,14 @@
           </div>
           <template v-if="$v.sign_username.$error">
             <p class="help is-danger" v-if="!$v.sign_username.required">
-              This field is required
+              กรุณากรอก username
             </p>
             <p class="help is-danger" v-else-if="!$v.sign_username.maxLength">
-              25
+              จำนวนตัวอักษรน้อยกว่า 26 ตัว
             </p>
             <p class="help is-danger" v-else-if="!$v.sign_username.minLength">
-              5
+              จำนวนตัวอักษรมากกว่า 4 ตัว
+              
             </p>
           </template>
         </div>
@@ -198,7 +206,7 @@
           </div>
           <template v-if="$v.sign_password.$error">
             <p class="help is-danger" v-if="!$v.sign_password.required">
-              กรุณากรอกข้อมูล
+              กรุณากรอกรหัสผ่าน
             </p>
             <p class="help is-danger" v-else-if="!$v.sign_password.complex">
               รหัสมีความปลอดภัยน้อย
@@ -226,6 +234,12 @@
             </p>
           </template>
         </div>
+        <template v-if="error">
+          
+            <p class="help is-danger" >
+              {{ error }}
+            </p>
+          </template>
         <div class="field is-grouped">
           <div class="control">
             <a class="button is-primary" value="submit" @click="signUp()"
@@ -268,7 +282,7 @@
                 <strong>สมัครสมาชิก</strong>
               </a>
 
-              <div class="navbar-brand">
+              <div class="navbar-brand" v-if=" isActive_createAndReport == true">
                 <!-- <div class="navbar-end"> -->
                 <div class="navbar-item has-dropdown is-hoverable">
                   <a class="navbar-link"> REPORT </a>
@@ -323,6 +337,7 @@
               ><a
                 class="navbar-item button is-info"
                 href="http://localhost:8080/#/createRoom/"
+                v-if=" isActive_createAndReport == true"
               >
                 create
               </a>
@@ -335,7 +350,7 @@
 </template>
 
 <script>
-import axios from "@/plugins/axios";
+import axios from '@/plugins/axios'
 
 import {
   required,
@@ -343,6 +358,7 @@ import {
   minLength,
   sameAs,
   email,
+  alphaNum
 } from "vuelidate/lib/validators";
 // import navbar from '../../component/navbar.vue';
 function complexPassword(value) {
@@ -351,6 +367,14 @@ function complexPassword(value) {
   }
   return true;
 }
+
+function word(value){
+  if(value.match('^[^0-9]*$')){
+    return true
+  }
+  return false
+}
+
 
 function phone(value) {
   return !!value.match(/0[0-9]{9}/);
@@ -375,6 +399,7 @@ export default {
       modal: true,
       isActive_Sign_in: false,
       isActive_Sign_up: false,
+      isActive_createAndReport: false,
       logins: false,
       sign_fname: "",
       sign_lname: "",
@@ -394,12 +419,23 @@ export default {
   },
 
   created() {
-    console.log(this.user);
+   
     this.getUser();
-    console.log(this.getUser());
-    if (localStorage.getItem("user") != null) {
-      this.logins = true;
+    
+    
+    if (localStorage.getItem('user') != null) {
+      console.log(localStorage.getItem('user').split(' ')[1])
+      if(localStorage.getItem('user').split(' ')[1] == 'manager'){
+        console.log('true')
+        this.isActive_createAndReport = true
+        this.logins = true;
+      }
+      else{
+        this.logins = true;
+      }
+     
     } else {
+      console.log('false')
       this.logins = false;
     }
 
@@ -419,11 +455,15 @@ export default {
       required: required,
       maxLength: maxLength(15),
       minLength: minLength(5),
+      alphaNum : alphaNum,
+      word : word
     },
     sign_lname: {
       required: required,
       maxLength: maxLength(15),
       minLength: minLength(5),
+      alphaNum : alphaNum,
+      word : word
     },
     sign_phone: {
       required: required,
@@ -492,6 +532,7 @@ export default {
         this.$v.$reset();
     },
     login() {
+    
       const data = {
         username: this.username,
         password: this.password,
@@ -501,11 +542,17 @@ export default {
       axios
         .post("http://localhost:3000/user/login", data)
         .then((response) => {
+          // location.reload()
           // console.log(response.data)
           const token = response.data.token;
+          const role = response.data.user.login_role
+          console.log(role);
+          // const userProfile = [role, token]
+          localStorage.setItem("user", token + ' ' + role);
 
-          console.log(token);
-          localStorage.setItem("user", token);
+          if(role == 'manager'){
+            this.isActive_createAndReport = true
+          }
           this.$emit("auth-change");
           this.getUser();
           this.isActive_Sign_in = false;
@@ -519,14 +566,16 @@ export default {
         });
     },
     logOut() {
+      this.$router.push({name: 'Home'})
       localStorage.removeItem("user");
+      this.isActive_createAndReport = false;
       this.logins = false;
       this.isActive_Sign_in = false;
     },
     signUp() {
       this.$v.$touch();
 
-      // if (!this.$v.$invalid) {
+      if (this.sign_fname != '' && this.sign_lname != '' && this.sign_phone != '' && this.sign_email != '' && this.sign_username != '' && this.confirm_password != '' && this.sign_password != '') {
       var data = {
         fname: this.sign_fname,
         lname: this.sign_lname,
@@ -544,22 +593,27 @@ export default {
         .post("http://localhost:3000/signUp", data)
         .then((response) => {
           console.log(response);
+          this.$v.$reset();
 
           this.isActive_Sign_in = true;
           this.isActive_Sign_up = false;
         })
         .catch((error) => {
-          this.error = error.response.error;
-          console.log(error.response.error);
+          this.error = error.response.data.details.message;
+          console.log(error.response.data.details.message);
         });
-      // }
+      }
     },
 
     getUser() {
       axios.get("/user/me").then((res) => {
         this.user = res.data;
         this.profile = this.user;
-      });
+     
+        console.log(this.profile)
+      }).catch((err) =>{
+        console.log(err)
+      })
     },
   },
 };

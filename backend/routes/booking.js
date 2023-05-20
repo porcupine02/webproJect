@@ -20,6 +20,14 @@ const storage = multer.diskStorage({
   });
   const upload = multer({ storage: storage });
 
+//   const NameBookingSchema = Joi.object({
+//     fname:  Joi.string().required().pattern(/^[a-zA-Z\s]+$/),
+//     lname: Joi.string().required().pattern(/^[a-zA-Z\s]+$/),
+
+
+// })
+
+
 // Get comment
 router.get('/booking', isLoggedIn,  async function(req, res, next){
 
@@ -57,6 +65,12 @@ router.get('/booking', isLoggedIn,  async function(req, res, next){
 
 
 router.post('/invoice', isLoggedIn, upload.single('file_image'), async function(req, res, next){
+
+//   try {
+//     await NameBookingSchema.validateAsync(req.body, { abortEarly: false })
+// } catch (err) {
+//     return res.status(400).send(err)
+// }
     // console.log(req.file.path)
     console.log(req.body)
     // console.log(req.user.login_id)

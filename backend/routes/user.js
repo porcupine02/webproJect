@@ -54,9 +54,9 @@ router.post('/user/login', async (req, res, next) => {
         }
 
 
-        const hash = await bcrypt.hash(user.password, 5)
+        // const hash = await bcrypt.hash(user.password, 5)
 
-        if (!(await bcrypt.compare(password, hash))) {
+        if (!(await bcrypt.compare(password, user.password))) {
             throw new Error('Incorrect username or password')
         }
 
@@ -71,7 +71,7 @@ router.post('/user/login', async (req, res, next) => {
             )
         }
         conn.commit()
-        res.status(200).json({ 'token': token })
+        res.status(200).json({ 'token': token, user: user })
     } catch (err) {
         conn.rollback()
         res.status(400).json(err.toString())
@@ -99,17 +99,26 @@ const usernameValidator = async (value, helpers) => {
     const [rows, _] = await pool.query("SELECT username FROM login WHERE username = ?", [value])
     console.log(rows)
     if (rows.length > 0) {
-        const message = 'มีชื่อ ซ้ำ'
+        const message = 'มีชื่อ username ซ้ำ'
+        throw new Joi.ValidationError(message, { message })
+    }
+    return value
+}
+
+const emailValidator = async(value, helpers) =>{
+    const [rows] = await pool.query("SELECT email FROM customers WHERE email = ?", [value])
+    if (rows.length > 0) {
+        const message = 'ใช้email ซ้ำ'
         throw new Joi.ValidationError(message, { message })
     }
     return value
 }
 
 const signUpSchema = Joi.object({
-    email: Joi.string().required().email(),
+    email: Joi.string().required().email().external(emailValidator),
     phone: Joi.string().required().pattern(/0[0-9]{9}/),
-    fname: Joi.string().required().min(5).max(15),
-    lname: Joi.string().required().min(5).max(15),
+    fname: Joi.string().required().min(5).max(15).pattern(/^[a-zA-Z\s]+$/),
+    lname: Joi.string().required().min(5).max(15).pattern(/^[a-zA-Z\s]+$/),
     username: Joi.string().required().min(5).max(25).external(usernameValidator),
     password: Joi.string().required().custom(passwordValidator),
     confirm_password: Joi.string().required().valid(Joi.ref('password')),
@@ -141,7 +150,7 @@ router.post('/signUp', async function (req, res, next) {
     const dob = req.body.dob
     const email = req.body.email
     const username = req.body.username
-    const password = req.body.password
+    const password = await bcrypt.hash(req.body.password, 5)
 
     try {
         let results = await conn.query(
@@ -292,15 +301,23 @@ router.put('/forgot', async function (req, res, next) {
     } catch (err) {
         return res.status(400).send('ใส่รหัสไม่ถูกต้อง')
     }
+    const password = await bcrypt.hash(req.body.password, 5)
+
+    const[user] = await pool.query('SELECT login_id FROM login WHERE username = ?', req.body.username)
+
+    console.log("user" + user[0].login_id)
 
 
     try {
         console.log(req.body)
-        const [rows, fields] = await pool.query('UPDATE login set password = ? WHERE username = ?', [req.body.password, req.body.username])
+        const [rows, fields] = await pool.query('UPDATE login set password = ? WHERE username = ?', [password, req.body.username])
+        const [updateToken] = await pool.query('UPDATE tokens set token = ? WHERE login_id = ?', [password, user[0].login_id])
+
         res.json(rows)
     } catch (err) {
         console.log(err)
     }
+ 
 })
 
 router.get('/user/', isLoggedIn, async (req, res, next) => {

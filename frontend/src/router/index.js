@@ -19,13 +19,13 @@ const routes = [
   {
     path: '/admin',
     name: 'Admin',
-
+    meta: { login: true },
     component: () => import("../views/AdminPage.vue")
   },
   {
     path: '/invoice',
     name: 'Invoice',
-
+    meta: { login: true },
     component: () => import('../views/invoicePage.vue')
   },
   {
@@ -38,22 +38,25 @@ const routes = [
   {
     path: '/profile',
     name: 'Profile',
-
+    meta: { login: true },
     component: () => import('../views/ProfilePage.vue')
   },
   {
     path: '/forgot',
     name: 'Forgot',
+
     component: () => import('../views/ForgotPassPage.vue')
   },
   {
     path: '/createRoom',
     name: 'CreateRoom',
+    meta: { login: true },
     component: () => import('../views/CreatePage.vue')
   },
   {
     path: '/editroom/:id',
     name: 'EditRoom',
+    meta: { login: true },
     component: () => import('../views/EditRoomPage.vue')
   }
 
@@ -64,8 +67,9 @@ const router = new VueRouter({
 })
 router.beforeEach((to, from, next) => {
   const isLoggedIn = !!localStorage.getItem('user')
-
+  
   if (to.meta.login && !isLoggedIn) {
+   
     alert('please login first')
     next({ path: '/' })
   }

@@ -1,4 +1,46 @@
 <template>
+
+  <div>
+
+    <div>
+      <NavBar />
+    </div>
+      <br>
+      <br>
+
+    
+    <div class="steps is-centered">
+        <div class="step-item">
+          <div class="step-marker"><span class="icon">
+            <i class="fa fa-bed" aria-hidden="true"></i>
+            </span></div>
+          
+          <div class="step-details">
+            <p class="step-title">เลือกห้องที่ต้องการ</p>
+          </div>
+        </div>
+
+        <div class="step-item  ">
+          <div class="step-marker"> <span class="icon">
+              <i class="fa fa-user"></i>
+            </span></div>
+          <div class="step-details">
+            <p class="step-title">กรอกข้อมูลส่วนตัว</p>
+          </div>
+        </div>
+
+        <div class="step-item is-active">
+          <div class="step-marker"><span class="icon">
+            <i class="fa fa-check"></i>
+          </span></div>
+          <div class="step-details ">
+            <p class="step-title">ยืนยันการจ่ายเงิน</p>
+          </div>
+        </div>
+      </div>
+    
+ 
+
   <div class="columns" style="margin-top: 100px" id="invoice">
     <div class="column"></div>
     <div class="column is-three box">
@@ -97,10 +139,37 @@
     </div>
     <div class="column"></div>
   </div>
+
+  <br>
+  <br>
+  <div>
+      <FooterBar />
+    </div>
+</div>
 </template>
 
 <script>
 import axios from "@/plugins/axios";
+import NavBar from "@/components/NavBar.vue";
+import FooterBar from "@/components/FooterBar.vue";
+
+import "bulma/css/bulma.min.css";
+import "bulma-steps/dist/css/bulma-steps.min.css";
+
+
+
+import bulmaSteps from "bulma-steps/dist/js/bulma-steps.min.js";
+
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Get all the step items
+  var steps = document.querySelectorAll(".steps .step-item");
+
+  // Initialize the steps component
+  bulmaSteps.attach(steps);
+});
 
 // import { required } from "vuelidate/lib/validators";
 
@@ -147,6 +216,7 @@ export default {
       // user : this.user.username
     };
   },
+  components: { NavBar, FooterBar },
   validations: {
     fileSize: {
       checkuploadfile: checkuploadfile,
@@ -209,9 +279,9 @@ export default {
     this.countRooms = this.booking.split(" ")[4];
     this.priceForDay = this.booking.split(" ")[7];
     this.price =
-      this.booking.split(" ")[7] *
-      this.booking.split(" ")[4] *
-      this.booking.split(" ")[10];
+    this.booking.split(" ")[7] *
+    this.booking.split(" ")[4] *
+    this.booking.split(" ")[10];
     this.allPrice = this.booking.split(" ")[9];
     console.log("folK" + this.allPrice);
     this.allCountRooms = this.booking.split(" ")[11];

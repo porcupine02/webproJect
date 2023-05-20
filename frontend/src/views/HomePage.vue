@@ -3,6 +3,61 @@
     <div>
       <NavBar />
     </div>
+    
+
+    <br>
+    <br>
+    <br>
+
+    <div>
+      <div class="steps is-centered">
+        <div class="step-item is-active">
+          <div class="step-marker"><span class="icon">
+            <i class="fa fa-bed" aria-hidden="true"></i>
+            </span></div>
+          
+          <div class="step-details">
+            <p class="step-title">เลือกห้องที่ต้องการ</p>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-marker"> <span class="icon">
+              <i class="fa fa-user"></i>
+            </span></div>
+          <div class="step-details">
+            <p class="step-title">กรอกข้อมูลส่วนตัว</p>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-marker"><span class="icon">
+            <i class="fa fa-check"></i>
+          </span></div>
+          <div class="step-details">
+            <p class="step-title">ยืนยันการจ่ายเงิน</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- <ul class="steps">
+        <li class="steps-segment">
+          <a href="#" class="steps-marker"></a>
+        </li>
+        <li class="steps-segment">
+          <a href="#" class="steps-marker"></a>
+        </li>
+        <li class="steps-segment is-active">
+          <span class="steps-marker"></span>
+        </li>
+        <li class="steps-segment">
+          <span class="steps-marker"></span>
+        </li>
+        <li class="steps-segment">
+          <span class="steps-marker"></span>
+        </li>
+      </ul> -->
+    </div>
 
     <br /><br /><br />
     <div class="container">
@@ -13,14 +68,17 @@
             <div class="">
               <p>{{ begin }}</p>
 
-          
-              
-              <input class="input" type="date" v-model="$v.begin.$model" :min="dateNow"  :class="{ 'is-danger': $v.begin.$error }">
-           
+              <input
+                class="input"
+                type="date"
+                v-model="$v.begin.$model"
+                :min="dateNow"
+                :class="{ 'is-danger': $v.begin.$error }"
+              />
             </div>
             <template v-if="$v.begin.$error">
               <p class="help is-danger" v-if="!$v.begin.required">
-                This field is required
+                กรูณากรอกเวลา
               </p>
             </template>
           </div>
@@ -38,7 +96,7 @@
             </div>
             <template v-if="$v.end.$error">
               <p class="help is-danger" v-if="!$v.end.required">
-                This field is required
+                กรูณากรอกเวลา
               </p>
               <p class="help is-danger" v-else-if="!$v.end.ErrDate">
                 ใส่เวลาให้น้อยกว่าเริ่มต้น
@@ -58,6 +116,14 @@
       </div>
       <br />
 
+
+   
+
+      
+    <br>
+    <br>
+
+
       <!-- </div> -->
       <!-- <div class="container"> -->
       <div class="columns is-centered" v-if="rooms.length == 0">
@@ -67,7 +133,7 @@
         <div
           class="column is-3 card"
           style="margin-left: 6%; margin-bottom: 4%"
-          v-for="room in rooms"
+          v-for="(room, index) in rooms"
           :key="room.id"
         >
           <div v-if="room == ''"></div>
@@ -88,7 +154,7 @@
               <div class="media-content">
                 <p class="title is-4">{{ room.room_type }}</p>
                 <p class="subtitle is-6">
-                  <i
+                  <!-- <i
                     class="fas fa-star mt-3"
                     style="font-size: 40px; color: rgb(244, 247, 76)"
                   ></i>
@@ -107,7 +173,22 @@
                   <i
                     class="fas fa-star mt-3"
                     style="font-size: 40px; color: rgb(244, 247, 76)"
-                  ></i>
+                  ></i> -->
+          
+           {{ room }}
+            <i
+              v-for="item in rateRoom[index]"
+              :key="item"
+          
+              class="fa fa-star"
+              style="font-size: 30px; color: rgb(244, 247, 76)"
+            ></i>
+            <i
+              v-for="item in 5 - rateRoom[index]"
+              :key="item"
+              class="fa fa-star"
+              style="font-size: 30px; color: rgb(188, 188, 165)"
+            ></i>
                 </p>
               </div>
             </div>
@@ -123,12 +204,16 @@
               >เพิ่มเติม</a
             >
             <!-- :href="'#/booking?room=' + room.room_id + ' ' + begin + ' ' + end" -->
-            <a @click="booking(room.room_id)" class="card-footer-item"
+            <a @click="booking(room.room_id)" class="card-footer-item" v-if="Active_booking == true"
               >จองเลย</a
             >
-            <a :href="`/#/editroom/${room.room_id}`" class="card-footer-item"
+
+            <!-- <a
+              :href="`/#/editroom/${room.room_id}`"
+              v-if="CheckRole()"
+              class="card-footer-item"
               >แก้ไขห้อง</a
-            >
+            > -->
           </footer>
         </div>
       </div>
@@ -162,40 +247,11 @@
       </div>
     </div>
     <br />
-    <footer class="footer" style="background-color: black">
-      <!-- Start Footer Top -->
-      <div class="footer-top">
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-4 col-md-4 col-12">
-              <!-- Single Widget -->
-              <div class="single-footer" style="color: whitesmoke">
-                <p>Alway make you happy by providing the best option for you</p>
-                <ul class="social">
-                  <br />
-                  <li>
-                    <a href=""
-                      ><i
-                        class="fab fa-facebook"
-                        style="font-size: 40px; margin-right: 10px"
-                      ></i
-                    ></a>
-                    <a href=""
-                      ><i class="fab fa-instagram" style="font-size: 40px"></i
-                    ></a>
-                  </li>
-                </ul>
-                <!-- <p class="copyright-text">Designed and Developed by <a href="https://uideck.com/"
-                                    rel="nofollow" target="_blank">UIdeck</a>
-                            </p> -->
-              </div>
-              <!-- End Single Widget -->
-            </div>
-          </div>
-        </div>
-      </div>
-      <!--/ End Footer Top -->
-    </footer>
+
+    <div>
+      <FooterBar />
+    </div>
+
   </div>
 </template>
 
@@ -204,27 +260,30 @@
 
 import axios from "@/plugins/axios";
 import NavBar from "@/components/NavBar.vue";
-import {
-  required,
-  maxLength,
-  minLength,
-  sameAs,
-  email,
-} from "vuelidate/lib/validators";
-// import navbar from '../../component/navbar.vue';
-function complexPassword(value) {
-  if (!(value.match(/[a-z]/) && value.match(/[A-Z]/) && value.match(/[0-9]/))) {
-    return false;
-  }
-  return true;
-}
+import FooterBar from "@/components/FooterBar.vue";
+import "bulma/css/bulma.min.css";
+import "bulma-steps/dist/css/bulma-steps.min.css";
 
-function phone(value) {
-  return !!value.match(/0[0-9]{9}/);
-}
+
+
+import bulmaSteps from "bulma-steps/dist/js/bulma-steps.min.js";
+
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Get all the step items
+  var steps = document.querySelectorAll(".steps .step-item");
+
+  // Initialize the steps component
+  bulmaSteps.attach(steps);
+});
+
+import { required } from "vuelidate/lib/validators";
+// import navbar from '../../component/navbar.vue';
 
 function ErrDate(value) {
-  if (value <= this.begin) {
+  if (value <= this.begin || value == null) {
     return false;
   }
   return true;
@@ -234,26 +293,21 @@ export default {
   props: ["user"],
   data() {
     return {
-      username: "",
-      password: "",
       rooms: null,
+      rateRoom : null,
       modal: true,
       isActive_Sign_in: false,
       isActive_Sign_up: false,
+      Active_booking : false,
       logins: false,
-      sign_fname: "",
-      sign_lname: "",
-      sign_phone: "",
-      sign_dob: "",
-      sign_email: "",
-      sign_username: "",
-      sign_password: "",
-      confirm_password: "",
+
+
       error: "",
       count: 1,
       begin: "",
       dateNow: "",
       end: "",
+
       // model: {
       //   date: "",
       // },
@@ -264,9 +318,11 @@ export default {
     };
   },
   // name : 'app',
-  components: { NavBar },
+  components: { NavBar, FooterBar },
 
   created() {
+    // console.log(this.user)
+    // this.profile = this.user
     // console.log(this.user);
     // if (localStorage.getItem("user") != null) {
     //   this.logins = true;
@@ -277,8 +333,10 @@ export default {
     axios
       .get("http://localhost:3000/showRoom")
       .then((response) => {
-        this.rooms = response.data;
-        console.log(this.rooms);
+        this.rooms = response.data.roomShow;
+        this.rateRoom = response.data.rateArr
+
+        console.log(this.rateRoom);
       })
       .catch((err) => {
         console.log(err);
@@ -297,41 +355,6 @@ export default {
   },
 
   validations: {
-    sign_fname: {
-      required: required,
-      maxLength: maxLength(15),
-      minLength: minLength(5),
-    },
-    sign_lname: {
-      required: required,
-      maxLength: maxLength(15),
-      minLength: minLength(5),
-    },
-    sign_phone: {
-      required: required,
-      sign_phone: phone,
-      maxLength: maxLength(10),
-    },
-    sign_dob: {
-      required: required,
-    },
-    sign_email: {
-      required: required,
-      email: email,
-    },
-    sign_username: {
-      required: required,
-      maxLength: maxLength(25),
-      minLength: minLength(5),
-    },
-    sign_password: {
-      required: required,
-      minLength: minLength(8),
-      complex: complexPassword,
-    },
-    confirm_password: {
-      sameAs: sameAs("sign_password"),
-    },
     begin: {
       required: required,
     },
@@ -346,83 +369,9 @@ export default {
         this.count--;
       }
     },
-    // Close() {
-    //   this.isActive_Sign_in = false;
-    //   this.isActive_Sign_up = false;
-    //   this.username = "";
-    //   this.password = "";
-    //   this.error = "";
-    //   (this.sign_fname = ""),
-    //     (this.sign_lname = ""),
-    //     (this.sign_phone = ""),
-    //     (this.sign_dob = ""),
-    //     (this.sign_email = ""),
-    //     (this.sign_username = ""),
-    //     (this.sign_password = ""),
-    //     (this.confirm_password = ""),
-    //     this.$v.$reset();
-    // },
-    // login() {
-    //   var data = {
-    //     username: this.username,
-    //     password: this.password,
-    //   };
-    //   axios
-    //     .post("http://localhost:3000/user/login", data)
-    //     .then((response) => {
-    //       // console.log(response.data)
-    //       const token = response.data.token;
-    //       localStorage.setItem("user", token);
-    //       this.$emit("auth-change");
-    //       this.isActive_Sign_in = false;
-    //       this.logins = true;
-    //       this.username = "";
-    //       this.password = "";
-    //     })
-    //     .catch((error) => {
-    //       this.error = error.response.data;
-    //       console.log(error.response.data);
-    //     });
-    // },
-    // logOut() {
-    //   localStorage.removeItem("user");
-    //   this.logins = false;
-    //   this.isActive_Sign_in = false;
-    // },
-    // signUp() {
-    //   this.$v.$touch();
 
-    //   // if (!this.$v.$invalid) {
-    //     var data = {
-    //       fname: this.sign_fname,
-    //       lname: this.sign_lname,
-    //       phone: this.sign_phone,
-    //       dob: this.sign_dob,
-    //       email: this.sign_email,
-    //       username: this.sign_username,
-    //       confirm_password: this.confirm_password,
-    //       password: this.sign_password,
-
-    //     };
-
-    //     console.log(data)
-
-    //     axios
-    //       .post("http://localhost:3000/signUp", data)
-    //       .then((response) => {
-    //         console.log(response);
-
-    //         this.isActive_Sign_in = true;
-    //         this.isActive_Sign_up = false;
-    //       })
-    //       .catch((error) => {
-    //         this.error = error.response.error;
-    //         console.log(error.response.error);
-    //       });
-    //   // }
-    // },
     serach() {
-      if (this.begin == "" && this.end == "") {
+      if (this.begin == "" || this.end == "") {
         this.$v.$touch();
       }
       if (this.begin != "" && this.end != "") {
@@ -435,8 +384,10 @@ export default {
             },
           })
           .then((response) => {
-            this.rooms = response.data;
-            console.log(this.rooms);
+            this.rooms = response.data.roomShow;
+        this.rateRoom = response.data.rateArr
+            console.log(response.data);
+            this.Active_booking = true
           })
           .catch((err) => {
             console.log(err);
@@ -455,6 +406,15 @@ export default {
         });
       }
       // }
+    },
+
+    CheckRole() {
+      console.log(this.user);
+      if (!this.user) {
+        return false;
+      } else if (this.user.login_role == "manager") {
+        return true;
+      }
     },
   },
 };
