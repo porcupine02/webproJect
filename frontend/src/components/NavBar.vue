@@ -7,7 +7,7 @@
           <label class="label has-text-centered">ล็อคอิน</label>
         </div>
         <div class="field">
-          <h1 class="label">Username {{ username }}</h1>
+          <h1 class="label">Username</h1>
           <div class="control has-icons-left">
             <span class="icon is-small is-left">
               <i class="fas fa-envelope"></i>
@@ -22,7 +22,7 @@
         </div>
 
         <div class="field">
-          <label class="label">Password {{ password }}</label>
+          <label class="label">Password</label>
           <div class="control has-icons-left">
             <span class="icon is-small is-left">
               <i class="fas fa-lock"></i>
@@ -61,7 +61,7 @@
         </div>
 
         <div class="field">
-          <h1 class="label">First Name{{ sign_fname }}</h1>
+          <h1 class="label">First Name</h1>
           <div class="control">
             <input
               class="input"
@@ -128,7 +128,7 @@
           </template>
         </div>
         <div class="field">
-          <label class="label">Date</label>
+          <label class="label">Birthday</label>
           <div class="control">
             <input
               class="input"
@@ -188,7 +188,7 @@
             </p>
             <p class="help is-danger" v-else-if="!$v.sign_username.minLength">
               จำนวนตัวอักษรมากกว่า 4 ตัว
-              
+
             </p>
           </template>
         </div>
@@ -235,7 +235,7 @@
           </template>
         </div>
         <template v-if="error">
-          
+
             <p class="help is-danger" >
               {{ error }}
             </p>
@@ -261,12 +261,15 @@
       style="position: fixed; top: 0; width: 100%"
     >
       <div class="navbar-brand">
-        <a class="navbar-item" href="http://localhost:8080/">
+        <a class="navbar-item" href="/">
           <strong> <i class="fas fa-home"> </i> Home</strong>
+        </a>
+        <a class="navbar-item" href="/#/admin" v-if=" isActive_createAndReport == true">
+          <strong> Admin Page</strong>
         </a>
       </div>
 
-      
+
       <div class="navbar-menu">
         <!-- <div class="navbar-start">
           <a class="navbar-item" v-if="logins == true" href="/search">
@@ -287,10 +290,10 @@
               <div class="navbar-brand" v-if=" isActive_createAndReport == true">
                 <!-- <div class="navbar-end"> -->
                 <div class="navbar-item has-dropdown is-hoverable">
-                  <a class="navbar-link"> REPORT 
+                  <a class="navbar-link"> REPORT
                     <span class="tag is-danger is-badge mb-5">{{CountReports}}</span>
                   </a>
-               
+
 
                   <div class="navbar-dropdown is-right">
                     <div
@@ -341,7 +344,7 @@
                 >ล็อคเอ้า</a
               ><a
                 class="navbar-item button is-info"
-                href="http://localhost:8080/#/createRoom/"
+                href="/#/createRoom/"
                 v-if=" isActive_createAndReport == true"
               >
                 create
@@ -351,7 +354,7 @@
         </div>
       </div>
 
-      
+
     </nav>
   </div>
 </template>
@@ -427,10 +430,10 @@ export default {
   },
 
   created() {
-   
+
     this.getUser();
-    
-    
+
+
     if (localStorage.getItem('user') != null) {
       console.log(localStorage.getItem('user').split(' ')[1])
       if(localStorage.getItem('user').split(' ')[1] == 'manager'){
@@ -441,7 +444,7 @@ export default {
       else{
         this.logins = true;
       }
-     
+
     } else {
       console.log('false')
       this.logins = false;
@@ -519,8 +522,8 @@ export default {
           console.log(res);
           this.reports = res.data.reports;
           this.allReports = res.data.allReports;
-         
-          
+
+
           console.log(this.reports)
         })
         .catch((error) => {
@@ -545,7 +548,7 @@ export default {
         this.$v.$reset();
     },
     login() {
-    
+
       const data = {
         username: this.username,
         password: this.password,
@@ -622,7 +625,7 @@ export default {
       axios.get("/user/me").then((res) => {
         this.user = res.data;
         this.profile = this.user;
-     
+
         console.log(this.profile)
       }).catch((err) =>{
         console.log(err)

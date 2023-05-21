@@ -24,7 +24,7 @@ router.get("/detail/:id", async function (req, res, next) {
     const [rate] = await pool.query('SELECT sum(rate) as `Sumrate`, count(rate) as `countRate`, FLOOR(sum(rate) / count(rate)) AS result FROM comments  WHERE room_id = ?', [req.params.id])
     const [row_room, columns_room] = await pool.query(`SELECT * FROM  roomdetail r join services s using (service_id) where r.room_id = ?`, [req.params.id])
     const [images, fields] = await pool.query(`select file_path from images where room_id = ?`, [req.params.id])
-    const [comments, fields1] = await pool.query(`select c.*, concat(u.first_name, ' ', u.last_name) as name, DATE_FORMAT(post_time, '%Y-%m-%d %H%i') AS post_time  from comments c join customers u using (cus_id) where room_id = ?`, [req.params.id])
+    const [comments, fields1] = await pool.query(`select c.*, concat(u.first_name, ' ', u.last_name) as name, DATE_FORMAT(post_time, '%Y-%m-%d %H%i') AS post_time  from comments c join users u using (cus_id) where room_id = ?`, [req.params.id])
 
     console.log(row_room)
     console.log(comments)
@@ -47,7 +47,7 @@ router.get("/detail/:id", async function (req, res, next) {
 router.get("/search", async function (req, res, next) {
   try {
     console.log(req.query.search)
-    let query = 'SELECT * FROM customers'
+    let query = 'SELECT * FROM users'
     let params = []
     if (req.query.search) {
       query = query + ' WHERE first_name LIKE ? or last_name like ? or email like ? or cus_id = ?'

@@ -48,18 +48,18 @@ router.get('/booking', isLoggedIn,  async function(req, res, next){
         const [dateNow] = await pool.query(`SELECT DATE_FORMAT(NOW(), '%Y-%m-%d')  as 'date' `)
         const [cusId] = await pool.query('SELECT cus_id FROM login WHERE login_id = ?', req.user.login_id)
         console.log(cusId[0].cus_id)
-        const [dob, feild2] = await pool.query(`SELECT DATE_FORMAT(DOB, '%Y-%m-%d') as DOB FROM customers WHERE cus_id = ?`, cusId[0].cus_id)
+        const [dob, feild2] = await pool.query(`SELECT DATE_FORMAT(DOB, '%Y-%m-%d') as DOB FROM users WHERE cus_id = ?`, cusId[0].cus_id)
         // console.log(countDays[0].counts)
         // console.log(dateNow[0].date)
 
         // console.log(countRooms)
-      
+
         res.status(200).json({room : JSON.stringify(room), countDays : JSON.stringify(countDays[0].counts), dateNow : JSON.stringify(dateNow[0].date), dob:JSON.stringify(dob), ucount : JSON.stringify(countRooms)})
     }catch(err){
         console.log(err)
         res.status(400).send(err)
     }
-    
+
 });
 
 
@@ -87,7 +87,7 @@ router.post('/invoice', isLoggedIn, upload.single('file_image'), async function(
 
     for(let j  = 0; j < countDate + 1; j++){
       if(j == 0){
- 
+
         const[uCountRooms] = await pool.query(`SELECT min(count) as min_count FROM unvalible_room WHERE date = ? and room_id = ?`, [date, roomId])
         console.log(uCountRooms)
         if(uCountRooms[0].min_count == null){
@@ -115,20 +115,20 @@ router.post('/invoice', isLoggedIn, upload.single('file_image'), async function(
     //จำนวนห้อง
     console.log(num)
 
-    
+
 
     // console.log(dateCount[0].DateDiff)
 
-   
- 
+
+
     // console.log(typeof(countDate))
 
-    
+
     const conn = await pool.getConnection()
     await conn.beginTransaction();
 
     try {
-       
+
         const[booking] = await conn.query('INSERT INTO booking (cus_id, room_id, price, check_in, check_out, booking_fname, booking_lname, timestamp_booking, people, countRoom) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [cus_id, roomId, price, checkIn, checkOut, fname, lname, new Date(), people, countRooms])
         console.log(booking.insertId)
 
@@ -155,7 +155,7 @@ router.post('/invoice', isLoggedIn, upload.single('file_image'), async function(
                      dates = unval[0].DateAdd
                      conn.query('INSERT INTO unvalible_room (room_id, count, date) VALUES (?, ?, ?)', [roomId, num[i] - countRooms, dates])
               }
-  
+
           }
         }
         else{
@@ -173,7 +173,7 @@ router.post('/invoice', isLoggedIn, upload.single('file_image'), async function(
         }
         }
 
-        
+
         // res.send(payment)
         await conn.commit()
 
@@ -188,7 +188,7 @@ router.post('/invoice', isLoggedIn, upload.single('file_image'), async function(
     }
 
     // const[booking, fields] = await pool.query(`SELECT * FROM roomdetail WHERE room_id = ?`)
-    
+
 })
 
 
@@ -203,24 +203,24 @@ router.delete('/deleteBooking/:id', isLoggedIn, async function(req, res, next){
     await conn.beginTransaction()
 
     try {
-      
+
             await conn.query("delete from payments where payment_id =?", [req.params.id])
 
-            
+
 
             conn.commit()
             res.status(201).send("ถูกcancel")
-       
-        
+
+
     } catch (err) {
         conn.rollback()
         res.status(400).json(err.toString())
     } finally {
         conn.release()
     }
-  
-    
-    
+
+
+
 });
 
 // Delete comment
@@ -255,13 +255,13 @@ router.put('/editBooking',isLoggedIn, async function(req, res, next){
       }
     }
     console.log(alldate)
-    
+
 
     const conn = await pool.getConnection()
     await conn.beginTransaction()
 
     try {
-      
+
             await conn.query("update booking set status = ? where booking_id = ?", [4, bookedId])
 
             console.log(alldate[0].minCountRoom + bookedCountRoom)
@@ -270,13 +270,13 @@ router.put('/editBooking',isLoggedIn, async function(req, res, next){
 
             for(let i = 0; i < alldate.length; i++){
               await conn.query("update unvalible_room set count = ? where room_id = ? and date = ?", [alldate[i].minCountRoom + bookedCountRoom, alldate[i].room_id, alldate[i].date])
-              
+
             }
 
             conn.commit()
             res.status(201).send("ถูกcancel")
-       
-        
+
+
     } catch (err) {
         conn.rollback()
         res.status(400).json(err.toString())
@@ -303,9 +303,9 @@ router.put('/checkIn/:id', isLoggedIn, async function(req, res, next){
           res.status(500).json(error)
       }
 
-       
-        
-  
+
+
+
 })
 
 
@@ -328,8 +328,8 @@ router.put('/checkOut/:id', isLoggedIn, async function(req, res, next){
         res.status(500).json(error)
     }
 
-     
-      
+
+
 
 })
 

@@ -19,7 +19,7 @@ const routes = [
   {
     path: '/admin',
     name: 'Admin',
-    meta: { login: true },
+    meta: { login: true, admin: true },
     component: () => import("../views/AdminPage.vue")
   },
   {
@@ -67,12 +67,16 @@ const router = new VueRouter({
 })
 router.beforeEach((to, from, next) => {
   const isLoggedIn = !!localStorage.getItem('user')
-  
+
   if (to.meta.login && !isLoggedIn) {
-   
     alert('please login first')
     next({ path: '/' })
   }
+  if (to.meta.admin && !isLoggedIn) {
+    alert('please asdf first')
+    next({ path: '/' })
+  }
+
 
   next()
 })

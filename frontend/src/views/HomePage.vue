@@ -66,7 +66,7 @@
           <div class="column is-4">
             <div class="subtitle is-4">เช็คอิน :</div>
             <div class="">
-              <p>{{ begin }}</p>
+              <!-- <p>{{ begin }}</p> -->
 
               <input
                 class="input"
@@ -85,7 +85,7 @@
           <div class="column is-4">
             <div class="subtitle is-4">เช็คเอ้าท์ :</div>
             <div class="">
-              <p>{{ end }}</p>
+              <!-- <p>{{ end }}</p> -->
               <input
                 type="date"
                 class="input"
@@ -158,22 +158,22 @@
               v-for="item in rateRoom[index]"
               :key="item"
 
-              class="fa fa-star"
+              class="fa fa-star mt-3"
               style="font-size: 30px; color: rgb(244, 247, 76)"
             ></i>
             <i
               v-for="item in 5 - rateRoom[index]"
               :key="item"
-              class="fa fa-star"
+              class="fa fa-star mt-3"
               style="font-size: 30px; color: rgb(188, 188, 165)"
             ></i>
                 </p>
               </div>
             </div>
             <div class="content">
-              รายละเอียดห้อง
-              <br />
-              {{ room.description }}
+              <!-- รายละเอียดห้อง
+              <br /> -->
+              {{ room.description.substring(0, 150) + "..." }}
               <p class="title has-text-danger mt-2">THB {{ room.price }} -.</p>
             </div>
           </div>
@@ -201,7 +201,7 @@
     <br />
 
     <!-- Contact -->
-    <div class="container">
+    <div class="container p-6">
       <div class="columns">
         <div class="column is-7">
           <iframe

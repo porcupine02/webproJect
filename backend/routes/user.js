@@ -106,7 +106,7 @@ const usernameValidator = async (value, helpers) => {
 }
 
 const emailValidator = async (value, helpers) => {
-    const [rows] = await pool.query("SELECT email FROM customers WHERE email = ?", [value])
+    const [rows] = await pool.query("SELECT email FROM users WHERE email = ?", [value])
     if (rows.length > 0) {
         const message = 'ใช้email ซ้ำ'
         throw new Joi.ValidationError(message, { message })
@@ -154,7 +154,7 @@ router.post('/signUp', async function (req, res, next) {
 
     try {
         let results = await conn.query(
-            'INSERT INTO customers ( first_name, last_name, phone, email, DOB) VALUES (?, ?, ?, ?, ?)', [fname, lname, phone, email, dob]
+            'INSERT INTO users ( first_name, last_name, phone, email, DOB) VALUES (?, ?, ?, ?, ?)', [fname, lname, phone, email, dob]
         )
 
         const cusId = results[0].insertId;
@@ -259,7 +259,7 @@ router.get('/report', async function (req, res, next) {
     try {
         const [reports] = await pool.query("select * from reports where status = 'submit'")
         const [Countreports] = await pool.query("select count(report_id) as CountReport from reports where status = 'submit'")
-        const [allReports] = await pool.query("select *, concat(c.first_name, ' ', last_name) as 'name' from reports join customers c using (cus_id)")
+        const [allReports] = await pool.query("select *, concat(c.first_name, ' ', last_name) as 'name' from reports join users c using (cus_id)")
         res.status(200).send({ reports: reports, allReports: allReports, Countreports: Countreports })
     } catch (err) {
         console.log(err)
@@ -329,7 +329,7 @@ router.get('/user/', isLoggedIn, async (req, res, next) => {
     try {
         const [customer] = await pool.query("select * from login where login_id = ?", [req.user.login_id])
         const [booking, fields1] = await pool.query("select *, DATE_FORMAT(check_in, '%Y-%m-%d') as check_in, date_format(check_out, '%Y-%m-%d') as check_out, DATE_FORMAT(timestamp_booking, '%Y-%m-%d %H:%i') as timestamp_booking, booking.status as bstatus from booking join payments using (booking_id) where cus_id = ? order by timestamp_booking desc", [id])
-        const [user, fields2] = await pool.query("select *, DATE_FORMAT(DOB, '%Y-%m-%d') as DOB from customers join login using (cus_id)  where cus_id = ?", [id])
+        const [user, fields2] = await pool.query("select *, DATE_FORMAT(DOB, '%Y-%m-%d') as DOB from users join login using (cus_id)  where cus_id = ?", [id])
         const [allbooking, fields3] = await pool.query("select *, DATE_FORMAT(check_in, '%Y-%m-%d') as check_in, date_format(check_out, '%Y-%m-%d') as check_out, DATE_FORMAT(timestamp_booking, '%Y-%m-%d %H:%i') as timestamp_booking, booking.status as bstatus from booking join payments using (booking_id) order by timestamp_booking desc")
         const [image] = await pool.query("select * from images where cus_id = ?", [customer[0].cus_id])
 

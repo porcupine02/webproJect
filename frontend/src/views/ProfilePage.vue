@@ -88,14 +88,14 @@
           </div>
           <div class="content is-size-4">
             <strong>{{ user[0].user_name }}</strong>
-            <p class="is-size-5">
-              {{ user[0].first_name + " " + user[0].last_name }}
+            <p class="is-size-5 m-3">
+               <i class="fa fa-user mr-3" aria-hidden="true"></i>{{ user[0].first_name + " " + user[0].last_name }}
               <br />
-              tel : {{ user[0].phone }}
+              <i class="fa fa-phone mr-3" aria-hidden="true"></i>{{ user[0].phone }}
               <br />
-              E-mail : {{ user[0].email }}
+              <i class="fa fa-envelope mr-3" aria-hidden="true"></i>{{ user[0].email }}
               <br />
-              Birth-date : {{ user[0].DOB }}
+              <i class="fa fa-birthday-cake mr-3" aria-hidden="true"></i>{{ user[0].DOB }}
             </p>
             <div class="is-size-5 has-text-centered content has-text-success">
               {{ complete }}
@@ -154,6 +154,12 @@
                       <i class="fas fa-upload"></i>
                     </span>
                     <span class="file-label"> รูปภาพโปรไฟล์ : </span>
+                  </span>
+                  <span class="file-name" v-if="!file">
+                    กรุณาเลือกไฟล์ภาพ
+                  </span>
+                  <span class="file-name" v-else>
+                    {{ file.name }}
                   </span>
                 </label>
                 <a class="button is-primary mt-3" @click="confirm()">ยืนยัน</a>
@@ -332,6 +338,7 @@ export default {
       is_active_report: false,
       reportContent: "",
       image: "",
+      file: null,
     };
   },
   components: { NavBar },
@@ -477,6 +484,7 @@ export default {
           .then((res) => {
             console.log(res);
             this.is_active_comments = false;
+            this.comment = ""
           })
           .catch((err) => {
             console.log(err);

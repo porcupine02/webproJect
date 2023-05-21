@@ -162,6 +162,8 @@
             </div>
             <!-- report -->
             <div id="report" class="content-tab" style="display: none">
+
+              <h3 class="has-text-centered has-text-danger m-6" v-if="allReports == ''"> ยังไม่มีการร้องเรียนมาในตอนนี้ </h3>
               <div
                 v-for="report in allReports"
                 :key="report.report_id"
