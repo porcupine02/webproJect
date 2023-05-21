@@ -257,9 +257,9 @@ router.put('/report/:reportId', async function (req, res, next) {
 })
 router.get('/report', async function (req, res, next) {
     try {
-        const [reports] = await pool.query("select * from reports where status = 'submit'")
+        const [reports] = await pool.query("select * from reports where status = 'submit' order by report_time desc")
         const [Countreports] = await pool.query("select count(report_id) as CountReport from reports where status = 'submit'")
-        const [allReports] = await pool.query("select *, concat(c.first_name, ' ', last_name) as 'name' from reports join users c using (cus_id)")
+        const [allReports] = await pool.query("select *, concat(c.first_name, ' ', last_name) as 'name' from reports join users c using (cus_id) order by report_time desc")
         res.status(200).send({ reports: reports, allReports: allReports, Countreports: Countreports })
     } catch (err) {
         console.log(err)
