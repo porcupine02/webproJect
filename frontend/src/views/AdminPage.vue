@@ -383,21 +383,23 @@ export default {
     searchQuery() {
       this.dummyData2 = this.tags;
       this.result = ""
-      axios
-        .get(`http://localhost:3000/searchQuery`, {
-          params: {
-            search: this.tags,
-          },
-        })
-        .then((res) => {
-          console.log(res);
-          this.result = res.data.result;
-          console.log(this.result);
-        })
-        .catch((error) => {
-          this.error = error.response.data;
-          console.log(error.response.data);
-        });
+      if(this.tags != ''){
+        axios
+          .get(`http://localhost:3000/searchQuery`, {
+            params: {
+              search: this.tags,
+            },
+          })
+          .then((res) => {
+            console.log(res);
+            this.result = res.data.result;
+            console.log(this.result);
+          })
+          .catch((error) => {
+            this.error = error.response.data;
+            console.log(error.response.data);
+          });
+      }
     },
     addTag(event) {
       if (event.code == "Enter" && this.tagInput != '') {

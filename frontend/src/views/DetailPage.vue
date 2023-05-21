@@ -3,6 +3,9 @@
     <div>
       <NavBar />
     </div>
+    <br>
+    <br>
+    <br>
     <!-- content -->
     <div class="container" v-for="room in rooms" :key="room">
       <!-- left -->

@@ -82,9 +82,15 @@
                 " x " +
                 countDays +
                 " = " +
-                allPrice
+                 priceForDay * countRooms * countDays
               }}
             </td>
+          </tr>
+          <tr v-if="dobDay.split('-')[1] == nowDay.split('-')[1]">
+            <td colspan="3">ลดราคา : <del class="has-text-danger">{{  priceForDay * countRooms * countDays }}</del> <label class="has-text-danger" for="">  ลด10%  </label> {{  +allPrice }}</td>
+          </tr>
+          <tr v-else>
+            <td colspan="3">ลดราคา :  -</td>
           </tr>
           <tr>
             <td colspan="3">รวม : {{ allPrice }}</td>
@@ -118,6 +124,7 @@
                   </span>
                 </label>
               </div>
+              <br>
               <div>
                 <label for="">กรอกจำนวนเงินที่จ่าย</label>
                 <input type="number" class="ml-3" v-model="paidAmount" />
@@ -213,6 +220,8 @@ export default {
       roomId: "",
       file: null,
       paidAmount: "",
+      dobDay: '',
+      nowDay: '',
       fileSize: 0,
       allCountRooms: 0,
       // user : this.user.username
@@ -287,8 +296,11 @@ export default {
     this.allPrice = this.booking.split(" ")[9];
     console.log("folK" + this.allPrice);
     this.allCountRooms = this.booking.split(" ")[11];
+    this.dobDay = this.booking.split(' ')[12]
+    this.nowDay = this.booking.split(' ')[13]
+    
 
-    console.log(this.allPrice);
+    console.log(this.dobDay.split('-')[1] + ' ' + this.nowDay);
     console.log(this.user);
 
     // axios

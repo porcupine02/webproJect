@@ -8,7 +8,7 @@
         />
       </div>
       <div class="column content ml-6 mt-6 p-6">
-        <h5>ยินดีต้อนรับเข้าสู่โรงแรม</h5>
+        <h5>โรงแรมหรูหรามีสไตล์ต้อง</h5>
         <h1>DoubleF Hotel</h1>
       </div>
     </div>

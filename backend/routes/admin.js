@@ -80,7 +80,7 @@ router.delete("/deleteRoom/:roomId", async function (req, res, next) {
 
             res.status(204).send({ allRooms: allRooms })
         } else {
-            res.status(400).send("can't delete this room because have booked")
+            res.status(400).send("ไม่สามารถลบได้เพราะมีคนจองห้องอยู่")
         }
     } catch (err) {
         conn.rollback()

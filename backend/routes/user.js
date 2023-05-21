@@ -6,7 +6,7 @@ const { generateToken } = require('../utils/token');
 const { isLoggedIn } = require("../middlewares");
 const multer = require('multer');
 const path = require('path');
-const { report } = require('process');
+
 
 router = express.Router();
 const loginSchema = Joi.object({
@@ -34,7 +34,7 @@ router.post('/user/login', async (req, res, next) => {
     try {
         await loginSchema.validateAsync(req.body, { abortEarly: false })
     } catch (err) {
-        return res.status(400).send('กรุณากรอก usernam password')
+        return res.status(400).send('กรุณากรอก username password')
 
     }
     const { username, password } = req.body
@@ -50,14 +50,14 @@ router.post('/user/login', async (req, res, next) => {
         const user = users[0]
         console.log(user)
         if (!user) {
-            throw new Error('Incorrect username or password')
+            return res.status(400).send('กรุณากรอก username password')
         }
 
 
         // const hash = await bcrypt.hash(user.password, 5)
 
         if (!(await bcrypt.compare(password, user.password))) {
-            throw new Error('Incorrect username or password')
+            return res.status(400).send('กรุณากรอก username password')
         }
 
         const [tokens] = await conn.query('SELECT * FROM tokens WHERE login_id = ?', [user.login_id])
@@ -243,10 +243,10 @@ router.put('/report/:reportId', async function (req, res, next) {
     try {
         await conn.query("update reports set status = 'accept' where report_id = ?", [req.params.reportId])
         const [reports] = await pool.query("select *  from reports where status = 'submit'")
-
+        const [Countreports] = await pool.query("select count(report_id) as CountReport from reports where status = 'submit'")
         const [allReports] = await pool.query("select *  from reports")
         conn.commit()
-        res.status(202).send({ reports: reports, allReports: allReports })
+        res.status(202).send({ reports: reports, allReports: allReports, Countreports : Countreports })
     } catch (err) {
         conn.rollback()
         res.status(400).send(err.toString())

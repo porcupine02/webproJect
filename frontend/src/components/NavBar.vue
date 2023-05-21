@@ -2,37 +2,38 @@
   <div id="app">
     <div :class="{ modal: modal, 'is-active': isActive_Sign_in }">
       <div class="modal-background"></div>
-      <div class="box modal-content">
+      <div class="box modal-content ">
         <div class="field">
           <label class="label has-text-centered">ล็อคอิน</label>
         </div>
         <div class="field">
           <h1 class="label">Username</h1>
           <div class="control has-icons-left">
-            <span class="icon is-small is-left">
-              <i class="fas fa-envelope"></i>
-            </span>
             <input
               class="input"
               type="username"
-              placeholder="e.g. alex@example.com"
+              placeholder="Username"
               v-model="username"
+            
             />
+            <span class="icon is-small is-left">
+              <i class="fas fa-user"></i>
+            </span>
           </div>
         </div>
 
         <div class="field">
           <label class="label">Password</label>
           <div class="control has-icons-left">
+            <input
+            class="input"
+            type="password"
+            placeholder="********"
+            v-model="password"
+            />
             <span class="icon is-small is-left">
               <i class="fas fa-lock"></i>
             </span>
-            <input
-              class="input"
-              type="password"
-              placeholder="********"
-              v-model="password"
-            />
           </div>
         </div>
         <p
@@ -62,7 +63,7 @@
 
         <div class="field">
           <h1 class="label">First Name</h1>
-          <div class="control">
+          <div class="control has-icons-left">
             <input
               class="input"
               :class="{ 'is-danger': $v.sign_fname.$error }"
@@ -70,6 +71,9 @@
               placeholder="Puttipong"
               v-model="$v.sign_fname.$model"
             />
+            <span class="icon is-small is-left">
+              <i class="fa fa-user-circle"></i>
+            </span>
           </div>
 
           <template v-if="$v.sign_fname.$error">
@@ -84,7 +88,7 @@
         </div>
         <div class="field">
           <h1 class="label">Last Name</h1>
-          <div class="control">
+          <div class="control has-icons-left">
             <input
               class="input"
               :class="{ 'is-danger': $v.sign_lname.$error }"
@@ -92,6 +96,9 @@
               placeholder="Panich"
               v-model="$v.sign_lname.$model"
             />
+            <span class="icon is-small is-left">
+              <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+            </span>
           </div>
           <template v-if="$v.sign_lname.$error">
             <p class="help is-danger" v-if="!$v.sign_lname.required">
@@ -106,7 +113,7 @@
         </div>
         <div class="field">
           <label class="label">Phone number</label>
-          <div class="control">
+          <div class="control has-icons-left">
             <input
               class="input"
               :class="{ 'is-danger': $v.sign_phone.$error }"
@@ -114,6 +121,9 @@
               placeholder="083-3343-xxx"
               v-model="$v.sign_phone.$model"
             />
+            <span class="icon is-small is-left">
+              <i class="fa fa-mobile" aria-hidden="true"></i>
+            </span>
           </div>
           <template v-if="$v.sign_phone.$error">
             <p class="help is-danger" v-if="!$v.sign_phone.required">
@@ -129,7 +139,7 @@
         </div>
         <div class="field">
           <label class="label">Birthday</label>
-          <div class="control">
+          <div class="control has-icons-left">
             <input
               class="input"
               :class="{ 'is-danger': $v.sign_dob.$error }"
@@ -137,6 +147,9 @@
               placeholder="24/07/2002"
               v-model="$v.sign_dob.$model"
             />
+            <span class="icon is-small is-left">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+            </span>
           </div>
           <template v-if="$v.sign_dob.$error">
             <p class="help is-danger" v-if="!$v.sign_dob.required">
@@ -147,7 +160,7 @@
         </div>
         <div class="field">
           <h1 class="label">Email</h1>
-          <div class="control">
+          <div class="control has-icons-left">
             <input
               class="input"
               :class="{ 'is-danger': $v.sign_email.$error }"
@@ -155,6 +168,9 @@
               placeholder="e.g. alex@example.com"
               v-model="$v.sign_email.$model"
             />
+            <span class="icon is-small is-left">
+              <i class="fa fa-envelope" aria-hidden="true"></i>
+            </span>
           </div>
           <template v-if="$v.sign_email.$error">
             <p class="help is-danger" v-if="!$v.sign_email.required">
@@ -170,7 +186,7 @@
 
         <div class="field">
           <label class="label">Username</label>
-          <div class="control">
+          <div class="control has-icons-left">
             <input
               class="input"
               :class="{ 'is-danger': $v.sign_username.$error }"
@@ -178,6 +194,9 @@
               placeholder="Folk"
               v-model="$v.sign_username.$model"
             />
+            <span class="icon is-small is-left">
+              <i class="fa fa-user" aria-hidden="true"></i>
+            </span>
           </div>
           <template v-if="$v.sign_username.$error">
             <p class="help is-danger" v-if="!$v.sign_username.required">
@@ -195,7 +214,7 @@
 
         <div class="field">
           <label class="label">Password</label>
-          <div class="control">
+          <div class="control has-icons-left">
             <input
               class="input"
               :class="{ 'is-danger': $v.sign_password.$error }"
@@ -203,6 +222,9 @@
               placeholder="********"
               v-model="$v.sign_password.$model"
             />
+            <span class="icon is-small is-left">
+              <i class="fa fa-lock" aria-hidden="true"></i>
+            </span>
           </div>
           <template v-if="$v.sign_password.$error">
             <p class="help is-danger" v-if="!$v.sign_password.required">
@@ -218,7 +240,7 @@
         </div>
         <div class="field">
           <label class="label">confirm_password</label>
-          <div class="control">
+          <div class="control has-icons-left">
             <input
               class="input"
               :class="{ 'is-danger': $v.confirm_password.$error }"
@@ -226,6 +248,9 @@
               placeholder="********"
               v-model="$v.confirm_password.$model"
             />
+            <span class="icon is-small is-left">
+              <i class="fa fa-lock" aria-hidden="true"></i>
+            </span>
           </div>
           <template v-if="$v.confirm_password.$error">
             <!-- <p class="help is-danger" v-if="!$v.confirm_password.required">This field is required</p> -->
@@ -234,14 +259,14 @@
             </p>
           </template>
         </div>
-        <template v-if="error">
-
-            <p class="help is-danger" >
-              {{ error }}
-            </p>
-          </template>
+        <p
+          v-if="error"
+          class="px-3 py-2 mb-3 has-text-danger-dark has-background-danger-light"
+        >
+          {{ error }}
+        </p>
         <div class="field is-grouped">
-          <div class="control">
+          <div class="control ">
             <a class="button is-primary" value="submit" @click="signUp()"
               >ลงทะเบียน</a
             >
@@ -291,7 +316,7 @@
                 <!-- <div class="navbar-end"> -->
                 <div class="navbar-item has-dropdown is-hoverable">
                   <a class="navbar-link"> REPORT
-                    <span class="tag is-danger is-badge mb-5">{{CountReports}}</span>
+                    <span class="tag is-danger is-rounded mb-5" v-if="CountReports > 0">{{CountReports}}</span>
                   </a>
 
 
@@ -302,13 +327,15 @@
                       :key="report"
                     >
                       <div class="navbar-item column">
-                        {{ report.content }}
-                        <div
-                          class="button is-primary column"
+                        <label for="">{{ report.content.substring(0, 10) + "..." }}</label>
+                      
+                        <a
+                          class="button is-primary column p-2"
+
                           @click="acceptReport(report.report_id)"
                         >
-                          accept
-                        </div>
+                         accept
+                        </a>
                       </div>
                     </div>
                     <div class="columns">
@@ -522,6 +549,7 @@ export default {
           console.log(res);
           this.reports = res.data.reports;
           this.allReports = res.data.allReports;
+          this.CountReports = res.data.Countreports[0].CountReport
 
 
           console.log(this.reports)
@@ -548,6 +576,7 @@ export default {
         this.$v.$reset();
     },
     login() {
+     
 
       const data = {
         username: this.username,
@@ -573,6 +602,7 @@ export default {
           this.getUser();
           this.isActive_Sign_in = false;
           this.logins = true;
+          this.error = ''
           this.username = "";
           this.password = "";
         })
@@ -609,8 +639,9 @@ export default {
         .post("http://localhost:3000/signUp", data)
         .then((response) => {
           console.log(response);
+          
           this.$v.$reset();
-
+          this.error = ""
           this.isActive_Sign_in = true;
           this.isActive_Sign_up = false;
         })

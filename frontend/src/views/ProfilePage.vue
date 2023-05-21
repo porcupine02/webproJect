@@ -217,7 +217,7 @@
                   </span>
                   สถานะการจ่ายเงิน :
                   <strong
-                    class="has-text-success"
+                    class="has-text-success "
                     v-if="booked.status == 'complete'"
                     >complete</strong
                   >
@@ -231,25 +231,45 @@
                   </span>
                 </p>
 
+
                 <div
                   v-if="
-                    booked.status == 'complete' && booked.bstatus == 'booked'
+                    (booked.status == 'complete' && booked.bstatus == 'booked' && booked.check_in == dateNow) || (booked.status == 'complete' && booked.bstatus == 'booked' && user[0].login_role == 'manager')
                   "
                 >
                   <div
-                    class="button"
+                    class="button mx-3"
                     @click="checkIn(booked.booking_id, index)"
                   >
                     check in
                   </div>
-                  <div class="button">check out</div>
+                  <div class="button mx-1"  disabled>check out</div>
                 </div>
 
-                <div v-else-if="booked.bstatus == 'checkIn'">
-                  <div class="button has-background-success">check in</div>
+                <div
+                  v-else-if="booked.status == 'complete' && booked.bstatus == 'booked' && booked.check_in != dateNow"
+                >
                   <div
-                    class="button"
+                    class="button mx-1" disabled
+                  >
+                    check in
+                  </div>
+                  <div class="button mx-1" disabled>check out</div>
+                </div>
+
+                <div v-else-if="booked.bstatus == 'checkIn' && booked.check_out == dateNow || user[0].login_role == 'manager' && booked.bstatus == 'checkIn'">
+                  <div class="button has-background-success mx-3">check in</div>
+                  <div
+                    class="button mx-1"
                     @click="checkOut(booked.booking_id, index, booked.room_id)"
+                  >
+                    check out
+                  </div>
+                </div>
+                <div v-else-if="booked.bstatus == 'checkIn' && booked.check_out != dateNow ">
+                  <div class="button has-background-success mx-3">check in</div>
+                  <div
+                    class="button" disabled
                   >
                     check out
                   </div>
@@ -339,6 +359,7 @@ export default {
       reportContent: "",
       image: "",
       file: null,
+      dateNow : ''
     };
   },
   components: { NavBar },
@@ -586,6 +607,16 @@ export default {
 
   created() {
     // user = localStorage.getItem("user");
+    const currentDate = new Date();
+
+const formattedDate = `${currentDate.getFullYear()}-${(
+  currentDate.getMonth() + 1
+)
+  .toString()
+  .padStart(2, "0")}-${currentDate.getDate().toString().padStart(2, "0")}`;
+  this.dateNow = formattedDate
+  console.log(this.dateNow)
+
     this.user = localStorage.getItem("user");
     console.log(this.user);
     axios

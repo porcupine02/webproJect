@@ -161,7 +161,7 @@
             </button>
           </div>
           <div class="control">
-            <a href="/"
+            <a href="/#/admin"
               ><button class="button is-link is-light">Cancel</button></a
             >
           </div>
