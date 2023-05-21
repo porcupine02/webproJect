@@ -1,35 +1,25 @@
 <template>
-  <footer class="footer" style="background-color: black">
-    <!-- Start Footer Top -->
-    <div class="footer-top">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-4 col-md-4 col-12">
-            <!-- Single Widget -->
-            <div class="single-footer" style="color: whitesmoke">
-              <p>Alway make you happy by providing the best option for you</p>
-              <ul class="social">
-                <br />
-                <li>
-                  <a href=""
-                    ><i
-                      class="fab fa-facebook"
-                      style="font-size: 40px; margin-right: 10px"
-                    ></i
-                  ></a>
-                  <a href=""
-                    ><i class="fab fa-instagram" style="font-size: 40px"></i
-                  ></a>
-                </li>
-              </ul>
-            </div>
-            <!-- End Single Widget -->
-
-          </div>
+  <footer class="footer" style="background-color: black" >
+    <div class="columns" style="color: #fff">
+      <div class="column">
+        <p class="title is-5 has-text-centered" style="color: #fff">
+          Contact Me
+        </p>
+        <p class="subtitle is-6" style="color: #fff">
+          <i class="mt-4 ml-6 fa fa-phone-square" aria-hidden="true"></i> 088-8888-888 <br />
+          <i class="mt-4 ml-6 fa fa-facebook-official" aria-hidden="true"></i> DoubleF Hotel <br />
+          <i class="mt-4 ml-6 fa fa-instagram" aria-hidden="true"></i> DoubleF Hotel <br />
+          <i class="mt-4 ml-6 fa fa-envelope-o" aria-hidden="true"></i> doublef@gmail.com<br />
+        </p>
+      </div>
+      <div class="column">
+        <div class="content has-text-centered">
+          <br><br>
+          <p>&copy; 2023 Your Company. All rights reserved.</p>
+          <p>Contract | Privacy Policy | Terms of Service</p>
         </div>
       </div>
     </div>
-    <!--/ End Footer Top -->
   </footer>
 </template>
 
