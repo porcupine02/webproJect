@@ -1,15 +1,19 @@
 <template>
-  <div class="container is-widescreen">
-    <section class="hero">
-      <div class="hero-body">
-        <p class="title">Edit Room</p>
-      </div>
-    </section>
-    <section class="px-6">
-      <!-- <%= error.code + ': ' + error.sqlMessage %> -->
-      <!---->
+  <div>
+    <div>
+      <NavBar />
+    </div>
+    <div class="container is-widescreen m-6">
+      <section class="hero">
+        <div class="hero-body">
+          <p class="title">Edit Room</p>
+        </div>
+      </section>
+      <section class="px-6">
+        <!-- <%= error.code + ': ' + error.sqlMessage %> -->
+        <!---->
 
-      <!-- <label class="checkbox column is-2">
+        <!-- <label class="checkbox column is-2">
         <input type="checkbox" v-model="addNewImage" />
         ต้องการเปลี่ยนรูปใหม่
       </label>
@@ -50,123 +54,125 @@
           </div>
         </div>
       </div> -->
-      <div class="field mt-5">
-        <label class="label">ประเภทห้องพัก</label>
-        <div class="control">
-          <input class="input" type="text" v-model="room_type" disabled />
+        <div class="field mt-5">
+          <label class="label">ประเภทห้องพัก</label>
+          <div class="control">
+            <input class="input" type="text" v-model="room_type" disabled />
+          </div>
         </div>
-      </div>
 
-      <div class="field">
-        <label class="label">รายละเอียดห้องพัก</label>
-        <div class="control">
-          <textarea
-            :class="$v.description.$error ? 'is-danger' : ''"
-            v-model="$v.description.$model"
-            class="textarea"
-            placeholder="รายละเอียดห้องพัก"
-          ></textarea>
+        <div class="field">
+          <label class="label">รายละเอียดห้องพัก</label>
+          <div class="control">
+            <textarea
+              :class="$v.description.$error ? 'is-danger' : ''"
+              v-model="$v.description.$model"
+              class="textarea"
+              placeholder="รายละเอียดห้องพัก"
+            ></textarea>
 
-          <template v-if="$v.description.$error">
-            <p class="help is-danger" v-if="!$v.description.minLength">
-              ต้องมีข้อมูลมากกว่า 50 ตัวอักษร
+            <template v-if="$v.description.$error">
+              <p class="help is-danger" v-if="!$v.description.minLength">
+                ต้องมีข้อมูลมากกว่า 50 ตัวอักษร
+              </p>
+            </template>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">ราคาห้องต่อคืน</label>
+          <div class="control">
+            <input
+              class="input column is-2"
+              type="number"
+              v-model="$v.price.$model"
+              :class="$v.price.$error ? 'is-danger' : ''"
+            />
+          </div>
+          <template v-if="$v.price.$error">
+            <p class="help is-danger" v-if="!$v.price.integer">
+              จำนวณเงินต้องมากกว่า 0
             </p>
           </template>
         </div>
-      </div>
 
-      <div class="field">
-        <label class="label">ราคาห้องต่อคืน</label>
-        <div class="control">
-          <input
-            class="input column is-2"
-            type="number"
-            v-model="$v.price.$model"
-            :class="$v.price.$error ? 'is-danger' : ''"
-          />
+        <div class="field">
+          <label class="label">บริการจากทางโรงแรม</label>
+          <div class="control mb-3 columns">
+            <label class="checkbox column is-2">
+              <input type="checkbox" v-model="service1" />
+              อาหารเช้า
+            </label>
+            <label class="checkbox column is-2">
+              <input type="checkbox" v-model="service2" />
+              สระว่าย
+            </label>
+            <label class="checkbox column is-2">
+              <input type="checkbox" v-model="service3" />
+              อินเทอร์เน็ต
+            </label>
+            <label class="checkbox column is-2">
+              <input type="checkbox" v-model="service4" />
+              เครื่องปรับอากาศ
+            </label>
+          </div>
         </div>
-        <template v-if="$v.price.$error">
-          <p class="help is-danger" v-if="!$v.price.integer">
-            จำนวณเงินต้องมากกว่า 0
-          </p>
-        </template>
-      </div>
 
-      <div class="field">
-        <label class="label">บริการจากทางโรงแรม</label>
-        <div class="control mb-3 columns">
-          <label class="checkbox column is-2">
-            <input type="checkbox" v-model="service1" />
-            อาหารเช้า
-          </label>
-          <label class="checkbox column is-2">
-            <input type="checkbox" v-model="service2" />
-            สระว่าย
-          </label>
-          <label class="checkbox column is-2">
-            <input type="checkbox" v-model="service3" />
-            อินเทอร์เน็ต
-          </label>
-          <label class="checkbox column is-2">
-            <input type="checkbox" v-model="service4" />
-            เครื่องปรับอากาศ
-          </label>
+        <div class="field">
+          <label class="label">จำนวนคนที่เหมาะกับห้องนี้</label>
+          <div class="control">
+            <input
+              class="input column is-2"
+              type="number"
+              :class="$v.people.$error ? 'is-danger' : ''"
+              v-model="$v.people.$model"
+            />
+          </div>
+          <template v-if="$v.people.$error">
+            <p class="help is-danger" v-if="!$v.people.integer">
+              จำนวณเงินต้องมากกว่า 0
+            </p>
+          </template>
         </div>
-      </div>
+        <div class="field">
+          <label class="label">จำนวนห้องที่เปิดให้บริการ</label>
+          <div class="control">
+            <input
+              class="input column is-2"
+              v-model="$v.count.$model"
+              :class="$v.count.$error ? 'is-danger' : ''"
+              type="number"
+              disabled
+            />
+          </div>
+          <template v-if="$v.people.$error">
+            <p class="help is-danger" v-if="!$v.count.integer">
+              จำนวนห้องต้องมากกว่า 0
+            </p>
+          </template>
+        </div>
 
-      <div class="field">
-        <label class="label">จำนวนคนที่เหมาะกับห้องนี้</label>
-        <div class="control">
-          <input
-            class="input column is-2"
-            type="number"
-            :class="$v.people.$error ? 'is-danger' : ''"
-            v-model="$v.people.$model"
-          />
-        </div>
-        <template v-if="$v.people.$error">
-          <p class="help is-danger" v-if="!$v.people.integer">
-            จำนวณเงินต้องมากกว่า 0
-          </p>
-        </template>
-      </div>
-      <div class="field">
-        <label class="label">จำนวนห้องที่เปิดให้บริการ</label>
-        <div class="control">
-          <input
-            class="input column is-2"
-            v-model="$v.count.$model"
-            :class="$v.count.$error ? 'is-danger' : ''"
-            type="number"
-            disabled
-          />
-        </div>
-        <template v-if="$v.people.$error">
-          <p class="help is-danger" v-if="!$v.count.integer">
-            จำนวนห้องต้องมากกว่า 0
-          </p>
-        </template>
-      </div>
+        <hr />
 
-      <hr />
-
-      <div class="field is-grouped">
-        <div class="control">
-          <button class="button is-link" @click="submitUpdateRoom()">
-            Submit
-          </button>
+        <div class="field is-grouped">
+          <div class="control">
+            <button class="button is-link" @click="submitUpdateRoom()">
+              Submit
+            </button>
+          </div>
+          <div class="control">
+            <a href="/"
+              ><button class="button is-link is-light">Cancel</button></a
+            >
+          </div>
         </div>
-        <div class="control">
-          <a href="/"
-            ><button class="button is-link is-light">Cancel</button></a
-          >
-        </div>
-      </div>
-    </section>
+      </section>
+    </div>
   </div>
 </template>
 
 <script>
+import NavBar from "@/components/NavBar.vue";
 import axios from "@/plugins/axios";
 import {
   required,
@@ -192,6 +198,7 @@ export default {
       service_id: "",
     };
   },
+  components: { NavBar },
   validations: {
     description: {
       required,

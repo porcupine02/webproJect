@@ -139,7 +139,7 @@
                   <div class="card-content">
                     <div class="content">
                       <i class="fa fa-id-card-o" aria-hidden="true"></i>
-                      {{ "user" + customer.cus_id }}
+                      {{ customer.username }}
                       <br />
                       <i class="fa fa-user" aria-hidden="true"></i>
                       {{ customer.name }}
@@ -309,6 +309,7 @@ import axios from "axios";
 import NavBar from "@/components/NavBar.vue";
 
 export default {
+  props: ["user"],
   data() {
     return {
       logins: true,
@@ -358,7 +359,8 @@ export default {
           value.first_name.includes(newVal) ||
           value.last_name.includes(newVal) ||
           fullname.includes(newVal) ||
-          value.email.includes(newVal)
+          value.email.includes(newVal) ||
+          value.username.includes(newVal)
         );
       });
     },

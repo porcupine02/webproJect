@@ -103,7 +103,7 @@ router.get("/admin", async function (req, res, next) {
     try {
         console.log("hello world")
 
-        const [customers] = await pool.query(" select *, concat(first_name, ' ', last_name) as name, DATE_FORMAT(DOB, '%Y-%m-%d') as DOB from users left outer join images using (cus_id)")
+        const [customers] = await pool.query(" select *, concat(first_name, ' ', last_name) as name, DATE_FORMAT(DOB, '%Y-%m-%d') as DOB from users left outer join images using (cus_id) join login using (cus_id)")
         const [booking] = await pool.query(" select * from booking")
         const [allRooms] = await pool.query('SELECT * FROM roomdetail join services using(service_id) join images using (room_id) WHERE main = 1')
         console.log(allRooms)
