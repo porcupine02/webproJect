@@ -154,7 +154,6 @@
               <div class="media-content">
                 <p class="title is-4">{{ room.room_type }}</p>
                 <p class="subtitle is-6">
-
             <i
               v-for="item in rateRoom[index]"
               :key="item"
