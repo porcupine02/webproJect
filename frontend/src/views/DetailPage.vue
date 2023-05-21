@@ -128,7 +128,7 @@
         <div class="has-text-centered m-5" v-show="!comments.length">
           ตอนนี้ยังไม่มีความคิดเห็นจากผู้ใช้
         </div>
-        <div v-for="comment in comments" :key="comment.id">
+        <div v-for="(comment,index) in comments" :key="comment.id">
           <article class="media">
             <figure class="media-left">
               <p class="image is-64x64">
@@ -158,7 +158,7 @@
             <div class="media-right">
               <button
                 class="delete"
-                @click="delelteComment(comment.comment_id)"
+                @click="delelteComment(comment.comment_id, index)"
               ></button>
             </div>
           </article>
@@ -182,14 +182,14 @@ export default {
     };
   },
   methods: {
-    delelteComment(id) {
+    delelteComment(id, index) {
       axios
-        .delete(`http://localhost:3000/comments/${id}`, {
-          query: { room_id: this.rooms[10].room_id },
-        })
+        .delete(`http://localhost:3000/comments/${id}`)
         .then((response) => {
           console.log(response);
-          this.comments = response.data.comments;
+          // this.comments = response.data.comments;
+          this.comments.splice(index, 1);
+          this.rate = response.data.rate;
         })
         .catch((err) => {
           console.log(err);
@@ -213,6 +213,8 @@ export default {
   },
   components: { NavBar },
   created() {
+    // const roomId = this.$route.params.id
+    // console.log(roomId)
     axios
       .get(`http://localhost:3000/detail/${this.$route.params.id}`)
       .then((response) => {

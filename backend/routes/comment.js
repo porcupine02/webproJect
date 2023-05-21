@@ -47,22 +47,30 @@ router.put('/comments/:commentId', function (req, res, next) {
 router.delete('/comments/:commentId', async function (req, res, next) {
     console.log("test")
     console.log(req.params.commentId)
-    console.log(req.query.room_id)
+    const commentId = req.params.commentId
 
-    const conn = await pool.getConnection()
-    await conn.beginTransaction();
+    const[roomId] = await pool.query('SELECT room_id FROM comments WHERE comment_id = ?', commentId)
+
+    console.log(roomId[0].room_id)
+    const room_id = roomId[0].room_id
+    // console.log(req.query.room_id)
+
+    // const conn = await pool.getConnection()
+    // await conn.beginTransaction();
 
     try {
-        await conn.query('delete from comments where comment_id = ?', [req.params.commentId])
-        const [comments] = await conn.query("select * from comments where room_id = ?", [req.query.room_id])
-        res.status(200).send({ comments: comments })
+        const [rows1, fields1] = await pool.query(
+            'DELETE FROM comments WHERE comment_id=?', [req.params.commentId]
+        )
+        const [rate] = await pool.query('SELECT sum(rate) as `Sumrate`, count(rate) as `countRate`, FLOOR(sum(rate) / count(rate)) AS result FROM comments  WHERE room_id = ?', [room_id])
+        console.log(rate)
+        res.send({rate : rate})
+        // const [comments] = await conn.query("select * from comments where room_id = ?", [req.query.room_id])
+        
+        // res.status(200).send({ comments: comments })
 
     } catch (err) {
         console.log(err)
-        conn.rollback()
-    } finally {
-        conn.release()
-        res.send("complate")
     }
 
 
