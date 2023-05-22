@@ -210,7 +210,7 @@
         <div class="columns mt-5 is-8 is-variable" v-else>
           <div
             class="column is-4-tablet is-3-desktop"
-            v-for="room in topRoom"
+            v-for="(room, index) in detailTop"
             :key="room"
           >
             <div class="card">
@@ -227,7 +227,7 @@
                 "
                 alt="Placeholder image"
               />
-                <span class="tag is-primary is-size-6" style="position:absolute; margin-left: 240px;">{{ room.result }}</span>
+                <span class="tag is-primary is-size-6" style="position:absolute; margin-left: 240px;">{{ topRoom[index].result }}</span>
               </div>
               <div class="card-content">
                 <p>THB {{ room.price }} -.</p>
@@ -309,6 +309,7 @@ export default {
       begin: "",
       dateNow: "",
       end: "",
+      detailTop: ''
 
       // model: {
       //   date: "",
@@ -338,6 +339,7 @@ export default {
         this.rooms = response.data.roomShow;
         this.rateRoom = response.data.rateArr;
         this.topRoom = response.data.TopRoom;
+        this.detailTop = response.data.detailTop;
 
         console.log(this.topRoom);
       })

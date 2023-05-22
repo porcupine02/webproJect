@@ -106,9 +106,16 @@ router.get('/showRoom', async function(req, res, next){
     const[roomShow, feild1] = await pool.query('SELECT *  FROM roomdetail join services using(service_id) join images using (room_id) WHERE main = 1')
     const[CountRoom] = await pool.query('SELECT count(room_id) as roomCount FROM roomdetail ')
 
-    const [TopRoom] = await pool.query('SELECT *, sum(rate) as `Sumrate`, count(rate) as `countRate`, room_id, round(sum(rate) / count(rate), 1) AS result FROM comments join roomdetail using(room_id) join images using(room_id) where main = 1 group by room_id  order by result desc LIMIT 4')
+    const [TopRoom] = await pool.query('SELECT sum(rate) as `Sumrate`, count(rate) as `countRate`, room_id, round(sum(rate) / count(rate), 1) AS result FROM comments join roomdetail using(room_id) join images using(room_id) where main = 1 group by room_id  order by result desc LIMIT 4')
     console.log(1)
     console.log(TopRoom)
+    var detailTop = []
+    for (let i = 0; i < TopRoom.length; i++) {
+      const [detailTopRoom] = await pool.query('SELECT * from roomdetail join images using(room_id) where main = 1 and room_id', [i])
+      // console.log(detailTopRoom)
+      detailTop.push(detailTopRoom[0])
+      console.log(detailTop)
+    }
 
     console.log(CountRoom[0].roomCount)
 
@@ -135,7 +142,8 @@ router.get('/showRoom', async function(req, res, next){
     return res.send({
       roomShow: roomShow,
       rateArr: rateArr,
-      TopRoom : TopRoom
+      TopRoom : TopRoom,
+      detailTop: detailTop
     });
   }catch(err){
     console.log(err)
