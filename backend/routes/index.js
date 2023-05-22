@@ -23,50 +23,66 @@ router.get("/",async function (req, res, next) {
    
     // );
     const [room_un, fields] = await pool.query(
-       'SELECT DISTINCT  room_id, min(unvalible_room.count) as ucount FROM  roomdetail  join unvalible_room using(room_id) WHERE people >= ?  and date between ? and ? group by room_id', [people, begin, end ]
+       'SELECT DISTINCT  room_id, min(unvalible_room.count) as ucount FROM  roomdetail  join unvalible_room using(room_id) WHERE people >= ?  and date between ? and ? group by room_id order by room_id', [people, begin, end ]
     );
+ 
     const [room_all, field1] = await pool.query('SELECT room_id, count as ucount FROM roomdetail WHERE people >= ?', people)
+
+  
+    var a = room_un;
+var b = room_all;
+var union = [...new Set([...a, ...b])];
+// console.log(union);
+
 
 
    var arr = []
   //  console.log(room_all)
   //  console.log(room_un)
-   
-   for(let j = 0; j < room_all.length; j++){
-    if(room_un[j] == undefined){
-      arr[j] = room_all[j]
-    }
-    else{
-      arr[j] = room_un[j]
-    }
-    
-   }
+  
+  const uniqueRoomIds = [...new Set(union.map(item => item.room_id))];
+  console.log(uniqueRoomIds)
+  
+  const result = uniqueRoomIds.reduce((acc, roomId) => {
+    const filteredData = union.filter(item => item.room_id === roomId);
+    console.log(1)
+    console.log(filteredData)
+    const minUcount = Math.min(...filteredData.map(item => item.ucount));
+    acc.push({ room_id: roomId, min_ucount: minUcount });
+    return acc;
+  }, []);
+ 
+  // console.log(result);
+  result.sort((a, b) => a.room_id - b.room_id);
+console.log(result);
+
    const rateArr = []
 
  
  
       console.log(arr)
 
-      for(let i = 0; i < arr.length; i++){
-         if(arr[i].ucount == 0){
+      for(let i = 0; i < result.length; i++){
+         if(result[i].min_ucount == 0){
             roomblank[i] = 0
             rateArr[i] = 0
     
          }
          else{
            const[roomBlank] = await pool.query('SELECT * FROM roomdetail join services using(service_id) join images using (room_id) WHERE people >= ? and main = 1', people)
-           const [commentRate] = await pool.query('SELECT sum(rate) as Sumrate, count(rate) as countRate FROM comments  WHERE room_id = ?', arr[i].room_id)
+           const [commentRate] = await pool.query('SELECT sum(rate) as Sumrate, count(rate) as countRate FROM comments  WHERE room_id = ?', result[i].room_id)
            roomblank[i] = roomBlank[i]
            rateArr[i] = Number(Math.floor(commentRate[0].Sumrate * 5 / (5 * commentRate[0].countRate)))
 
       
          }
       }
+      console.log(rateArr)
      
       var blank = [0]
       var difference1 = roomblank.filter(x => blank.indexOf(x) === -1)
       var difference2 = rateArr.filter(x => blank.indexOf(x) === -1)
-      // console.log(difference)
+      console.log(difference2)
       return res.send({
         roomShow: difference1,
         rateArr: difference2

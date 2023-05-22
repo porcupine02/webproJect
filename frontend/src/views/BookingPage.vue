@@ -68,8 +68,8 @@
                 />
               </div>
               <div class="column is-6">
-                <h1>ชื่อห้องพัก : {{ room.room_type }}</h1>
-                <h1>รายละเอียดห้อง</h1>
+                <h1> <b>ชื่อห้องพัก :</b>  {{ room.room_type }}</h1>
+                <h1> <b>รายละเอียดห้องพัก</b> </h1>
                 {{ room.description }}
               </div>
             </div>
@@ -293,7 +293,12 @@ function word(value) {
   return false;
 }
 
-import { required, alphaNum } from "vuelidate/lib/validators";
+function validateNotBlank(value) {
+  
+    return !value.match(/\s+/);
+  }
+
+import { required } from "vuelidate/lib/validators";
 export default {
   data() {
     return {
@@ -352,12 +357,12 @@ export default {
   validations: {
     fname: {
       required: required,
-      alphaNum: alphaNum,
+      alphaNum: validateNotBlank,
       word: word,
     },
     lname: {
       required: required,
-      alphaNum: alphaNum,
+      alphaNum: validateNotBlank,
       word: word,
     },
   },

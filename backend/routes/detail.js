@@ -2,7 +2,6 @@ const express = require("express")
 const path = require("path")
 const pool = require("../config")
 const { isLoggedIn } = require("../middlewares");
-
 router = express.Router()
 
 // Require multer for file upload

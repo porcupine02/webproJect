@@ -218,7 +218,7 @@
                
                  <span class="tag is-danger is-badge mb-5">{{CountReports}}</span>
                 </div> -->
-              <div class="image is-relative">
+              <div class="image is-relative  is-4by3">
                 <img
                 :src="
                   room.file_path
@@ -227,7 +227,7 @@
                 "
                 alt="Placeholder image"
               />
-                <span class="tag is-primary is-size-6">{{ room.result }}</span>
+                <span class="tag is-primary is-size-6" style="position:absolute; margin-left: 240px;">{{ room.result }}</span>
               </div>
               <div class="card-content">
                 <p>THB {{ room.price }} -.</p>

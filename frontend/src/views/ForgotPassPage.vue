@@ -28,16 +28,20 @@
             <input
               class="input"
               type="email"
-              placeholder="e.g. alex@example.com"
+              placeholder="username"
               v-model="username"
             />
           </div>
           <!-- {{ error }} -->
+          <br>
           <template v-if="error">
             <!-- <p class="help is-danger" v-if="!$v.confirm_password.required">This field is required</p> -->
-            <p class="help is-danger">
-              {{ error }}
-            </p>
+            <p
+          v-if="error"
+          class="px-3 py-2 mb-3 has-text-danger-dark has-background-danger-light"
+        >
+          {{ error }}
+        </p>
           </template>
         </div>
 
@@ -59,7 +63,7 @@
             <input
               class="input"
               type="password"
-              placeholder="e.g. alex@example.com"
+              placeholder="***********"
               :class="{ 'is-danger': $v.password.$error }"
               v-model="$v.password.$model"
             />
@@ -80,7 +84,7 @@
             <input
               class="input"
               type="password"
-              placeholder="e.g. alex@example.com"
+              placeholder="***********"
               :class="{ 'is-danger': $v.confirm_password.$error }"
               v-model="$v.confirm_password.$model"
             />

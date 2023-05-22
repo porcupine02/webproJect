@@ -296,7 +296,7 @@
                 </div>
               </div>
             </div>
-            <div class="media-right" v-if="booked.status == 'incomplete'">
+            <div class="media-right" v-if="booked.status == 'incomplete' || user[0].login_role == 'manager' && booked.status == 'incomplete'">
               <div
                 class="button has-background-danger"
                 @click="
