@@ -14,7 +14,7 @@
               type="username"
               placeholder="Username"
               v-model="username"
-            
+
             />
             <span class="icon is-small is-left">
               <i class="fas fa-user"></i>
@@ -328,7 +328,7 @@
                     >
                       <div class="navbar-item column">
                         <label for="">{{ report.content.substring(0, 10) + "..." }}</label>
-                      
+
                         <a
                           class="button is-primary column p-2"
 
@@ -394,8 +394,7 @@ import {
   maxLength,
   minLength,
   sameAs,
-  email,
-  alphaNum
+  email
 } from "vuelidate/lib/validators";
 // import navbar from '../../component/navbar.vue';
 function complexPassword(value) {
@@ -411,6 +410,12 @@ function word(value){
   }
   return false
 }
+
+
+function validateNotBlank(value) {
+  return !value.match(/\s+/);
+}
+
 
 
 function phone(value) {
@@ -496,14 +501,14 @@ export default {
       required: required,
       maxLength: maxLength(15),
       minLength: minLength(5),
-      alphaNum : alphaNum,
+      alphaNum : validateNotBlank,
       word : word
     },
     sign_lname: {
       required: required,
       maxLength: maxLength(15),
       minLength: minLength(5),
-      alphaNum : alphaNum,
+      alphaNum : validateNotBlank,
       word : word
     },
     sign_phone: {
@@ -576,7 +581,7 @@ export default {
         this.$v.$reset();
     },
     login() {
-     
+
 
       const data = {
         username: this.username,
@@ -639,7 +644,7 @@ export default {
         .post("http://localhost:3000/signUp", data)
         .then((response) => {
           console.log(response);
-          
+
           this.$v.$reset();
           this.error = ""
           this.isActive_Sign_in = true;

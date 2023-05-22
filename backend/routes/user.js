@@ -117,8 +117,8 @@ const emailValidator = async (value, helpers) => {
 const signUpSchema = Joi.object({
     email: Joi.string().required().email().external(emailValidator),
     phone: Joi.string().required().pattern(/0[0-9]{9}/),
-    fname: Joi.string().required().min(5).max(15).pattern(/^[a-zA-Z\s]+$/),
-    lname: Joi.string().required().min(5).max(15).pattern(/^[a-zA-Z\s]+$/),
+    fname: Joi.string().required().min(5).max(15),
+    lname: Joi.string().required().min(5).max(15),
     username: Joi.string().required().min(5).max(25).external(usernameValidator),
     password: Joi.string().required().custom(passwordValidator),
     confirm_password: Joi.string().required().valid(Joi.ref('password')),

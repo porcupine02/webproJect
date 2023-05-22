@@ -68,8 +68,8 @@
                 />
               </div>
               <div class="column is-6">
-                <h1> <b>ชื่อห้องพัก :</b>  {{ room.room_type }}</h1>
-                <h1> <b>รายละเอียดห้องพัก</b> </h1>
+                <h1><b>ชื่อห้องพัก :</b> {{ room.room_type }}</h1>
+                <h1><b>รายละเอียดห้องพัก</b></h1>
                 {{ room.description }}
               </div>
             </div>
@@ -96,7 +96,7 @@
               class="columns has-text-danger"
               v-if="dob.split('-')[1] == dayNow.split('-')[1]"
             >
-              <div class="column is-6">โปรโมชั่น </div>
+              <div class="column is-6">โปรโมชั่น</div>
               <div class="column is-6">ลด 10%</div>
             </div>
             <hr />
@@ -294,9 +294,8 @@ function word(value) {
 }
 
 function validateNotBlank(value) {
-  
-    return !value.match(/\s+/);
-  }
+  return !value.match(/\s+/);
+}
 
 import { required } from "vuelidate/lib/validators";
 export default {
